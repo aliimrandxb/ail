@@ -2224,76 +2224,84 @@
     // Modern Document Picture-in-Picture API (Chrome/Edge desktop & supported platforms)
     let docPiPWindow = null;
     async function toggleDocumentPiP() {
-      if (!('documentPictureInPicture' in window)) {
-        alert('Document Picture-in-Picture is supported in modern Chrome & Edge. It opens an always-on-top window over other apps.');
-        return;
-      }
-      if (docPiPWindow && !docPiPWindow.closed) {
-        docPiPWindow.close();
-        docPiPWindow = null;
-        return;
-      }
-
-      try {
-        docPiPWindow = await window.documentPictureInPicture.requestWindow({
-          width: 380,
-          height: 420
-        });
-
-        docPiPWindow.document.body.style.margin = '0';
-        docPiPWindow.document.body.style.background = '#090514';
-        docPiPWindow.document.body.style.color = '#fff';
-        docPiPWindow.document.body.style.fontFamily = 'system-ui, sans-serif';
-        docPiPWindow.document.body.style.display = 'flex';
-        docPiPWindow.document.body.style.flexDirection = 'column';
-        docPiPWindow.document.body.style.padding = '12px';
-        docPiPWindow.document.body.style.boxSizing = 'border-box';
-
-        docPiPWindow.document.body.innerHTML = `
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-            <div style="display:flex;align-items:center;gap:6px;">
-              <span style="width:8px;height:8px;border-radius:50%;background:#10b981;"></span>
-              <span style="font-size:12px;font-weight:bold;color:#f43f5e;">Sanctuary Always-On-Top</span>
-            </div>
-            <span style="font-size:10px;color:#94a3b8;font-family:monospace;">Ali & Ayesha</span>
-          </div>
-          <div style="flex:1;background:#000;border-radius:12px;overflow:hidden;position:relative;border:1px solid rgba(244,63,94,0.3);">
-            ${currentPlayingVideoId ? `
-              <iframe style="width:100%;height:100%;border:0;" 
-                src="https://www.youtube-nocookie.com/embed/${currentPlayingVideoId}?autoplay=1&modestbranding=1" 
-                allow="autoplay; encrypted-media" allowfullscreen>
-              </iframe>
-            ` : `
-              <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:11px;">
-                <span>📺 No video currently playing</span>
-                <span style="font-size:9px;color:#64748b;margin-top:4px;">Play a track in Cinema</span>
-              </div>
-            `}
-          </div>
-          <div style="display:flex;gap:6px;margin-top:8px;">
-            <button id="pip-whisper-btn" style="flex:1;padding:8px;border-radius:8px;background:rgba(244,63,94,0.2);border:1px solid rgba(244,63,94,0.4);color:#f43f5e;font-size:11px;font-weight:bold;cursor:pointer;">
-              💓 Send Whisper
-            </button>
-            <button id="pip-close-btn" style="padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.1);border:0;color:#cbd5e1;font-size:11px;cursor:pointer;">
-              Close
-            </button>
-          </div>
-        `;
-
-        docPiPWindow.document.getElementById('pip-whisper-btn').onclick = () => {
-          sendTelepathy('💓 Whispered from floating PiP window...');
-          showTelepathyBanner('💓 Whisper sent from floating PiP!');
-        };
-        docPiPWindow.document.getElementById('pip-close-btn').onclick = () => {
+      // 1. Try Desktop Chrome/Edge native Document PiP if supported and in secure context
+      if ('documentPictureInPicture' in window && window.isSecureContext) {
+        if (docPiPWindow && !docPiPWindow.closed) {
           docPiPWindow.close();
-        };
-
-        docPiPWindow.addEventListener('pagehide', () => {
           docPiPWindow = null;
-        });
+          return;
+        }
 
-      } catch (err) {
-        console.warn('Document PiP request error:', err);
+        try {
+          docPiPWindow = await window.documentPictureInPicture.requestWindow({
+            width: 380,
+            height: 420
+          });
+
+          docPiPWindow.document.body.style.margin = '0';
+          docPiPWindow.document.body.style.background = '#090514';
+          docPiPWindow.document.body.style.color = '#fff';
+          docPiPWindow.document.body.style.fontFamily = 'system-ui, sans-serif';
+          docPiPWindow.document.body.style.display = 'flex';
+          docPiPWindow.document.body.style.flexDirection = 'column';
+          docPiPWindow.document.body.style.padding = '12px';
+          docPiPWindow.document.body.style.boxSizing = 'border-box';
+
+          docPiPWindow.document.body.innerHTML = `
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="width:8px;height:8px;border-radius:50%;background:#10b981;"></span>
+                <span style="font-size:12px;font-weight:bold;color:#f43f5e;">Sanctuary Always-On-Top</span>
+              </div>
+              <span style="font-size:10px;color:#94a3b8;font-family:monospace;">Ali & Ayesha</span>
+            </div>
+            <div style="flex:1;background:#000;border-radius:12px;overflow:hidden;position:relative;border:1px solid rgba(244,63,94,0.3);">
+              ${currentPlayingVideoId ? `
+                <iframe style="width:100%;height:100%;border:0;" 
+                  src="https://www.youtube-nocookie.com/embed/${currentPlayingVideoId}?autoplay=1&modestbranding=1" 
+                  allow="autoplay; encrypted-media" allowfullscreen>
+                </iframe>
+              ` : `
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:11px;">
+                  <span>📺 No video currently playing</span>
+                  <span style="font-size:9px;color:#64748b;margin-top:4px;">Play a track in Cinema</span>
+                </div>
+              `}
+            </div>
+            <div style="display:flex;gap:6px;margin-top:8px;">
+              <button id="pip-whisper-btn" style="flex:1;padding:8px;border-radius:8px;background:rgba(244,63,94,0.2);border:1px solid rgba(244,63,94,0.4);color:#f43f5e;font-size:11px;font-weight:bold;cursor:pointer;">
+                💓 Send Whisper
+              </button>
+              <button id="pip-close-btn" style="padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.1);border:0;color:#cbd5e1;font-size:11px;cursor:pointer;">
+                Close
+              </button>
+            </div>
+          `;
+
+          docPiPWindow.document.getElementById('pip-whisper-btn').onclick = () => {
+            sendTelepathy('💓 Whispered from floating PiP window...');
+            showTelepathyBanner('💓 Whisper sent from floating PiP!');
+          };
+          docPiPWindow.document.getElementById('pip-close-btn').onclick = () => {
+            docPiPWindow.close();
+          };
+
+          docPiPWindow.addEventListener('pagehide', () => {
+            docPiPWindow = null;
+          });
+          return;
+
+        } catch (err) {
+          console.warn('Document PiP request error, falling back to In-App PiP:', err);
+        }
+      }
+
+      // 2. Fallback: In-App Floating PiP Mini-Player (Works everywhere, including Mobile Chrome & Safari)
+      closeDrawer();
+      const pip = document.getElementById('pip-mini-player');
+      if (pip) {
+        pip.classList.remove('hidden');
+        showTelepathyBanner('📺 Floating Cinema active! You can view 3D room or chat.');
       }
     }
 
@@ -3038,6 +3046,49 @@
     let wallPhotoIndex = 0;
     let wallSlideshowTimer = null;
 
+
+    // -------------------------------------------------------------
+    // INTERACTIVE BED ATTRACTION & ROMANCE
+    // -------------------------------------------------------------
+    const BED_ROMANTIC_QUOTES = [
+      "Pulled you into bed under the warm duvet with me... 🛏️💋",
+      "Bare skin, whispered desires, and your arms around me... 🔥",
+      "Let everything else fade away... it's just you and me now... ❤️",
+      "My favorite place in the entire world is tangled in bed with you... ✨",
+      "Wrapped tightly in your warmth, never letting you go... 🌹"
+    ];
+
+    function handleBedInteraction() {
+      // 1. Seductive audio chime & double-heartbeat vibration
+      playBeepAlert(880, 0.2);
+      if (navigator.vibrate) {
+        navigator.vibrate([90, 80, 140, 80]);
+      }
+
+      // 2. Intense sensual under-bed neon glow surge
+      if (bedGlowLight) {
+        bedGlowLight.intensity = 3.6;
+        bedGlowLight.color.setHex(0xe11d48);
+        setTimeout(() => {
+          if (bedGlowLight) bedGlowLight.intensity = 1.6;
+        }, 3000);
+      }
+      if (candleLight) {
+        candleLight.intensity = 2.4;
+        setTimeout(() => {
+          if (candleLight) candleLight.intensity = 1.4;
+        }, 3000);
+      }
+
+      // 3. Pick romantic whisper and send to partner
+      const quote = BED_ROMANTIC_QUOTES[Math.floor(Math.random() * BED_ROMANTIC_QUOTES.length)];
+      showTelepathyBanner(quote);
+      sendPayload({ type: 'telepathy', sender: myRole, text: quote });
+
+      // 4. Trigger the full-screen TikTok-style romantic passion animation
+      playRomanticAnimation('cuddle', true);
+    }
+
     function initThreeRoom() {
       if (threeInitialized) return;
       threeInitialized = true;
@@ -3143,6 +3194,8 @@
       pillow2.position.set(-0.9, 0.65, -2.4);
       pillow2.rotation.x = 0.2;
       bedGroup.add(pillow2);
+
+      const bedInteractiveMeshes = [duvet, bedBase, headboard, pillow1, pillow2];
 
       // Nightstand Table & Lamp
       const nightstandMat = new THREE.MeshStandardMaterial({ color: 0x2e1065, roughness: 0.6 });
@@ -3259,7 +3312,8 @@
         mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
         raycaster.setFromCamera(mouse, camera);
 
-        const intersects = raycaster.intersectObjects([tvScreenMesh, wallPhotoMesh], false);
+        const clickable = [tvScreenMesh, wallPhotoMesh, ...bedInteractiveMeshes];
+        const intersects = raycaster.intersectObjects(clickable, false);
         if (intersects.length > 0) {
           const hit = intersects[0].object;
           if (hit === tvScreenMesh) {
@@ -3267,6 +3321,8 @@
             showTelepathyBanner('📺 Opening Synced YouTube Theatre...');
           } else if (hit === wallPhotoMesh) {
             cycleWallFrameNext();
+          } else if (bedInteractiveMeshes.includes(hit)) {
+            handleBedInteraction();
           }
         }
       });
