@@ -2162,6 +2162,21 @@
 
     let currentPlayingVideoId = null;
 
+
+    function switchVideoToDrawer(videoId) {
+      // Move active video into drawer and mute/pause 3D TV to prevent double sound!
+      const tvEl = document.getElementById('css3d-tv-element');
+      if (tvEl) tvEl.innerHTML = '';
+      
+      document.getElementById('yt-player-container').innerHTML = `
+        <iframe class="w-full h-full absolute inset-0" 
+          src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1" 
+          frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen>
+        </iframe>
+      `;
+      showTelepathyBanner('📺 Switched video to Cinema Drawer!');
+    }
+
     function playYtSong(videoId, syncToPartner = false) {
       currentPlayingVideoId = videoId;
       // UNIFIED AUDIO: Display console in drawer so two iframes do NOT echo at the same time!
@@ -2174,10 +2189,14 @@
             </div>
             <span class="text-xs font-bold text-white drop-shadow">Live Video Playing on 3D Room TV</span>
             <span class="text-[10px] text-rose-300 mt-1 font-mono">Synced for A & I • Zero Echo</span>
-            <div class="flex items-center gap-1 mt-3">
+            <div class="flex items-center gap-2 mt-3">
               <button onclick="closeDrawer()" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow active:scale-95 transition-all">
                 <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                 <span>View 3D TV Screen</span>
+              </button>
+              <button onclick="switchVideoToDrawer('${videoId}')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-rose-200 font-bold text-xs flex items-center gap-1.5 shadow active:scale-95 transition-all">
+                <i data-lucide="monitor" class="w-3.5 h-3.5"></i>
+                <span>Watch in Drawer</span>
               </button>
             </div>
           </div>
@@ -3472,7 +3491,7 @@
         raycaster.setFromCamera(mouse, camera);
 
         const clickable = [tvScreenMesh, wallPhotoMesh, ...bedInteractiveMeshes, charI, charA];
-        const intersects = raycaster.intersectObjects(clickable, false);
+        const intersects = raycaster.intersectObjects(clickable, true);
         if (intersects.length > 0) {
           const hit = intersects[0].object;
           if (hit === tvScreenMesh) {
@@ -3480,8 +3499,20 @@
             showTelepathyBanner('📺 Opening Synced YouTube Theatre...');
           } else if (hit === wallPhotoMesh) {
             cycleWallFrameNext();
-          } else if (bedInteractiveMeshes.includes(hit) || hit === charI || hit === charA || charI.children.includes(hit) || charA.children.includes(hit)) {
-            triggerIntimateBedEncounter('passion');
+          } else {
+            // Traverse up parent chain to see if hit is part of couple avatars or bed
+            let isCoupleOrBed = false;
+            let curr = hit;
+            while (curr && curr !== scene) {
+              if (curr === charI || curr === charA || curr === coupleGroup || bedInteractiveMeshes.includes(curr)) {
+                isCoupleOrBed = true;
+                break;
+              }
+              curr = curr.parent;
+            }
+            if (isCoupleOrBed || bedInteractiveMeshes.includes(hit)) {
+              handleBedInteraction();
+            }
           }
         }
       });
