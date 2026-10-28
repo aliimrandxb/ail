@@ -754,6 +754,11 @@
   <script>
     lucide.createIcons();
 
+    // Configuration & Session Room
+    const urlParams = new URLSearchParams(window.location.search);
+    let ROOM_BASE = (urlParams.get('room') || localStorage.getItem('sanctuary_room_base') || 'ali-ayesha-2026').toLowerCase().replace(/[^a-z0-9_-]/g, '');
+    let myRole = urlParams.get('role') || localStorage.getItem('sanctuary_role') || 'husband';
+
     // -------------------------------------------------------------
     // CHUNK 5: P2P CONNECTION STABILITY, WAKE LOCK & AUTO-RECONNECT
     // -------------------------------------------------------------
@@ -804,8 +809,6 @@
       console.warn('[Network] Internet disconnected.');
       updatePeerUI('red', 'Offline • No Internet connection', false);
     });
-    let ROOM_BASE = (urlParams.get('room') || localStorage.getItem('sanctuary_room_base') || 'ali-ayesha-2026').toLowerCase().replace(/[^a-z0-9_-]/g, '');
-    let myRole = urlParams.get('role') || localStorage.getItem('sanctuary_role') || 'husband';
 
     // Comprehensive STUN Servers for cellular / NAT punchthrough
     const PEER_CONFIG = {
