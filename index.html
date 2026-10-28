@@ -347,7 +347,7 @@
         <button onclick="answerLiveCall()" class="bg-emerald-500 hover:bg-emerald-400 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-lg active:scale-95 transition-all">
           Answer
         </button>
-        <button onclick="endLiveCall()" class="bg-white/10 hover:bg-white/20 text-slate-300 px-3 py-2.5 rounded-xl text-xs active:scale-95 transition-all">
+        <button onclick="declineLiveCall()" class="bg-white/10 hover:bg-white/20 text-slate-300 px-3 py-2.5 rounded-xl text-xs active:scale-95 transition-all">
           Decline
         </button>
       </div>
@@ -381,7 +381,7 @@
     </div>
 
     <!-- SLIDING DRAWERS / PANELS (GLASSMORPHISM) -->
-    <div id="sanctuary-drawer" class="drawer-sheet fixed inset-x-0 bottom-14 z-30 glass-panel rounded-t-3xl max-h-[82dvh] flex flex-col shadow-2xl">
+    <div id="sanctuary-drawer" class="drawer-sheet fixed inset-x-0 bottom-14 z-30 glass-panel rounded-t-3xl max-h-[82dvh] flex flex-col shadow-2xl transition-all duration-300">
       
       <!-- Drawer Header Bar -->
       <div class="px-4 pt-3 pb-2.5 border-b border-rose-500/20 flex items-center justify-between shrink-0">
@@ -389,9 +389,15 @@
           <i id="drawer-icon" data-lucide="message-circle" class="w-4 h-4 text-rose-400"></i>
           <span id="drawer-title" class="text-sm font-bold text-rose-100">Live P2P Encrypted Chat</span>
         </div>
-        <button onclick="closeDrawer()" class="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-rose-200 active:scale-95 transition-all">
-          <i data-lucide="chevron-down" class="w-4 h-4"></i>
-        </button>
+        <div class="flex items-center gap-1.5">
+          <!-- Fullscreen Chat Toggle Button -->
+          <button id="chat-fullscreen-toggle" onclick="toggleFullscreenChat()" title="Expand Fullscreen" class="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-rose-200 active:scale-95 transition-all">
+            <i id="chat-expand-icon" data-lucide="maximize-2" class="w-4 h-4"></i>
+          </button>
+          <button onclick="closeDrawer()" class="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-rose-200 active:scale-95 transition-all">
+            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+          </button>
+        </div>
       </div>
 
       <!-- PANEL 1: REAL P2P CHAT + VOICE NOTE + VOICE CALL + VIDEO CALL -->
@@ -419,7 +425,7 @@
         <audio id="remote-audio" autoplay playsinline class="hidden"></audio>
 
         <!-- Message Stream Area -->
-        <div id="chat-messages" class="flex-1 min-h-[170px] max-h-[220px] overflow-y-auto bg-black/40 border border-white/10 rounded-2xl p-3 space-y-2.5">
+        <div id="chat-messages" class="flex-1 min-h-[200px] overflow-y-auto bg-black/40 border border-white/10 rounded-2xl p-3 space-y-2.5 scroll-smooth">
           <div class="text-center py-2">
             <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-rose-950/60 border border-rose-500/20 text-[10px] text-rose-300 font-mono-code">
               <i data-lucide="shield-check" class="w-3 h-3 text-emerald-400"></i>
@@ -451,25 +457,48 @@
       <div id="panel-music" class="hidden flex-1 overflow-y-auto p-3.5 space-y-3 flex flex-col">
         <div class="text-xs font-bold text-rose-200 flex items-center justify-between">
           <div class="flex items-center gap-1.5">
-            <i data-lucide="youtube" class="w-4 h-4 text-rose-500"></i>
-            <span>Synchronized YouTube Theatre</span>
+            <i data-lucide="tv" class="w-4 h-4 text-rose-500"></i>
+            <span>Private Big-Screen Cinema</span>
           </div>
-          <span class="text-[10px] text-rose-300/70 font-mono">Synced on P2P</span>
+          <span id="theatre-sync-badge" class="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            P2P Synced
+          </span>
         </div>
 
         <div class="flex gap-2">
           <input id="yt-link-input" type="text" placeholder="Paste YouTube link or Video ID..." 
             class="flex-1 bg-black/60 border border-rose-500/30 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-rose-400" />
-          <button onclick="addYouTubeSong()" class="bg-rose-600 hover:bg-rose-500 active:scale-95 text-white px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all">
-            Play & Sync
+          <button onclick="addYouTubeSong()" class="bg-rose-600 hover:bg-rose-500 active:scale-95 text-white px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all flex items-center gap-1.5">
+            <i data-lucide="play" class="w-3.5 h-3.5"></i>
+            <span>Play</span>
           </button>
         </div>
 
-        <div id="yt-player-container" class="w-full aspect-video bg-black rounded-2xl overflow-hidden border border-rose-500/30 flex items-center justify-center relative shrink-0 shadow-lg">
-          <div class="text-center p-4 text-slate-400 text-xs">
-            <i data-lucide="film" class="w-8 h-8 mx-auto text-rose-400/60 mb-1"></i>
-            <span>Select or paste a track to start shared playback</span>
+        <!-- Big LCD Cinematic Screen Frame -->
+        <div class="relative w-full rounded-2xl p-1 bg-gradient-to-b from-slate-700 via-slate-900 to-black shadow-2xl border border-rose-500/30">
+          <div id="yt-player-container" class="w-full aspect-video bg-black rounded-xl overflow-hidden flex items-center justify-center relative shadow-inner">
+            <div class="text-center p-4 text-slate-400 text-xs">
+              <i data-lucide="film" class="w-8 h-8 mx-auto text-rose-400/60 mb-1"></i>
+              <span>Select or paste a track to start shared playback</span>
+            </div>
           </div>
+          <div class="flex justify-between items-center px-2 py-1 text-[9px] text-rose-300/60 font-mono">
+            <span>SANCTUARY ULTRA-HD</span>
+            <span id="theatre-controller-label">Synced with Partner</span>
+          </div>
+        </div>
+
+        <!-- Cinema Sync Action Controls -->
+        <div class="grid grid-cols-2 gap-2 pt-0.5">
+          <button onclick="syncCurrentTrackToPartner()" class="py-2 px-3 rounded-xl bg-white/5 border border-white/10 hover:border-rose-500/40 text-rose-200 text-xs font-semibold flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-rose-400"></i>
+            <span>Resync Both Screens</span>
+          </button>
+          <button onclick="clearCurrentTrack()" class="py-2 px-3 rounded-xl bg-white/5 border border-white/10 hover:border-rose-500/40 text-slate-300 text-xs font-semibold flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+            <i data-lucide="square" class="w-3.5 h-3.5 text-slate-400"></i>
+            <span>Stop Playback</span>
+          </button>
         </div>
 
         <div class="flex items-center justify-between text-[11px] font-bold text-rose-200 pt-1">
@@ -510,22 +539,78 @@
       </div>
 
       <!-- PANEL 4: LOVE LETTERS & ANNIVERSARY VAULT -->
-      <div id="panel-letters" class="hidden flex-1 overflow-y-auto p-4 space-y-3">
-        <div class="bg-gradient-to-br from-rose-950/90 via-[#23092b] to-purple-950/80 border border-rose-400/40 rounded-2xl p-4 space-y-2.5 shadow-xl">
+      <div id="panel-letters" class="hidden flex-1 overflow-y-auto p-4 space-y-4">
+        
+        <!-- Live Anniversary Counter Card -->
+        <div class="bg-gradient-to-br from-rose-950/90 via-[#23092b] to-purple-950/80 border border-rose-400/50 rounded-2xl p-4 shadow-xl space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-extrabold text-amber-300 uppercase tracking-widest">Happy Anniversary, My Life</span>
-            <i data-lucide="sparkle" class="w-4 h-4 text-amber-300"></i>
+            <span class="text-[11px] font-extrabold text-amber-300 uppercase tracking-widest flex items-center gap-1.5">
+              <i data-lucide="heart-handshake" class="w-4 h-4 text-rose-400"></i>
+              Together Forever
+            </span>
+            <span class="text-[10px] text-rose-300 font-mono">Anniversary Vault</span>
+          </div>
+          <div id="anniversary-countdown" class="grid grid-cols-4 gap-2 pt-1 text-center font-mono">
+            <div class="bg-black/50 border border-rose-500/20 rounded-xl py-2">
+              <div id="count-days" class="text-lg font-bold text-rose-200">--</div>
+              <div class="text-[9px] text-slate-400 uppercase">Days</div>
+            </div>
+            <div class="bg-black/50 border border-rose-500/20 rounded-xl py-2">
+              <div id="count-hours" class="text-lg font-bold text-rose-200">--</div>
+              <div class="text-[9px] text-slate-400 uppercase">Hours</div>
+            </div>
+            <div class="bg-black/50 border border-rose-500/20 rounded-xl py-2">
+              <div id="count-mins" class="text-lg font-bold text-rose-200">--</div>
+              <div class="text-[9px] text-slate-400 uppercase">Mins</div>
+            </div>
+            <div class="bg-black/50 border border-rose-500/20 rounded-xl py-2">
+              <div id="count-secs" class="text-lg font-bold text-amber-300">--</div>
+              <div class="text-[9px] text-slate-400 uppercase">Secs</div>
+            </div>
+          </div>
+          <p class="text-[11px] text-rose-200/80 text-center pt-1 font-serif-quote italic">
+            "Every heartbeat counts, every memory cherished."
+          </p>
+        </div>
+
+        <!-- Featured Letter -->
+        <div class="bg-black/40 border border-rose-500/30 rounded-2xl p-4 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-rose-200">Our Sacred Promise</span>
+            <i data-lucide="sparkle" class="w-3.5 h-3.5 text-amber-300"></i>
           </div>
           <p class="text-xs text-rose-100 leading-relaxed font-sans">
             Even in a busy world surrounded by noise and routine, my favorite place in the entire universe will always be this quiet sanctuary with you.
           </p>
-          <div class="pt-2 border-t border-rose-500/20">
-            <p class="text-sm font-serif-quote italic text-rose-200">
-              "رسمِ وفا نبھانا تو غیرت کی بات ہے..."
-            </p>
-            <p class="text-[11px] text-amber-300/80 font-mono mt-1 text-right">— Forever yours, Ali ❤️</p>
+          <div class="pt-2 border-t border-rose-500/20 flex justify-between items-center">
+            <span class="text-xs font-serif-quote italic text-rose-200">"رسمِ وفا نبھانا تو غیرت کی بات ہے..."</span>
+            <span class="text-[11px] text-amber-300 font-mono">— Ali & Ayesha ❤️</span>
           </div>
         </div>
+
+        <!-- Secret Capsule Writer -->
+        <div class="bg-black/40 border border-rose-500/30 rounded-2xl p-3.5 space-y-2.5">
+          <div class="text-xs font-bold text-rose-200 flex items-center justify-between">
+            <span>Write a Love Letter / Note</span>
+            <span class="text-[10px] text-slate-400 font-mono">Syncs to Partner</span>
+          </div>
+          <textarea id="love-letter-input" rows="3" placeholder="Leave a sweet whispered note in the vault..." 
+            class="w-full bg-black/60 border border-rose-500/30 rounded-xl p-3 text-xs text-rose-100 placeholder-slate-500 focus:outline-none focus:border-rose-400 resize-none"></textarea>
+          <button onclick="saveAndSendLoveLetter()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-2">
+            <i data-lucide="feather" class="w-3.5 h-3.5"></i>
+            <span>Seal & Put in Vault</span>
+          </button>
+        </div>
+
+        <!-- Stored Letters Stream -->
+        <div class="space-y-2">
+          <div class="text-[11px] font-bold text-rose-200 flex items-center justify-between">
+            <span>Saved Vault Letters</span>
+            <span id="vault-letters-count" class="text-slate-400 font-mono">0 letters</span>
+          </div>
+          <div id="vault-letters-list" class="space-y-2 max-h-48 overflow-y-auto"></div>
+        </div>
+
       </div>
 
       <!-- PANEL 5: ROOM CONTROLS & THEME -->
@@ -541,10 +626,64 @@
         </div>
       </div>
 
+      <!-- PANEL 6: SYSTEM & PWA SETTINGS -->
+      <div id="panel-settings" class="hidden flex-1 overflow-y-auto p-4 space-y-3 text-xs">
+        <div class="bg-black/40 border border-rose-500/30 rounded-2xl p-3.5 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-rose-200 flex items-center gap-1.5">
+              <i data-lucide="download" class="w-4 h-4 text-rose-400"></i>
+              Native App Experience
+            </span>
+            <span id="pwa-status-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">Web Mode</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Install this app to remove the browser URL bar, get fullscreen native feeling, and smooth bottom gestures.
+          </p>
+          <button id="pwa-install-btn" onclick="triggerPwaInstall()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-bold text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
+            <i data-lucide="smartphone" class="w-4 h-4"></i>
+            <span>Add to Home Screen (Install App)</span>
+          </button>
+          <div id="ios-install-guide" class="hidden text-[10px] text-amber-300/90 bg-amber-950/40 border border-amber-500/30 rounded-xl p-2.5 leading-relaxed">
+            <strong>iPhone/iPad Users:</strong> Tap the Safari Share button <span class="font-bold">⎋</span> at bottom, then scroll and select <span class="underline font-bold">"Add to Home Screen"</span> to hide URL address bar.
+          </div>
+        </div>
+
+        <div class="bg-black/40 border border-rose-500/30 rounded-2xl p-3.5 space-y-2.5">
+          <div class="font-bold text-rose-200 flex items-center gap-1.5">
+            <i data-lucide="bell" class="w-4 h-4 text-rose-400"></i>
+            Push & Background Notifications
+          </div>
+          <p class="text-[11px] text-slate-400">
+            Allow instant notifications when partner calls or drops an affection ping.
+          </p>
+          <div class="flex items-center justify-between pt-1">
+            <span id="notif-permission-status" class="text-[11px] text-slate-300 font-mono">Status: Default</span>
+            <button onclick="requestNotificationPermission()" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-rose-200 font-bold text-[11px] active:scale-95 transition-all">
+              Enable Alert
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-black/40 border border-rose-500/30 rounded-2xl p-3.5 space-y-2.5">
+          <div class="font-bold text-rose-200 flex items-center gap-1.5">
+            <i data-lucide="sliders" class="w-4 h-4 text-rose-400"></i>
+            P2P Direct Link Tuning
+          </div>
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-slate-400">Active Room:</span>
+            <span id="settings-room-label" class="text-rose-300 font-mono">ali-ayesha-2026</span>
+          </div>
+          <button onclick="showNetworkDiagnostics()" class="w-full py-2 rounded-xl bg-white/5 border border-white/10 hover:border-rose-500/40 text-rose-200 font-semibold text-xs active:scale-95 transition-all flex items-center justify-center gap-2">
+            <i data-lucide="radio" class="w-3.5 h-3.5"></i>
+            <span>Open P2P Network Diagnostics</span>
+          </button>
+        </div>
+      </div>
+
     </div>
 
     <!-- Sanctuary Bottom Dock -->
-    <nav class="relative z-40 h-14 bg-[#0d061a]/95 backdrop-blur-xl border-t border-rose-500/30 grid grid-cols-4 px-1 shrink-0">
+    <nav class="relative z-40 h-14 bg-[#0d061a]/95 backdrop-blur-xl border-t border-rose-500/30 grid grid-cols-5 px-1 shrink-0">
       <button onclick="openDrawer('chat')" id="snav-chat" class="flex flex-col items-center justify-center text-rose-400 transition-colors">
         <i data-lucide="message-circle" class="w-4 h-4"></i><span class="text-[9px] mt-1 font-bold">Chat & Calls</span>
       </button>
@@ -556,6 +695,9 @@
       </button>
       <button onclick="openDrawer('letters')" id="snav-letters" class="flex flex-col items-center justify-center text-slate-400 transition-colors">
         <i data-lucide="book-heart" class="w-4 h-4"></i><span class="text-[9px] mt-1 font-bold">Memories</span>
+      </button>
+      <button onclick="openDrawer('settings')" id="snav-settings" class="flex flex-col items-center justify-center text-slate-400 transition-colors">
+        <i data-lucide="settings" class="w-4 h-4"></i><span class="text-[9px] mt-1 font-bold">Settings</span>
       </button>
     </nav>
   </div>
@@ -612,8 +754,56 @@
   <script>
     lucide.createIcons();
 
-    // Configuration & Session Room
-    const urlParams = new URLSearchParams(window.location.search);
+    // -------------------------------------------------------------
+    // CHUNK 5: P2P CONNECTION STABILITY, WAKE LOCK & AUTO-RECONNECT
+    // -------------------------------------------------------------
+    let wakeLockSentinel = null;
+
+    async function requestScreenWakeLock() {
+      if ('wakeLock' in navigator) {
+        try {
+          wakeLockSentinel = await navigator.wakeLock.request('screen');
+          console.log('[WakeLock] Screen wake lock acquired for live call.');
+          wakeLockSentinel.addEventListener('release', () => {
+            console.log('[WakeLock] Screen wake lock released.');
+            wakeLockSentinel = null;
+          });
+        } catch (err) {
+          console.warn('[WakeLock] Request failed:', err);
+        }
+      }
+    }
+
+    function releaseScreenWakeLock() {
+      if (wakeLockSentinel) {
+        try { wakeLockSentinel.release(); } catch(e) {}
+        wakeLockSentinel = null;
+      }
+    }
+
+    // Auto reconnect on Page Visibility Change (switching back to Sanctuary tab)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        console.log('[P2P] App returned to foreground, checking connection...');
+        if (!peer || peer.disconnected || peer.destroyed) {
+          initPeerConnection();
+        } else if (!dataConn || !dataConn.open) {
+          attemptConnectPartner();
+        }
+      }
+    });
+
+    // Auto reconnect on network status recovery
+    window.addEventListener('online', () => {
+      console.log('[Network] Internet recovered, re-establishing P2P link...');
+      showTelepathyBanner('🌐 Network restored — syncing P2P...');
+      initPeerConnection();
+    });
+
+    window.addEventListener('offline', () => {
+      console.warn('[Network] Internet disconnected.');
+      updatePeerUI('red', 'Offline • No Internet connection', false);
+    });
     let ROOM_BASE = (urlParams.get('room') || localStorage.getItem('sanctuary_room_base') || 'ali-ayesha-2026').toLowerCase().replace(/[^a-z0-9_-]/g, '');
     let myRole = urlParams.get('role') || localStorage.getItem('sanctuary_role') || 'husband';
 
@@ -702,6 +892,7 @@
 
       peer.on('connection', (conn) => {
         console.log('[P2P] Incoming connection from:', conn.peer);
+        isConnectingPartner = false; // reset flag so future outbound attempts are not blocked
         setupDataChannel(conn);
       });
 
@@ -716,6 +907,16 @@
 
         // Play subtle ring tone via AudioContext
         playBeepAlert(650, 0.2);
+        startRingtoneLoop();
+
+        // Acknowledge back that device is actively ringing
+        sendPayload({ type: 'call_ringing_ack' });
+
+        // Push / System Notification if app is in background or tab hidden
+        triggerSystemNotification(
+          `${myRole === 'husband' ? 'Ayesha' : 'Ali'} is calling you! ❤️`,
+          isVideo ? 'Direct video call incoming...' : 'Direct voice call incoming...'
+        );
 
         if (sanctuaryActive) {
           document.getElementById('incoming-call-modal').classList.remove('hidden');
@@ -802,14 +1003,39 @@
         }
 
         if (d.type === 'chat') {
-          appendChatBubble(d.sender, d.text, false, d.time);
+          const msgId = d.id || 'msg_' + Date.now();
+          appendChatBubble(d.sender, d.text, false, d.time, msgId, 'delivered');
+          saveMessageToDb({ id: msgId, type: 'chat', sender: d.sender, text: d.text, time: d.time, isMe: false, status: 'delivered' });
           playBeepAlert(800, 0.08);
+          if (document.hidden || !sanctuaryActive) {
+            triggerSystemNotification(`Message from ${myRole === 'husband' ? 'Ayesha' : 'Ali'} ❤️`, d.text);
+          } else {
+            // Acknowledge seen if active in sanctuary chat
+            sendPayload({ type: 'msg_seen', msgId: msgId });
+          }
+        } else if (d.type === 'msg_seen') {
+          markMessageAsSeenInUi(d.msgId);
+          updateMessageSeenInDb(d.msgId);
         } else if (d.type === 'voice') {
-          appendVoiceBubble(d.sender, d.audioBase64, false, d.time);
+          const msgId = d.id || 'msg_' + Date.now();
+          appendVoiceBubble(d.sender, d.audioBase64, false, d.time, msgId, 'delivered');
+          saveMessageToDb({ id: msgId, type: 'voice', sender: d.sender, audioBase64: d.audioBase64, time: d.time, isMe: false, status: 'delivered' });
           playBeepAlert(800, 0.08);
+          if (document.hidden || !sanctuaryActive) {
+            triggerSystemNotification(`${myRole === 'husband' ? 'Ayesha' : 'Ali'} ❤️`, 'Sent a voice note 🎙️');
+          } else {
+            sendPayload({ type: 'msg_seen', msgId: msgId });
+          }
         } else if (d.type === 'media') {
-          appendMediaBubble(d.sender, d.mediaSrc, d.mediaType, false, d.time);
+          const msgId = d.id || 'msg_' + Date.now();
+          appendMediaBubble(d.sender, d.mediaSrc, d.mediaType, false, d.time, msgId, 'delivered');
+          saveMessageToDb({ id: msgId, type: 'media', sender: d.sender, mediaSrc: d.mediaSrc, mediaType: d.mediaType, time: d.time, isMe: false, status: 'delivered' });
           playBeepAlert(800, 0.08);
+          if (document.hidden || !sanctuaryActive) {
+            triggerSystemNotification(`${myRole === 'husband' ? 'Ayesha' : 'Ali'} ❤️`, `Sent a ${d.mediaType} 📷`);
+          } else {
+            sendPayload({ type: 'msg_seen', msgId: msgId });
+          }
         } else if (d.type === 'youtube_sync') {
           playYtSong(d.videoId, false);
           showTelepathyBanner(`🎵 Synced with partner!`);
@@ -822,6 +1048,24 @@
           showTelepathyBanner(d.text);
           appendChatBubble(d.sender, `✨ ${d.text}`, false, d.time);
           playBeepAlert(950, 0.15);
+          if (document.hidden || !sanctuaryActive) {
+            triggerSystemNotification(`Telepathy Pulse 💓`, d.text);
+          }
+        } else if (d.type === 'call_ringing_ack') {
+          // Partner device received call and is ringing
+          const statusRole = document.getElementById('active-call-role');
+          if (statusRole && statusRole.textContent.startsWith('Calling')) {
+            statusRole.textContent = `Ringing ${myRole === 'husband' ? 'Ayesha' : 'Ali'}... 🔔`;
+            setCallBtnState(currentCallType, true, 'Ringing...');
+          }
+        } else if (d.type === 'call_declined') {
+          showTelepathyBanner(`${myRole === 'husband' ? 'Ayesha' : 'Ali'} declined the call`);
+          logCallEventToChat(currentCallType, 'Declined Call');
+          endLiveCall(false);
+        } else if (d.type === 'love_letter') {
+          addLoveLetterToMemory(d.sender, d.letter, d.time, false);
+          showTelepathyBanner(`💌 New Love Letter from ${myRole === 'husband' ? 'Ayesha' : 'Ali'}`);
+          playBeepAlert(1000, 0.2);
         }
       });
 
@@ -854,11 +1098,12 @@
 
       if (dataConn && dataConn.open) {
         dataConn.send(payload);
-      } else if (peer && !peer.disconnected) {
+      } else if (peer && !peer.disconnected && !peer.destroyed) {
         const c = peer.connect(partnerId, { reliable: true });
+        // Fully set up the channel first, then send once open
+        setupDataChannel(c);
         c.on('open', () => {
-          setupDataChannel(c);
-          c.send(payload);
+          try { c.send(payload); } catch (e) {}
         });
       }
     }
@@ -891,8 +1136,12 @@
         }
 
         activeMediaCall = peer.call(partnerId, localStream, { metadata: { type: type } });
+        if (!activeMediaCall) {
+          throw new Error('peer.call() returned null — partner may be offline or peer is disconnected.');
+        }
         setCallBtnState(type, true, 'Calling...');
         startCallTimer();
+        requestScreenWakeLock();
 
         activeMediaCall.on('stream', (remoteStream) => {
           attachRemoteStream(remoteStream, type);
@@ -906,8 +1155,14 @@
 
       } catch (e) {
         console.error('Call exception:', e);
-        alert('Microphone/Camera permission required. Please allow access.');
         endLiveCall();
+        if (e.message && e.message.includes('null')) {
+          alert('Partner is not connected yet. Wait for the green dot, then try calling again.');
+        } else if (!peer || peer.disconnected || peer.destroyed) {
+          alert('Connection lost. Tap "Reconnect Now" in P2P Info, then try again.');
+        } else {
+          alert('Microphone/Camera permission required. Please allow access and try again.');
+        }
       }
     }
 
@@ -933,6 +1188,8 @@
         }
 
         activeMediaCall.answer(localStream);
+        stopRingtoneLoop();
+        requestScreenWakeLock();
         setCallBtnState(currentCallType, true, 'Connected (End)');
         startCallTimer();
 
@@ -945,8 +1202,20 @@
 
       } catch (e) {
         console.error('Answer call error:', e);
+        stopRingtoneLoop();
         alert('Microphone/Camera permission required to answer.');
         endLiveCall();
+      }
+    }
+
+    function declineLiveCall() {
+      stopRingtoneLoop();
+      document.getElementById('incoming-call-modal').classList.add('hidden');
+      sendPayload({ type: 'call_declined' });
+      logCallEventToChat(currentCallType, 'Declined Call');
+      if (activeMediaCall) {
+        try { activeMediaCall.close(); } catch (e) {}
+        activeMediaCall = null;
       }
     }
 
@@ -964,10 +1233,17 @@
       setCallBtnState(type, true, 'Connected (End)');
     }
 
-    function endLiveCall() {
+    function endLiveCall(notifyPartner = true) {
+      stopRingtoneLoop();
       document.getElementById('incoming-call-modal').classList.add('hidden');
       document.getElementById('video-call-overlay').classList.add('hidden');
       document.getElementById('active-call-banner').classList.add('hidden');
+
+      if (callSeconds > 0) {
+        const mins = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+        const secs = String(callSeconds % 60).padStart(2, '0');
+        logCallEventToChat(currentCallType, `Call Duration: ${mins}:${secs}`);
+      }
 
       if (callTimerInterval) {
         clearInterval(callTimerInterval);
@@ -986,6 +1262,35 @@
 
       setCallBtnState('audio', false, 'Voice Call');
       setCallBtnState('video', false, 'Video Call');
+      releaseScreenWakeLock();
+    }
+
+    let ringtoneTimer = null;
+    function startRingtoneLoop() {
+      stopRingtoneLoop();
+      let count = 0;
+      ringtoneTimer = setInterval(() => {
+        playBeepAlert(520, 0.3);
+        setTimeout(() => playBeepAlert(680, 0.4), 320);
+        count++;
+        if (count >= 15) stopRingtoneLoop(); // Max 30 seconds ring
+      }, 2000);
+    }
+
+    function stopRingtoneLoop() {
+      if (ringtoneTimer) {
+        clearInterval(ringtoneTimer);
+        ringtoneTimer = null;
+      }
+    }
+
+    function logCallEventToChat(type, statusText) {
+      const msgId = 'call_' + Date.now();
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const icon = type === 'video' ? '📹 Video' : '📞 Voice';
+      const text = `${icon} ${statusText}`;
+      appendChatBubble('system', text, true, timeStr, msgId, 'delivered');
+      saveMessageToDb({ id: msgId, type: 'chat', sender: 'system', text: text, time: timeStr, isMe: true, status: 'delivered' });
     }
 
     function setCallBtnState(type, active, label) {
@@ -1095,8 +1400,11 @@
           const reader = new FileReader();
           reader.onloadend = () => {
             const base64 = reader.result;
-            appendVoiceBubble(myRole, base64, true);
-            sendPayload({ type: 'voice', sender: myRole, audioBase64: base64 });
+            const msgId = 'msg_' + Date.now();
+            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            appendVoiceBubble(myRole, base64, true, timeStr, msgId, 'sent');
+            saveMessageToDb({ id: msgId, type: 'voice', sender: myRole, audioBase64: base64, time: timeStr, isMe: true, status: 'sent' });
+            sendPayload({ type: 'voice', sender: myRole, audioBase64: base64, id: msgId });
           };
           reader.readAsDataURL(new Blob(audioChunks, { type: mediaRecorder.mimeType }));
         };
@@ -1111,6 +1419,113 @@
     }
 
     // -------------------------------------------------------------
+    // CHUNK 3: INDEXEDDB PERSISTENT STORE & MESSAGE CACHE
+    // -------------------------------------------------------------
+    let chatDb = null;
+
+    function initIndexedDb() {
+      const request = indexedDB.open('sanctuary_db', 1);
+
+      request.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains('messages')) {
+          const store = db.createObjectStore('messages', { keyPath: 'id' });
+          store.createIndex('timestamp', 'timestamp', { unique: false });
+        }
+      };
+
+      request.onsuccess = (e) => {
+        chatDb = e.target.result;
+        console.log('[DB] IndexedDB initialized.');
+        loadChatHistoryFromDb();
+      };
+
+      request.onerror = (e) => {
+        console.warn('[DB] IndexedDB open error:', e);
+      };
+    }
+
+    function saveMessageToDb(msg) {
+      if (!chatDb) return;
+      try {
+        const tx = chatDb.transaction(['messages'], 'readwrite');
+        const store = tx.objectStore('messages');
+        msg.timestamp = msg.timestamp || Date.now();
+        store.put(msg);
+      } catch (err) {
+        console.warn('[DB] Error saving message:', err);
+      }
+    }
+
+    function updateMessageSeenInDb(msgId) {
+      if (!chatDb || !msgId) return;
+      try {
+        const tx = chatDb.transaction(['messages'], 'readwrite');
+        const store = tx.objectStore('messages');
+        const req = store.get(msgId);
+        req.onsuccess = () => {
+          if (req.result) {
+            const data = req.result;
+            data.status = 'seen';
+            store.put(data);
+          }
+        };
+      } catch (err) {}
+    }
+
+    function loadChatHistoryFromDb() {
+      if (!chatDb) return;
+      try {
+        const tx = chatDb.transaction(['messages'], 'readonly');
+        const store = tx.objectStore('messages');
+        const req = store.getAll();
+
+        req.onsuccess = () => {
+          const messages = req.result || [];
+          // Sort chronologically
+          messages.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+          messages.forEach((m) => {
+            if (m.type === 'chat') {
+              appendChatBubble(m.sender, m.text, m.isMe, m.time, m.id, m.status);
+            } else if (m.type === 'voice') {
+              appendVoiceBubble(m.sender, m.audioBase64, m.isMe, m.time, m.id, m.status);
+            } else if (m.type === 'media') {
+              appendMediaBubble(m.sender, m.mediaSrc, m.mediaType, m.isMe, m.time, m.id, m.status);
+            }
+          });
+        };
+      } catch (err) {
+        console.warn('[DB] Load history error:', err);
+      }
+    }
+
+    function markMessageAsSeenInUi(msgId) {
+      const statusEl = document.getElementById(`status-${msgId}`);
+      if (statusEl) {
+        statusEl.innerHTML = '<span class="text-sky-400 font-bold">✓✓</span>';
+      }
+    }
+
+    let isChatFullscreen = false;
+    function toggleFullscreenChat() {
+      const drawer = document.getElementById('sanctuary-drawer');
+      const expandIcon = document.getElementById('chat-expand-icon');
+      isChatFullscreen = !isChatFullscreen;
+
+      if (isChatFullscreen) {
+        drawer.classList.remove('max-h-[82dvh]', 'rounded-t-3xl', 'bottom-14');
+        drawer.classList.add('h-full', 'inset-0', 'rounded-none', 'z-50', 'bottom-0');
+        if (expandIcon) expandIcon.setAttribute('data-lucide', 'minimize-2');
+      } else {
+        drawer.classList.remove('h-full', 'inset-0', 'rounded-none', 'z-50', 'bottom-0');
+        drawer.classList.add('max-h-[82dvh]', 'rounded-t-3xl', 'bottom-14');
+        if (expandIcon) expandIcon.setAttribute('data-lucide', 'maximize-2');
+      }
+      lucide.createIcons();
+    }
+
+    // -------------------------------------------------------------
     // CHAT & MEDIA TRANSMISSION
     // -------------------------------------------------------------
     function sendChatMessage() {
@@ -1118,8 +1533,12 @@
       const text = input.value.trim();
       if (!text) return;
       input.value = '';
-      appendChatBubble(myRole, text, true);
-      sendPayload({ type: 'chat', sender: myRole, text: text });
+      const msgId = 'msg_' + Date.now();
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      appendChatBubble(myRole, text, true, timeStr, msgId, 'sent');
+      saveMessageToDb({ id: msgId, type: 'chat', sender: myRole, text: text, time: timeStr, isMe: true, status: 'sent' });
+      sendPayload({ type: 'chat', sender: myRole, text: text, id: msgId });
     }
 
     function handleMediaUpload(input) {
@@ -1135,8 +1554,12 @@
       reader.onloadend = () => {
         const base64 = reader.result;
         const type = file.type.startsWith('video') ? 'video' : 'image';
-        appendMediaBubble(myRole, base64, type, true);
-        sendPayload({ type: 'media', sender: myRole, mediaSrc: base64, mediaType: type });
+        const msgId = 'msg_' + Date.now();
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        appendMediaBubble(myRole, base64, type, true, timeStr, msgId, 'sent');
+        saveMessageToDb({ id: msgId, type: 'media', sender: myRole, mediaSrc: base64, mediaType: type, time: timeStr, isMe: true, status: 'sent' });
+        sendPayload({ type: 'media', sender: myRole, mediaSrc: base64, mediaType: type, id: msgId });
         input.value = '';
       };
       reader.readAsDataURL(file);
@@ -1144,18 +1567,25 @@
 
     function sendTelepathy(text) {
       showTelepathyBanner(`Sent: ${text}`);
-      appendChatBubble(myRole, `✨ ${text}`, true);
+      const msgId = 'msg_' + Date.now();
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      appendChatBubble(myRole, `✨ ${text}`, true, timeStr, msgId, 'sent');
+      saveMessageToDb({ id: msgId, type: 'chat', sender: myRole, text: `✨ ${text}`, time: timeStr, isMe: true, status: 'sent' });
       sendPayload({ type: 'telepathy', sender: myRole, text: text });
     }
 
-    function appendChatBubble(sender, text, isMe, timeStr) {
+    function appendChatBubble(sender, text, isMe, timeStr, msgId = '', status = 'sent') {
       const box = document.getElementById('chat-messages');
       const time = timeStr || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const senderName = isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali');
 
+      const tickStatus = isMe 
+        ? `<span id="status-${msgId}" class="ml-1 text-[10px]">${status === 'seen' ? '<span class="text-sky-400 font-bold">✓✓</span>' : '<span class="text-slate-400 font-bold">✓</span>'}</span>`
+        : '';
+
       const html = `
         <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
-          <span class="text-[9px] text-rose-300/60 px-1 mb-0.5">${senderName} • ${time}</span>
+          <span class="text-[9px] text-rose-300/60 px-1 mb-0.5 flex items-center">${senderName} • ${time} ${tickStatus}</span>
           <div class="max-w-[82%] px-3.5 py-2.5 rounded-2xl text-xs leading-relaxed ${isMe ? 'bubble-sent text-white' : 'bubble-received text-rose-100'}">
             ${escapeHtml(text)}
           </div>
@@ -1165,14 +1595,18 @@
       box.scrollTop = box.scrollHeight;
     }
 
-    function appendVoiceBubble(sender, src, isMe, timeStr) {
+    function appendVoiceBubble(sender, src, isMe, timeStr, msgId = '', status = 'sent') {
       const box = document.getElementById('chat-messages');
       const time = timeStr || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const senderName = isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali');
 
+      const tickStatus = isMe 
+        ? `<span id="status-${msgId}" class="ml-1 text-[10px]">${status === 'seen' ? '<span class="text-sky-400 font-bold">✓✓</span>' : '<span class="text-slate-400 font-bold">✓</span>'}</span>`
+        : '';
+
       const html = `
         <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
-          <span class="text-[9px] text-rose-300/60 px-1 mb-0.5">${senderName} • Voice Note • ${time}</span>
+          <span class="text-[9px] text-rose-300/60 px-1 mb-0.5 flex items-center">${senderName} • Voice Note • ${time} ${tickStatus}</span>
           <div class="px-3 py-2 rounded-2xl ${isMe ? 'bubble-sent' : 'bubble-received'} flex items-center gap-2">
             <i data-lucide="mic" class="w-4 h-4 text-rose-200 shrink-0"></i>
             <audio controls src="${src}" class="h-8 w-44"></audio>
@@ -1184,10 +1618,14 @@
       box.scrollTop = box.scrollHeight;
     }
 
-    function appendMediaBubble(sender, src, type, isMe, timeStr) {
+    function appendMediaBubble(sender, src, type, isMe, timeStr, msgId = '', status = 'sent') {
       const box = document.getElementById('chat-messages');
       const time = timeStr || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const senderName = isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali');
+
+      const tickStatus = isMe 
+        ? `<span id="status-${msgId}" class="ml-1 text-[10px]">${status === 'seen' ? '<span class="text-sky-400 font-bold">✓✓</span>' : '<span class="text-slate-400 font-bold">✓</span>'}</span>`
+        : '';
 
       const content = type === 'video'
         ? `<video controls src="${src}" class="max-w-[210px] rounded-xl shadow-md"></video>`
@@ -1195,7 +1633,7 @@
 
       const html = `
         <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
-          <span class="text-[9px] text-rose-300/60 px-1 mb-0.5">${senderName} • ${type} • ${time}</span>
+          <span class="text-[9px] text-rose-300/60 px-1 mb-0.5 flex items-center">${senderName} • ${type} • ${time} ${tickStatus}</span>
           <div class="p-1 rounded-2xl ${isMe ? 'bubble-sent' : 'bubble-received'}">
             ${content}
           </div>
@@ -1338,17 +1776,127 @@
       lucide.createIcons();
     }
 
+    let currentPlayingVideoId = null;
+
     function playYtSong(videoId, syncToPartner = false) {
+      currentPlayingVideoId = videoId;
       document.getElementById('yt-player-container').innerHTML = `
         <iframe class="w-full h-full absolute inset-0" 
-          src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0" 
+          src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1" 
           frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen>
         </iframe>
       `;
+      // Dynamic TV Glow in 3D Bedroom
+      if (tvScreenMesh) {
+        tvScreenMesh.material.color.setHex(0x38bdf8);
+        tvScreenMesh.material.emissive.setHex(0x0284c7);
+        tvScreenMesh.material.emissiveIntensity = 0.9;
+      }
+      const controllerLabel = document.getElementById('theatre-controller-label');
+      if (controllerLabel) {
+        controllerLabel.textContent = syncToPartner ? `Controlled by You` : `Controlled by ${myRole === 'husband' ? 'Ayesha' : 'Ali'}`;
+      }
       if (syncToPartner) {
         sendPayload({ type: 'youtube_sync', videoId });
       }
     }
+
+    function syncCurrentTrackToPartner() {
+      if (!currentPlayingVideoId) {
+        alert('No track currently playing in the theatre.');
+        return;
+      }
+      playYtSong(currentPlayingVideoId, true);
+      showTelepathyBanner('📺 Both cinema screens re-synchronized!');
+    }
+
+    function clearCurrentTrack() {
+      currentPlayingVideoId = null;
+      document.getElementById('yt-player-container').innerHTML = `
+        <div class="text-center p-4 text-slate-400 text-xs">
+          <i data-lucide="film" class="w-8 h-8 mx-auto text-rose-400/60 mb-1"></i>
+          <span>Select or paste a track to start shared playback</span>
+        </div>
+      `;
+      if (tvScreenMesh) {
+        tvScreenMesh.material.color.setHex(0x090314);
+        tvScreenMesh.material.emissive.setHex(0xe11d48);
+        tvScreenMesh.material.emissiveIntensity = 0.35;
+      }
+      lucide.createIcons();
+    }
+
+    // -------------------------------------------------------------
+    // CHUNK 8: LOVE LETTERS VAULT & ANNIVERSARY COUNTDOWN
+    // -------------------------------------------------------------
+    let vaultLetters = JSON.parse(localStorage.getItem('sanctuary_vault_letters') || '[]');
+
+    function saveAndSendLoveLetter() {
+      const input = document.getElementById('love-letter-input');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+
+      const timeStr = new Date().toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      addLoveLetterToMemory(myRole, text, timeStr, true);
+      sendPayload({ type: 'love_letter', sender: myRole, letter: text, time: timeStr });
+      showTelepathyBanner('💌 Sealed in our eternal vault!');
+    }
+
+    function addLoveLetterToMemory(sender, letter, timeStr, isMe) {
+      const item = { id: 'letter_' + Date.now(), sender, letter, time: timeStr, isMe };
+      vaultLetters.unshift(item);
+      localStorage.setItem('sanctuary_vault_letters', JSON.stringify(vaultLetters));
+      renderVaultLetters();
+    }
+
+    function renderVaultLetters() {
+      const container = document.getElementById('vault-letters-list');
+      const countEl = document.getElementById('vault-letters-count');
+      if (countEl) countEl.textContent = `${vaultLetters.length} letters`;
+      if (!container) return;
+
+      if (vaultLetters.length === 0) {
+        container.innerHTML = '<div class="text-[11px] text-slate-500 text-center py-3">No letters in vault yet. Write the first note!</div>';
+        return;
+      }
+
+      container.innerHTML = vaultLetters.map((l) => `
+        <div class="bg-black/50 border border-rose-500/25 rounded-xl p-3 space-y-1">
+          <div class="flex items-center justify-between text-[10px]">
+            <span class="font-bold ${l.isMe ? 'text-rose-300' : 'text-amber-300'}">${l.isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali')}</span>
+            <span class="text-slate-400 font-mono">${l.time}</span>
+          </div>
+          <p class="text-xs text-rose-100/90 leading-relaxed font-sans">${escapeHtml(l.letter)}</p>
+        </div>
+      `).join('');
+    }
+
+    // Anniversary live ticker (Count up from a special date or count down)
+    const ANNIVERSARY_DATE = new Date('2024-11-20T00:00:00'); // Example base date
+    function updateAnniversaryTicker() {
+      const now = new Date();
+      let diff = Math.abs(now - ANNIVERSARY_DATE);
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      diff -= days * (1000 * 60 * 60 * 24);
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      diff -= hours * (1000 * 60 * 60);
+      const mins = Math.floor(diff / (1000 * 60));
+      diff -= mins * (1000 * 60);
+      const secs = Math.floor(diff / 1000);
+
+      const dEl = document.getElementById('count-days');
+      const hEl = document.getElementById('count-hours');
+      const mEl = document.getElementById('count-mins');
+      const sEl = document.getElementById('count-secs');
+
+      if (dEl) dEl.textContent = String(days).padStart(2, '0');
+      if (hEl) hEl.textContent = String(hours).padStart(2, '0');
+      if (mEl) mEl.textContent = String(mins).padStart(2, '0');
+      if (sEl) sEl.textContent = String(secs).padStart(2, '0');
+    }
+    setInterval(updateAnniversaryTicker, 1000);
 
     // -------------------------------------------------------------
     // DECOY & COVER NAVIGATION (DAILY UTILITIES)
@@ -1519,7 +2067,8 @@
         music: { title: 'Synchronized YouTube Theatre', icon: 'youtube' },
         mood: { title: 'Telepathy Emotion Transmitters', icon: 'sparkles' },
         letters: { title: 'Our Private Anniversary Vault', icon: 'book-heart' },
-        room: { title: '3D Room Atmospheric Styling', icon: 'box' }
+        room: { title: '3D Room Atmospheric Styling', icon: 'box' },
+        settings: { title: 'Preferences & Native PWA', icon: 'settings' }
       };
 
       if (titles[panel]) {
@@ -1529,7 +2078,7 @@
         lucide.createIcons();
       }
 
-      ['chat', 'music', 'mood', 'letters', 'room'].forEach(p => {
+      ['chat', 'music', 'mood', 'letters', 'room', 'settings'].forEach(p => {
         const el = document.getElementById(`panel-${p}`);
         if (el) el.classList.toggle('hidden', p !== panel);
         const navBtn = document.getElementById(`snav-${p}`);
@@ -1537,6 +2086,7 @@
           navBtn.className = `flex flex-col items-center justify-center transition-colors ${p === panel ? 'text-rose-400' : 'text-slate-400'}`;
         }
       });
+      if (panel === 'settings') updateSettingsPanelUI();
     }
 
     function closeDrawer() {
@@ -1546,7 +2096,7 @@
     // -------------------------------------------------------------
     // 3D ISOMETRIC SANCTUARY ROOM (THREE.JS)
     // -------------------------------------------------------------
-    let scene, camera, renderer, controls, heartMesh, pointLight1, pointLight2, floatingParticles, threeInitialized = false;
+    let scene, camera, renderer, controls, heartMesh, pointLight1, pointLight2, floatingParticles, tvScreenMesh, threeInitialized = false;
 
     function initThreeRoom() {
       if (threeInitialized) return;
@@ -1588,6 +2138,7 @@
       const roomGroup = new THREE.Group();
       scene.add(roomGroup);
 
+      // Floor & Carpet Rug
       const floorMat = new THREE.MeshStandardMaterial({ color: 0x160c29, roughness: 0.6, metalness: 0.2 });
       const floor = new THREE.Mesh(new THREE.BoxGeometry(6.4, 0.3, 6.4), floorMat);
       floor.position.y = -0.15;
@@ -1598,6 +2149,7 @@
       rug.position.y = 0.03;
       roomGroup.add(rug);
 
+      // Walls
       const wallMat = new THREE.MeshStandardMaterial({ color: 0x22123f, roughness: 0.5 });
       const backWall = new THREE.Mesh(new THREE.BoxGeometry(6.4, 4.2, 0.25), wallMat);
       backWall.position.set(0, 2.1, -3.1);
@@ -1607,7 +2159,100 @@
       leftWall.position.set(-3.1, 2.1, 0);
       roomGroup.add(leftWall);
 
-      const heartGeom = new THREE.OctahedronGeometry(0.65, 2);
+      // ==========================================
+      // BEDROOM DECORATION: LUXURY BED & PILLOWS
+      // ==========================================
+      const bedGroup = new THREE.Group();
+      // Bed Base / Frame
+      const bedFrameMat = new THREE.MeshStandardMaterial({ color: 0x1a102a, roughness: 0.7 });
+      const bedBase = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.35, 3.0), bedFrameMat);
+      bedBase.position.set(-1.4, 0.18, -1.3);
+      bedGroup.add(bedBase);
+
+      // Headboard
+      const headboard = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1.4, 0.15), bedFrameMat);
+      headboard.position.set(-1.4, 0.85, -2.85);
+      bedGroup.add(headboard);
+
+      // Cozy Mattress & Duvet
+      const duvetMat = new THREE.MeshStandardMaterial({ color: 0x831843, roughness: 0.5 });
+      const duvet = new THREE.Mesh(new THREE.BoxGeometry(2.25, 0.3, 2.7), duvetMat);
+      duvet.position.set(-1.4, 0.45, -1.35);
+      bedGroup.add(duvet);
+
+      // Pillows
+      const pillowMat = new THREE.MeshStandardMaterial({ color: 0xfdf2f8, roughness: 0.8 });
+      const pillow1 = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.15, 0.5), pillowMat);
+      pillow1.position.set(-1.9, 0.65, -2.4);
+      pillow1.rotation.x = 0.2;
+      bedGroup.add(pillow1);
+
+      const pillow2 = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.15, 0.5), pillowMat);
+      pillow2.position.set(-0.9, 0.65, -2.4);
+      pillow2.rotation.x = 0.2;
+      bedGroup.add(pillow2);
+
+      // Nightstand Table & Lamp
+      const nightstandMat = new THREE.MeshStandardMaterial({ color: 0x2e1065, roughness: 0.6 });
+      const nightstand = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.55, 0.65), nightstandMat);
+      nightstand.position.set(-2.65, 0.28, -2.4);
+      bedGroup.add(nightstand);
+
+      const lampBase = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.15, 0.25, 16), new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.7 }));
+      lampBase.position.set(-2.65, 0.68, -2.4);
+      bedGroup.add(lampBase);
+
+      const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.3, 16, 1, true), new THREE.MeshStandardMaterial({ color: 0xffedd5, emissive: 0xfbbf24, emissiveIntensity: 0.6 }));
+      lampShade.position.set(-2.65, 0.9, -2.4);
+      bedGroup.add(lampShade);
+
+      const lampWarmLight = new THREE.PointLight(0xfbbf24, 0.9, 5);
+      lampWarmLight.position.set(-2.65, 0.95, -2.4);
+      bedGroup.add(lampWarmLight);
+
+      roomGroup.add(bedGroup);
+
+      // ==========================================
+      // BIG WALL-MOUNTED LCD THEATRE TV (INTERACTIVE)
+      // ==========================================
+      const tvGroup = new THREE.Group();
+      // TV Bezel / Frame
+      const tvFrameMat = new THREE.MeshStandardMaterial({ color: 0x050508, roughness: 0.3, metalness: 0.8 });
+      const tvFrame = new THREE.Mesh(new THREE.BoxGeometry(2.6, 1.5, 0.08), tvFrameMat);
+      tvFrame.position.set(1.4, 2.2, -2.95);
+      tvGroup.add(tvFrame);
+
+      // TV Display Screen
+      const tvScreenMat = new THREE.MeshStandardMaterial({
+        color: 0x090314,
+        emissive: 0xe11d48,
+        emissiveIntensity: 0.35,
+        roughness: 0.2
+      });
+      tvScreenMesh = new THREE.Mesh(new THREE.PlaneGeometry(2.46, 1.36), tvScreenMat);
+      tvScreenMesh.position.set(1.4, 2.2, -2.9);
+      tvGroup.add(tvScreenMesh);
+
+      // Floating Photo Frame on Left Wall
+      const frameGroup = new THREE.Group();
+      const frameBorder = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.1, 0.9), new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.8 }));
+      frameBorder.position.set(-2.95, 2.2, 0.6);
+      frameGroup.add(frameBorder);
+
+      const photoCanvas = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 1.0), new THREE.MeshStandardMaterial({
+        color: 0xbe123c,
+        emissive: 0x881337,
+        emissiveIntensity: 0.5
+      }));
+      photoCanvas.rotation.y = Math.PI / 2;
+      photoCanvas.position.set(-2.91, 2.2, 0.6);
+      frameGroup.add(photoCanvas);
+      roomGroup.add(frameGroup);
+
+      roomGroup.add(tvGroup);
+
+      // Romantic Floating Center Heart
+      const heartGeom = new THREE.OctahedronGeometry(0.55, 2);
       const heartMat = new THREE.MeshStandardMaterial({
         color: 0xfb7185,
         emissive: 0xe11d48,
@@ -1616,9 +2261,10 @@
         metalness: 0.5
       });
       heartMesh = new THREE.Mesh(heartGeom, heartMat);
-      heartMesh.position.set(0, 1.8, 0);
+      heartMesh.position.set(0.2, 1.6, 0.2);
       roomGroup.add(heartMesh);
 
+      // Ambient Stardust Particles
       const particleGeom = new THREE.BufferGeometry();
       const count = 70;
       const positions = new Float32Array(count * 3);
@@ -1632,6 +2278,28 @@
       floatingParticles = new THREE.Points(particleGeom, particleMat);
       roomGroup.add(floatingParticles);
 
+      // Interactive Raycaster for tapping TV Screen in 3D
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+
+      renderer.domElement.addEventListener('pointerdown', (e) => {
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+
+        const intersects = raycaster.intersectObjects([tvScreenMesh, heartMesh], false);
+        if (intersects.length > 0) {
+          const hit = intersects[0].object;
+          if (hit === tvScreenMesh) {
+            openDrawer('music');
+            showTelepathyBanner('📺 Opening Synced YouTube Theatre...');
+          } else if (hit === heartMesh) {
+            sendTelepathy('💓 Whispered love across our 3D room...');
+          }
+        }
+      });
+
       window.addEventListener('resize', onWindowResize);
 
       (function animate() {
@@ -1639,7 +2307,7 @@
         const t = performance.now() * 0.001;
         if (heartMesh) {
           heartMesh.rotation.y = t * 1.1;
-          heartMesh.position.y = 1.8 + Math.sin(t * 2.2) * 0.15;
+          heartMesh.position.y = 1.6 + Math.sin(t * 2.2) * 0.12;
         }
         if (floatingParticles) {
           floatingParticles.rotation.y = t * 0.05;
@@ -1670,9 +2338,156 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
+    // -------------------------------------------------------------
+    // CHUNK 1 & 2: PWA INSTALLATION, SERVICE WORKER & NOTIFICATIONS
+    // -------------------------------------------------------------
+    let swRegistration = null;
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => {
+            console.log('[SW] Registered successfully:', reg.scope);
+            swRegistration = reg;
+          })
+          .catch((err) => {
+            console.warn('[SW] Registration failed:', err);
+          });
+      });
+    }
+
+    function triggerSystemNotification(title, body) {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+      
+      const options = {
+        body: body,
+        icon: 'https://cdn-icons-png.flaticon.com/512/3209/3209265.png',
+        badge: 'https://cdn-icons-png.flaticon.com/512/3209/3209265.png',
+        tag: 'sanctuary-alert',
+        renotify: true,
+        vibrate: [200, 100, 200]
+      };
+
+      if (swRegistration && swRegistration.showNotification) {
+        swRegistration.showNotification(title, options).catch(() => {
+          new Notification(title, options);
+        });
+      } else {
+        new Notification(title, options);
+      }
+    }
+
+    let deferredPrompt = null;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const installBtn = document.getElementById('pwa-install-btn');
+      if (installBtn) {
+        installBtn.classList.remove('hidden');
+      }
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredPrompt = null;
+      updateSettingsPanelUI();
+      showTelepathyBanner('✨ App successfully installed to Home Screen!');
+    });
+
+    function triggerPwaInstall() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the PWA install prompt');
+          }
+          deferredPrompt = null;
+        });
+      } else {
+        // iOS or already installed or desktop browser
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) {
+          const iosGuide = document.getElementById('ios-install-guide');
+          if (iosGuide) iosGuide.classList.remove('hidden');
+        } else if (isStandalone) {
+          alert('Sanctuary is already running as a native app on your device!');
+        } else {
+          alert('To install: open browser menu (⋮ or Share) and select "Add to Home Screen" or "Install App".');
+        }
+      }
+    }
+
+    function updateSettingsPanelUI() {
+      const badge = document.getElementById('pwa-status-badge');
+      const installBtn = document.getElementById('pwa-install-btn');
+      const iosGuide = document.getElementById('ios-install-guide');
+      const roomLabel = document.getElementById('settings-room-label');
+      const notifStatus = document.getElementById('notif-permission-status');
+
+      if (roomLabel) roomLabel.textContent = ROOM_BASE;
+
+      if (isStandalone) {
+        if (badge) {
+          badge.textContent = 'Native Standalone';
+          badge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30';
+        }
+        if (installBtn) {
+          installBtn.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i><span>App Already Installed</span>';
+          installBtn.classList.add('opacity-70', 'pointer-events-none');
+        }
+      } else {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS && iosGuide) {
+          iosGuide.classList.remove('hidden');
+        }
+      }
+
+      if ('Notification' in window && notifStatus) {
+        if (Notification.permission === 'granted') {
+          notifStatus.textContent = 'Status: Active ✅';
+          notifStatus.className = 'text-[11px] text-emerald-400 font-mono';
+        } else if (Notification.permission === 'denied') {
+          notifStatus.textContent = 'Status: Blocked ❌';
+          notifStatus.className = 'text-[11px] text-rose-400 font-mono';
+        } else {
+          notifStatus.textContent = 'Status: Default';
+          notifStatus.className = 'text-[11px] text-slate-300 font-mono';
+        }
+      }
+      lucide.createIcons();
+    }
+
+    function requestNotificationPermission() {
+      if (!('Notification' in window)) {
+        alert('This device/browser does not support desktop/push notifications.');
+        return;
+      }
+      Notification.requestPermission().then((permission) => {
+        updateSettingsPanelUI();
+        if (permission === 'granted') {
+          showTelepathyBanner('🔔 Notifications enabled! You will get alerts.');
+          try {
+            new Notification('Sanctuary Connected ❤️', {
+              body: 'Private alerts enabled for Ali & Ayesha.',
+              icon: 'https://cdn-icons-png.flaticon.com/512/3209/3209265.png'
+            });
+          } catch(e) {}
+        } else {
+          alert('Notifications blocked. You can re-enable them in browser site settings.');
+        }
+      });
+    }
+
     renderGroceries();
     renderYtPlaylist();
-    switchRole(myRole);
+    renderVaultLetters();
+    updateAnniversaryTicker();
+    initIndexedDb();
+    // Update role UI only — do NOT call initPeerConnection on decoy screen load.
+    // P2P connection is started lazily when the user unlocks the sanctuary.
+    document.getElementById('role-husband').className = `px-2.5 py-1 rounded-lg ${myRole === 'husband' ? 'bg-rose-600 text-white shadow-sm' : 'text-rose-200/70 hover:text-white'}`;
+    document.getElementById('role-wife').className = `px-2.5 py-1 rounded-lg ${myRole === 'wife' ? 'bg-rose-600 text-white shadow-sm' : 'text-rose-200/70 hover:text-white'}`;
   </script>
 </body>
 </html>
