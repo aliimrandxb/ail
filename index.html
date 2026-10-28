@@ -508,10 +508,16 @@
             <i data-lucide="tv" class="w-4 h-4 text-rose-500"></i>
             <span>Private Big-Screen Cinema</span>
           </div>
-          <span id="theatre-sync-badge" class="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            P2P Synced
-          </span>
+          <div class="flex items-center gap-2">
+            <button onclick="toggleDocumentPiP()" title="Pop Out System Floating PiP Window (Always on Top)" class="px-2 py-0.5 rounded-lg bg-rose-950/70 border border-rose-500/40 text-[10px] text-rose-300 hover:text-white flex items-center gap-1 active:scale-95 transition-all">
+              <i data-lucide="external-link" class="w-3 h-3"></i>
+              <span>Float PiP</span>
+            </button>
+            <span id="theatre-sync-badge" class="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              P2P Synced
+            </span>
+          </div>
         </div>
 
         <div class="flex gap-2">
@@ -791,6 +797,38 @@
         </div>
       </div>
 
+    </div>
+
+    <!-- In-App Floating PiP Cinema Mini-Player (Plays while chatting or viewing 3D room) -->
+    <div id="pip-mini-player" class="hidden absolute bottom-16 right-3 z-50 bg-[#0f081d]/95 border border-rose-500/40 rounded-2xl p-2.5 shadow-2xl backdrop-blur-md flex items-center gap-3 max-w-[310px] transition-all duration-300 animate-fade-in">
+      <div class="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-black/80 border border-rose-500/30">
+        <img id="pip-thumb" src="icon-192.png" class="w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+          <div class="flex items-end gap-0.5 h-3">
+            <span class="w-0.5 bg-rose-400 animate-pulse h-2"></span>
+            <span class="w-0.5 bg-rose-300 animate-pulse h-3"></span>
+            <span class="w-0.5 bg-rose-500 animate-pulse h-1.5"></span>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1 min-w-0 cursor-pointer" onclick="openDrawer('music')">
+        <div class="flex items-center gap-1">
+          <span class="text-[8px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono font-bold uppercase">Live Cinema</span>
+          <span class="text-[9px] text-slate-400 font-mono" id="pip-role-tag">Synced</span>
+        </div>
+        <p id="pip-title" class="text-[11px] font-semibold text-white truncate mt-0.5">Playing in Sanctuary...</p>
+      </div>
+      <div class="flex items-center gap-1">
+        <button onclick="toggleDocumentPiP()" title="Pop out floating window (always on top)" class="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-rose-200 active:scale-95 transition-all">
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        </button>
+        <button onclick="openDrawer('music')" title="Maximize Cinema" class="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-rose-200 active:scale-95 transition-all">
+          <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+        </button>
+        <button onclick="clearCurrentTrack()" title="Stop Playback" class="p-1.5 rounded-lg bg-rose-950/80 hover:bg-rose-900 border border-rose-500/30 text-rose-300 active:scale-95 transition-all">
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
     </div>
 
     <!-- Sanctuary Bottom Dock -->
@@ -2126,7 +2164,7 @@
     function playYtSong(videoId, syncToPartner = false) {
       currentPlayingVideoId = videoId;
       document.getElementById('yt-player-container').innerHTML = `
-        <iframe class="w-full h-full absolute inset-0" 
+        <iframe id="yt-active-iframe" class="w-full h-full absolute inset-0" 
           src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1" 
           frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen>
         </iframe>
@@ -2135,12 +2173,126 @@
       // Render Live Video Thumbnail onto 3D Bedroom TV Mesh
       renderYtOn3DTV(videoId);
 
+      // Update In-App Floating PiP Thumbnail
+      const pipThumb = document.getElementById('pip-thumb');
+      if (pipThumb) pipThumb.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+      const pipRole = document.getElementById('pip-role-tag');
+      if (pipRole) pipRole.textContent = syncToPartner ? 'By You' : (myRole === 'husband' ? 'By Ayesha' : 'By Ali');
+      
+      // Keep MediaSession active for lockscreen & notification shade playback controls
+      setupMediaSessionForTrack(videoId);
+
+      // Update PiP visibility
+      updateFloatingPiPState(currentActiveDrawerPanel);
+
       const controllerLabel = document.getElementById('theatre-controller-label');
       if (controllerLabel) {
         controllerLabel.textContent = syncToPartner ? `Controlled by You` : `Controlled by ${myRole === 'husband' ? 'Ayesha' : 'Ali'}`;
       }
       if (syncToPartner) {
         sendPayload({ type: 'youtube_sync', videoId });
+      }
+    }
+
+    function setupMediaSessionForTrack(videoId) {
+      if (!('mediaSession' in navigator)) return;
+      try {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: 'Sanctuary Shared Cinema',
+          artist: myRole === 'husband' ? 'Ali & Ayesha ❤️' : 'Ayesha & Ali ❤️',
+          album: 'Private Sanctuary',
+          artwork: [
+            { src: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`, sizes: '480x360', type: 'image/jpeg' },
+            { src: 'icon-512.png', sizes: '512x512', type: 'image/png' }
+          ]
+        });
+        navigator.mediaSession.setActionHandler('play', () => {
+          showTelepathyBanner('▶ Play signal sent');
+        });
+        navigator.mediaSession.setActionHandler('pause', () => {
+          showTelepathyBanner('⏸ Pause signal sent');
+        });
+        navigator.mediaSession.setActionHandler('stop', () => {
+          clearCurrentTrack();
+        });
+      } catch (e) {
+        console.warn('MediaSession error:', e);
+      }
+    }
+
+    // Modern Document Picture-in-Picture API (Chrome/Edge desktop & supported platforms)
+    let docPiPWindow = null;
+    async function toggleDocumentPiP() {
+      if (!('documentPictureInPicture' in window)) {
+        alert('Document Picture-in-Picture is supported in modern Chrome & Edge. It opens an always-on-top window over other apps.');
+        return;
+      }
+      if (docPiPWindow && !docPiPWindow.closed) {
+        docPiPWindow.close();
+        docPiPWindow = null;
+        return;
+      }
+
+      try {
+        docPiPWindow = await window.documentPictureInPicture.requestWindow({
+          width: 380,
+          height: 420
+        });
+
+        docPiPWindow.document.body.style.margin = '0';
+        docPiPWindow.document.body.style.background = '#090514';
+        docPiPWindow.document.body.style.color = '#fff';
+        docPiPWindow.document.body.style.fontFamily = 'system-ui, sans-serif';
+        docPiPWindow.document.body.style.display = 'flex';
+        docPiPWindow.document.body.style.flexDirection = 'column';
+        docPiPWindow.document.body.style.padding = '12px';
+        docPiPWindow.document.body.style.boxSizing = 'border-box';
+
+        docPiPWindow.document.body.innerHTML = `
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:#10b981;"></span>
+              <span style="font-size:12px;font-weight:bold;color:#f43f5e;">Sanctuary Always-On-Top</span>
+            </div>
+            <span style="font-size:10px;color:#94a3b8;font-family:monospace;">Ali & Ayesha</span>
+          </div>
+          <div style="flex:1;background:#000;border-radius:12px;overflow:hidden;position:relative;border:1px solid rgba(244,63,94,0.3);">
+            ${currentPlayingVideoId ? `
+              <iframe style="width:100%;height:100%;border:0;" 
+                src="https://www.youtube-nocookie.com/embed/${currentPlayingVideoId}?autoplay=1&modestbranding=1" 
+                allow="autoplay; encrypted-media" allowfullscreen>
+              </iframe>
+            ` : `
+              <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:11px;">
+                <span>📺 No video currently playing</span>
+                <span style="font-size:9px;color:#64748b;margin-top:4px;">Play a track in Cinema</span>
+              </div>
+            `}
+          </div>
+          <div style="display:flex;gap:6px;margin-top:8px;">
+            <button id="pip-whisper-btn" style="flex:1;padding:8px;border-radius:8px;background:rgba(244,63,94,0.2);border:1px solid rgba(244,63,94,0.4);color:#f43f5e;font-size:11px;font-weight:bold;cursor:pointer;">
+              💓 Send Whisper
+            </button>
+            <button id="pip-close-btn" style="padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.1);border:0;color:#cbd5e1;font-size:11px;cursor:pointer;">
+              Close
+            </button>
+          </div>
+        `;
+
+        docPiPWindow.document.getElementById('pip-whisper-btn').onclick = () => {
+          sendTelepathy('💓 Whispered from floating PiP window...');
+          showTelepathyBanner('💓 Whisper sent from floating PiP!');
+        };
+        docPiPWindow.document.getElementById('pip-close-btn').onclick = () => {
+          docPiPWindow.close();
+        };
+
+        docPiPWindow.addEventListener('pagehide', () => {
+          docPiPWindow = null;
+        });
+
+      } catch (err) {
+        console.warn('Document PiP request error:', err);
       }
     }
 
@@ -2207,9 +2359,20 @@
         </div>
       `;
       if (tvScreenMesh) {
+        tvScreenMesh.material.map = null;
+        tvScreenMesh.material.emissiveMap = null;
         tvScreenMesh.material.color.setHex(0x090314);
         tvScreenMesh.material.emissive.setHex(0xe11d48);
         tvScreenMesh.material.emissiveIntensity = 0.35;
+        tvScreenMesh.material.needsUpdate = true;
+      }
+      if (docPiPWindow && !docPiPWindow.closed) {
+        docPiPWindow.close();
+        docPiPWindow = null;
+      }
+      updateFloatingPiPState(null);
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = null;
       }
       lucide.createIcons();
     }
@@ -2759,15 +2922,28 @@
       switchDecoyTab('notes');
     }
 
+    let currentActiveDrawerPanel = null;
+
     function openDrawer(panel) {
-      document.getElementById('sanctuary-drawer').classList.add('open');
+      const drawer = document.getElementById('sanctuary-drawer');
+      const isAlreadyOpen = drawer.classList.contains('open');
+
+      // If user taps the same active tab, toggle it closed so they can interact with the 3D bedroom!
+      if (isAlreadyOpen && currentActiveDrawerPanel === panel) {
+        closeDrawer();
+        return;
+      }
+
+      currentActiveDrawerPanel = panel;
+      drawer.classList.add('open');
+
       const titles = {
-        chat: { title: 'Live P2P Encrypted Chat & Calls', icon: 'message-circle' },
-        music: { title: 'Synchronized YouTube Theatre', icon: 'youtube' },
-        mood: { title: 'Telepathy Emotion Transmitters', icon: 'sparkles' },
-        letters: { title: 'Our Private Anniversary Vault', icon: 'book-heart' },
+        chat: { title: 'Live P2P Encrypted Chat & Calls', icon: 'message-square' },
+        music: { title: 'Synchronized YouTube Theatre', icon: 'tv' },
+        mood: { title: 'Telepathy Emotion Transmitters', icon: 'flame' },
+        letters: { title: 'Our Private Anniversary Vault', icon: 'book-open' },
         room: { title: '3D Room Atmospheric Styling', icon: 'box' },
-        settings: { title: 'Preferences & Native PWA', icon: 'settings' }
+        settings: { title: 'Preferences & Native PWA', icon: 'sliders-horizontal' }
       };
 
       if (titles[panel]) {
@@ -2779,13 +2955,61 @@
 
       ['chat', 'music', 'mood', 'letters', 'room', 'settings'].forEach(p => {
         const el = document.getElementById(`panel-${p}`);
-        if (el) el.classList.toggle('hidden', p !== panel);
+        if (el) {
+          if (p === 'music') {
+            // CRITICAL FOR BACKGROUND AUDIO: Never set display:none on panel-music if video is playing!
+            // Instead, if not active, keep it invisibly mounted in DOM so audio stream never gets paused!
+            if (p === panel) {
+              el.classList.remove('hidden');
+              el.style.position = 'relative';
+              el.style.left = '0';
+              el.style.opacity = '1';
+              el.style.pointerEvents = 'auto';
+            } else if (currentPlayingVideoId) {
+              el.classList.remove('hidden');
+              el.style.position = 'absolute';
+              el.style.left = '-9999px';
+              el.style.opacity = '0';
+              el.style.pointerEvents = 'none';
+            } else {
+              el.classList.add('hidden');
+            }
+          } else {
+            el.classList.toggle('hidden', p !== panel);
+          }
+        }
         const navBtn = document.getElementById(`snav-${p}`);
         if (navBtn) {
-          navBtn.className = `flex flex-col items-center justify-center transition-colors ${p === panel ? 'text-rose-400' : 'text-slate-400'}`;
+          navBtn.className = `flex flex-col items-center justify-center transition-colors ${p === panel ? 'text-rose-400 font-bold' : 'text-slate-400'}`;
         }
       });
+
+      // Update In-App Floating PiP state
+      updateFloatingPiPState(panel);
+
       if (panel === 'settings') updateSettingsPanelUI();
+    }
+
+    function closeDrawer() {
+      const drawer = document.getElementById('sanctuary-drawer');
+      drawer.classList.remove('open');
+      currentActiveDrawerPanel = null;
+      ['chat', 'music', 'mood', 'letters', 'room', 'settings'].forEach(p => {
+        const navBtn = document.getElementById(`snav-${p}`);
+        if (navBtn) navBtn.className = 'flex flex-col items-center justify-center transition-colors text-slate-400';
+      });
+      // Show floating PiP mini-player when drawer is closed if a song is playing!
+      updateFloatingPiPState(null);
+    }
+
+    function updateFloatingPiPState(activePanel) {
+      const pip = document.getElementById('pip-mini-player');
+      if (!pip) return;
+      if (currentPlayingVideoId && activePanel !== 'music') {
+        pip.classList.remove('hidden');
+      } else {
+        pip.classList.add('hidden');
+      }
     }
 
     function closeDrawer() {
@@ -3068,8 +3292,8 @@
       
       const options = {
         body: body,
-        icon: 'https://cdn-icons-png.flaticon.com/512/3209/3209265.png',
-        badge: 'https://cdn-icons-png.flaticon.com/512/3209/3209265.png',
+        icon: 'icon-192.png',
+        badge: 'icon-192.png',
         tag: 'sanctuary-alert',
         renotify: true,
         vibrate: [200, 100, 200]
@@ -3177,7 +3401,7 @@
           try {
             new Notification('Sanctuary Connected ❤️', {
               body: 'Private alerts enabled for Ali & Ayesha.',
-              icon: 'https://cdn-icons-png.flaticon.com/512/3209/3209265.png'
+              icon: 'icon-192.png'
             });
           } catch(e) {}
         } else {
