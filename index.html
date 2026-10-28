@@ -128,13 +128,15 @@
     </div>
   </div>
 
-  <!-- FULLSCREEN TIKTOK-STYLE ROMANTIC BEDROOM EFFECT OVERLAY -->
+  <!-- FULLSCREEN ROMANTIC BEDROOM EFFECT OVERLAY -->
   <div id="romantic-fx-overlay" class="hidden pointer-events-none fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden">
-    <div id="romantic-fx-content" class="flex flex-col items-center justify-center text-center">
+    <div id="romantic-fx-bg" class="absolute inset-0 bg-gradient-to-b from-black/80 via-rose-950/60 to-black/90"></div>
+    <div id="romantic-fx-content" class="flex flex-col items-center justify-center text-center relative z-10">
       <div id="romantic-fx-icon" class="text-7xl sm:text-8xl drop-shadow-[0_0_35px_rgba(244,63,94,0.9)]">💋</div>
       <div id="romantic-fx-title" class="text-2xl sm:text-3xl font-extrabold text-white mt-3 tracking-wider drop-shadow-[0_2px_15px_rgba(0,0,0,0.9)]">Sensual Intimacy</div>
       <div id="romantic-fx-sub" class="text-xs sm:text-sm text-rose-200 mt-1 max-w-xs font-serif-quote italic drop-shadow-md">"Every breath belongs to you..."</div>
     </div>
+    <canvas id="romantic-fx-particles" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
   </div>
 
   <!-- ============================================================= -->
@@ -595,6 +597,42 @@
             <div class="text-2xl">🌹</div>
             <div class="text-xs font-bold text-white mt-1.5">Whispered Fantasies</div>
             <div class="text-[10px] text-rose-300 mt-0.5">I want you right now</div>
+          </button>
+
+          <button onclick="triggerRomanticEffect('massage')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
+            <div class="text-2xl">💆</div>
+            <div class="text-xs font-bold text-white mt-1.5">Slow Body Massage</div>
+            <div class="text-[10px] text-rose-300 mt-0.5">Warm oil, bare back, slow hands</div>
+          </button>
+
+          <button onclick="triggerRomanticEffect('blindfold')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
+            <div class="text-2xl">🙈</div>
+            <div class="text-xs font-bold text-white mt-1.5">Blindfolded Touch</div>
+            <div class="text-[10px] text-rose-300 mt-0.5">Close your eyes... feel me</div>
+          </button>
+
+          <button onclick="triggerRomanticEffect('undress')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
+            <div class="text-2xl">🔥</div>
+            <div class="text-xs font-bold text-white mt-1.5">Slow Undress</div>
+            <div class="text-[10px] text-rose-300 mt-0.5">One piece at a time...</div>
+          </button>
+
+          <button onclick="triggerRomanticEffect('neck')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
+            <div class="text-2xl">💜</div>
+            <div class="text-xs font-bold text-white mt-1.5">Neck Kisses</div>
+            <div class="text-[10px] text-rose-300 mt-0.5">Lips trailing down your neck</div>
+          </button>
+
+          <button onclick="triggerRomanticEffect('pin')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
+            <div class="text-2xl">🔒</div>
+            <div class="text-xs font-bold text-white mt-1.5">Pinned Down</div>
+            <div class="text-[10px] text-rose-300 mt-0.5">You're not going anywhere...</div>
+          </button>
+
+          <button onclick="triggerRomanticEffect('surrender')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
+            <div class="text-2xl">😈</div>
+            <div class="text-xs font-bold text-white mt-1.5">Full Surrender</div>
+            <div class="text-[10px] text-rose-300 mt-0.5">Take me... I'm all yours</div>
           </button>
 
           <button onclick="sendTelepathy('☕ Craving Karak Chai together right now!')" class="p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-rose-500/40 text-left active:scale-95 transition-all">
@@ -2599,11 +2637,77 @@
     // ROMANTIC FULLSCREEN ACTIVITIES & 3D WALLPAPER CONTROLLER
     // -------------------------------------------------------------
     const ROMANTIC_PRESETS = {
-      kiss: { icon: '💋', title: 'Passionate Kiss', sub: 'Lips locked, breathless and completely lost in you...' },
-      touch: { icon: '🔥', title: 'Intense Seduction', sub: 'Slow whispers in the dark, bare skin and racing pulses...' },
-      cuddle: { icon: '🛏️', title: 'Wrapped In Bed', sub: 'Bodies entangled under the warm duvet with you...' },
-      tease: { icon: '🌹', title: 'Whispered Desires', sub: 'I crave your touch and cannot wait another second...' }
+      kiss:      { icon: '💋', title: 'Passionate Kiss', sub: 'Lips locked, breathless and completely lost in you...',
+                   bgGrad: 'from-black/80 via-rose-950/60 to-black/90', particleColor: '#f43f5e' },
+      touch:     { icon: '🔥', title: 'Intense Seduction', sub: 'Slow whispers in the dark, bare skin and racing pulses...',
+                   bgGrad: 'from-black/80 via-amber-950/50 to-black/90', particleColor: '#f59e0b' },
+      cuddle:    { icon: '🛏️', title: 'Wrapped In Bed', sub: 'Bodies entangled under the warm duvet with you...',
+                   bgGrad: 'from-black/80 via-purple-950/50 to-black/90', particleColor: '#a855f7' },
+      tease:     { icon: '🌹', title: 'Whispered Desires', sub: 'I crave your touch and cannot wait another second...',
+                   bgGrad: 'from-black/80 via-red-950/50 to-black/90', particleColor: '#ef4444' },
+      massage:   { icon: '💆', title: 'Slow Body Massage', sub: 'Warm oil trailing down your bare back... every curve, every inch...',
+                   bgGrad: 'from-black/80 via-amber-900/50 to-black/90', particleColor: '#d97706' },
+      blindfold: { icon: '🙈', title: 'Blindfolded Touch', sub: 'You cannot see... only feel my fingers finding every secret spot...',
+                   bgGrad: 'from-black/90 via-violet-950/70 to-black/95', particleColor: '#7c3aed' },
+      undress:   { icon: '🔥', title: 'Slow Undress', sub: 'One piece at a time... watching you tremble with anticipation...',
+                   bgGrad: 'from-black/80 via-pink-950/50 to-black/90', particleColor: '#ec4899' },
+      neck:      { icon: '💜', title: 'Neck Kisses', sub: 'Lips trailing down your neck... warm breath on your collarbone...',
+                   bgGrad: 'from-black/80 via-fuchsia-950/50 to-black/90', particleColor: '#c026d3' },
+      pin:       { icon: '🔒', title: 'Pinned Down', sub: 'Wrists held above your head... nowhere to run, nowhere to hide...',
+                   bgGrad: 'from-black/90 via-slate-900/60 to-black/95', particleColor: '#94a3b8' },
+      surrender: { icon: '😈', title: 'Full Surrender', sub: 'No more teasing... take me completely... I am all yours tonight...',
+                   bgGrad: 'from-black/80 via-rose-900/70 to-black/90', particleColor: '#fb7185' }
     };
+
+    // 2D particle shower for fullscreen overlay
+    let romanticParticleRAF = null;
+    function spawnOverlayParticles(color, duration) {
+      const canvas = document.getElementById('romantic-fx-particles');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const particles = [];
+      const symbols = ['💋','❤️','🔥','✨','💜','🌹','💫','🫦','💗'];
+      for (let i = 0; i < 40; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          vy: 1 + Math.random() * 3,
+          vx: (Math.random() - 0.5) * 2,
+          size: 14 + Math.random() * 18,
+          sym: symbols[Math.floor(Math.random() * symbols.length)],
+          alpha: 0.5 + Math.random() * 0.5,
+          rot: Math.random() * Math.PI * 2,
+          spin: (Math.random() - 0.5) * 0.05
+        });
+      }
+      const start = performance.now();
+      if (romanticParticleRAF) cancelAnimationFrame(romanticParticleRAF);
+      function draw() {
+        const elapsed = performance.now() - start;
+        if (elapsed > duration) { ctx.clearRect(0, 0, canvas.width, canvas.height); return; }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const fade = elapsed > duration - 800 ? (duration - elapsed) / 800 : 1;
+        particles.forEach(p => {
+          p.y += p.vy;
+          p.x += p.vx;
+          p.rot += p.spin;
+          if (p.y > canvas.height + 30) { p.y = -30; p.x = Math.random() * canvas.width; }
+          ctx.save();
+          ctx.globalAlpha = p.alpha * fade;
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.font = `${p.size}px serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(p.sym, 0, 0);
+          ctx.restore();
+        });
+        romanticParticleRAF = requestAnimationFrame(draw);
+      }
+      draw();
+    }
 
     function triggerRomanticEffect(key) {
       playRomanticAnimation(key, true);
@@ -2617,16 +2721,23 @@
       const icon = document.getElementById('romantic-fx-icon');
       const title = document.getElementById('romantic-fx-title');
       const sub = document.getElementById('romantic-fx-sub');
+      const bg = document.getElementById('romantic-fx-bg');
 
       if (overlay && content) {
         icon.textContent = preset.icon;
         title.textContent = preset.title;
         sub.textContent = `"${preset.sub}" — ${isMe ? 'You' : (myRole === 'husband' ? 'A' : 'I')}`;
 
+        // Dynamic background gradient per preset
+        if (bg) bg.className = `absolute inset-0 bg-gradient-to-b ${preset.bgGrad}`;
+
         overlay.classList.remove('hidden');
         content.classList.remove('romantic-burst-anim');
         void content.offsetWidth;
         content.classList.add('romantic-burst-anim');
+
+        // Spawn falling emoji particles
+        spawnOverlayParticles(preset.particleColor, 3200);
 
         setTimeout(() => {
           overlay.classList.add('hidden');
@@ -2640,55 +2751,177 @@
     }
 
     function triggerIntimateBedEncounter(key) {
+      if (isIntimacyAnimating) return; // prevent stacking
       isIntimacyAnimating = true;
 
-      // 1. Double heartbeat vibration
-      if (navigator.vibrate) navigator.vibrate([100, 80, 150, 80]);
+      // Per-preset unique pose configurations
+      const POSE_MAP = {
+        kiss: {
+          dur: 8000, vib: [100, 80, 150, 80, 100],
+          I: { x: -0.12, z: 0.3, y: 0.35 }, A: { x: 0.12, z: -0.35, y: -0.35 },
+          light: 0xe11d48, glow: 5.0, candle: 2.8, p1: 0x831843, p2: 0xf59e0b
+        },
+        touch: {
+          dur: 9000, vib: [60, 40, 120, 60, 150, 80],
+          I: { x: -0.08, z: 0.15, y: 0.5 }, A: { x: 0.10, z: -0.2, y: -0.5 },
+          light: 0xf59e0b, glow: 4.5, candle: 2.5, p1: 0xb45309, p2: 0xf43f5e
+        },
+        cuddle: {
+          dur: 10000, vib: [80, 60, 100, 60],
+          I: { x: -0.1, z: 0.2, y: 0.2 }, A: { x: 0.08, z: -0.25, y: -0.15 },
+          light: 0xa855f7, glow: 3.5, candle: 2.2, p1: 0x6b21a8, p2: 0xd946ef
+        },
+        tease: {
+          dur: 7000, vib: [50, 30, 80, 40, 120],
+          I: { x: -0.2, z: 0.1, y: 0.15 }, A: { x: 0.22, z: -0.1, y: -0.15 },
+          light: 0xef4444, glow: 4.0, candle: 2.4, p1: 0x991b1b, p2: 0xfb923c
+        },
+        massage: {
+          dur: 12000, vib: [40, 80, 40, 80, 40, 80],
+          I: { x: -0.06, z: 0.4, y: 0.6 }, A: { x: 0.06, z: -0.1, y: -0.05 },
+          light: 0xd97706, glow: 3.0, candle: 3.0, p1: 0x92400e, p2: 0xfbbf24
+        },
+        blindfold: {
+          dur: 10000, vib: [30, 100, 30, 100, 30, 200],
+          I: { x: -0.14, z: 0.2, y: 0.45 }, A: { x: 0.14, z: -0.3, y: -0.4 },
+          light: 0x7c3aed, glow: 5.5, candle: 1.0, p1: 0x3b0764, p2: 0x6d28d9
+        },
+        undress: {
+          dur: 10000, vib: [100, 50, 100, 50, 150, 60, 200],
+          I: { x: -0.1, z: 0.18, y: 0.4 }, A: { x: 0.1, z: -0.2, y: -0.35 },
+          light: 0xec4899, glow: 4.8, candle: 2.6, p1: 0x831843, p2: 0xfb7185
+        },
+        neck: {
+          dur: 9000, vib: [60, 40, 80, 50, 100, 40],
+          I: { x: -0.08, z: 0.35, y: 0.55 }, A: { x: 0.05, z: -0.15, y: -0.2 },
+          light: 0xc026d3, glow: 4.2, candle: 2.3, p1: 0x701a75, p2: 0xe879f9
+        },
+        pin: {
+          dur: 10000, vib: [200, 100, 250, 100],
+          I: { x: -0.05, z: 0.45, y: 0.6 }, A: { x: 0.05, z: -0.05, y: -0.05 },
+          light: 0x94a3b8, glow: 5.0, candle: 1.5, p1: 0x1e293b, p2: 0x475569
+        },
+        surrender: {
+          dur: 12000, vib: [100, 60, 150, 60, 200, 80, 250],
+          I: { x: -0.06, z: 0.35, y: 0.5 }, A: { x: 0.06, z: -0.35, y: -0.45 },
+          light: 0xfb7185, glow: 6.0, candle: 3.2, p1: 0x9f1239, p2: 0xfda4af
+        }
+      };
+
+      const pose = POSE_MAP[key] || POSE_MAP.kiss;
+
+      // 1. Haptic heartbeat pattern
+      if (navigator.vibrate) navigator.vibrate(pose.vib);
       playBeepAlert(880, 0.25);
 
-      // 2. Dim room lights into deep candlelight & sensual crimson under-bed surge
+      // 2. Transform room lighting for this desire
       if (pointLight1 && pointLight2 && bedGlowLight) {
-        pointLight1.color.setHex(0x831843);
-        pointLight1.intensity = 0.8;
-        pointLight2.color.setHex(0xf59e0b);
-        pointLight2.intensity = 0.6;
+        pointLight1.color.setHex(pose.p1);
+        pointLight1.intensity = 0.6;
+        pointLight2.color.setHex(pose.p2);
+        pointLight2.intensity = 0.5;
+        bedGlowLight.intensity = pose.glow;
+        bedGlowLight.color.setHex(pose.light);
+        if (candleLight) candleLight.intensity = pose.candle;
 
-        bedGlowLight.intensity = 4.0;
-        bedGlowLight.color.setHex(0xe11d48);
-
-        if (candleLight) candleLight.intensity = 2.6;
-
+        // 3-stage animation: intense → hold → slow restore
+        const holdTime = pose.dur * 0.6;
+        const fadeTime = pose.dur * 0.4;
         setTimeout(() => {
-          pointLight1.color.setHex(0xf43f5e);
-          pointLight1.intensity = 2.2;
-          pointLight2.color.setHex(0xfbbf24);
-          pointLight2.intensity = 1.4;
-          if (bedGlowLight) bedGlowLight.intensity = 1.6;
-          if (candleLight) candleLight.intensity = 1.4;
-          isIntimacyAnimating = false;
-        }, 5000);
+          // Gradual restore
+          const steps = 20;
+          let step = 0;
+          const restoreInterval = setInterval(() => {
+            step++;
+            const t = step / steps;
+            if (pointLight1) { pointLight1.intensity = 0.6 + t * 1.6; }
+            if (pointLight2) { pointLight2.intensity = 0.5 + t * 0.9; }
+            if (bedGlowLight) { bedGlowLight.intensity = pose.glow - t * (pose.glow - 1.6); }
+            if (candleLight) { candleLight.intensity = pose.candle - t * (pose.candle - 1.4); }
+            if (step >= steps) {
+              clearInterval(restoreInterval);
+              pointLight1.color.setHex(0xf43f5e);
+              pointLight2.color.setHex(0xfbbf24);
+              isIntimacyAnimating = false;
+            }
+          }, fadeTime / steps);
+        }, holdTime);
       }
 
-      // 3. Characters lean in and embrace closely on the bed
+      // 3. Unique character pose per desire — smooth multi-stage animation
       if (charI && charA) {
-        charI.position.x = -0.15;
-        charI.rotation.z = 0.25;
-        charI.rotation.y = 0.3;
+        // Stage 1: Lean in (1.5s ease)
+        const leanDur = 1500;
+        const startI = { x: charI.position.x, rz: charI.rotation.z, ry: charI.rotation.y };
+        const startA = { x: charA.position.x, rz: charA.rotation.z, ry: charA.rotation.y };
+        const endI = pose.I, endA = pose.A;
 
-        charA.position.x = 0.15;
-        charA.rotation.z = -0.35;
-        charA.rotation.y = -0.3;
+        let leanStart = performance.now();
+        function animateLeanIn() {
+          const elapsed = performance.now() - leanStart;
+          const p = Math.min(elapsed / leanDur, 1);
+          const ease = 1 - Math.pow(1 - p, 3); // easeOutCubic
+          charI.position.x = startI.x + (endI.x - startI.x) * ease;
+          charI.rotation.z = startI.rz + (endI.z - startI.rz) * ease;
+          charI.rotation.y = startI.ry + (endI.y - startI.ry) * ease;
+          charA.position.x = startA.x + (endA.x - startA.x) * ease;
+          charA.rotation.z = startA.rz + (endA.z - startA.rz) * ease;
+          charA.rotation.y = startA.ry + (endA.y - startA.ry) * ease;
+          if (p < 1) requestAnimationFrame(animateLeanIn);
+        }
+        animateLeanIn();
 
+        // Stage 2: Intimate micro-sway while holding (breathing rhythm)
+        const swayStart = performance.now() + leanDur;
+        function animateSway() {
+          if (performance.now() < swayStart) { requestAnimationFrame(animateSway); return; }
+          const elapsed = performance.now() - swayStart;
+          if (elapsed > pose.dur - leanDur - 2000) return;
+          const breath = Math.sin(elapsed * 0.003) * 0.02;
+          charI.position.y = breath;
+          charA.position.y = -breath * 0.8;
+          charI.rotation.z = endI.z + Math.sin(elapsed * 0.002) * 0.03;
+          charA.rotation.z = endA.z - Math.sin(elapsed * 0.002) * 0.025;
+          requestAnimationFrame(animateSway);
+        }
+        animateSway();
+
+        // Stage 3: Slow release back to resting (2s ease)
         setTimeout(() => {
-          if (charI && charA) {
-            charI.position.x = -0.35;
-            charI.rotation.z = 0;
-            charI.rotation.y = 0;
-            charA.position.x = 0.35;
-            charA.rotation.z = 0;
-            charA.rotation.y = 0;
+          if (!charI || !charA) return;
+          const relStart = performance.now();
+          const relDur = 2000;
+          const curI = { x: charI.position.x, rz: charI.rotation.z, ry: charI.rotation.y };
+          const curA = { x: charA.position.x, rz: charA.rotation.z, ry: charA.rotation.y };
+          function animateRelease() {
+            const elapsed = performance.now() - relStart;
+            const p = Math.min(elapsed / relDur, 1);
+            const ease = p * p * (3 - 2 * p); // smoothstep
+            charI.position.x = curI.x + (-0.35 - curI.x) * ease;
+            charI.position.y = 0;
+            charI.rotation.z = curI.rz * (1 - ease);
+            charI.rotation.y = curI.ry * (1 - ease);
+            charA.position.x = curA.x + (0.35 - curA.x) * ease;
+            charA.position.y = 0;
+            charA.rotation.z = curA.rz * (1 - ease);
+            charA.rotation.y = curA.ry * (1 - ease);
+            if (p < 1) requestAnimationFrame(animateRelease);
           }
-        }, 5000);
+          animateRelease();
+        }, pose.dur - 2000);
+      }
+
+      // 4. Passion particles surge during encounter
+      if (passionParticles && passionParticles.material) {
+        const origColor = passionParticles.material.color.getHex();
+        passionParticles.material.color.setHex(parseInt(ROMANTIC_PRESETS[key]?.particleColor?.replace('#','') || 'f43f5e', 16));
+        passionParticles.material.size = 0.09;
+        passionParticles.material.opacity = 1.0;
+        setTimeout(() => {
+          passionParticles.material.color.setHex(origColor);
+          passionParticles.material.size = 0.05;
+          passionParticles.material.opacity = 0.75;
+        }, pose.dur);
       }
     }
 
@@ -3153,7 +3386,12 @@
       "Bare skin, whispered desires, and your arms around me... 🔥",
       "Let everything else fade away... it's just you and me now... ❤️",
       "My favorite place in the entire world is tangled in bed with you... ✨",
-      "Wrapped tightly in your warmth, never letting you go... 🌹"
+      "Wrapped tightly in your warmth, never letting you go... 🌹",
+      "Warm oil and slow hands tracing every curve... 💆",
+      "Close your eyes and trust my touch... 🙈",
+      "One slow breath at a time, nowhere to run tonight... 🔒",
+      "Soft kisses down your neck, making you shiver... 💜",
+      "Completely surrendered in your embrace tonight... 😈"
     ];
 
     function handleBedInteraction() {
@@ -3183,8 +3421,10 @@
       showTelepathyBanner(quote);
       sendPayload({ type: 'telepathy', sender: myRole, text: quote });
 
-      // 4. Trigger the full-screen TikTok-style romantic passion animation
-      playRomanticAnimation('cuddle', true);
+      // 4. Trigger intimate sensual animation and 3D bedroom encounter
+      const desireKeys = ['kiss', 'touch', 'cuddle', 'tease', 'massage', 'blindfold', 'undress', 'neck', 'pin', 'surrender'];
+      const chosenFx = desireKeys[Math.floor(Math.random() * desireKeys.length)];
+      playRomanticAnimation(chosenFx, true);
     }
 
     function initThreeRoom() {
@@ -3315,69 +3555,139 @@
 
       roomGroup.add(bedGroup);
       // ==========================================
-      // STYLIZED COUPLE AVATARS (A & I) ON THE BED
+      // REALISTIC COUPLE AVATARS (A & I) ON THE BED
       // ==========================================
       coupleGroup = new THREE.Group();
       coupleGroup.position.set(-1.4, 0.65, -1.55);
 
-      // --- Avatar "I" (Partner I) ---
-      charI = new THREE.Group();
-      charI.position.set(-0.35, 0, 0);
+      // Shared materials
+      const skinMat = new THREE.MeshStandardMaterial({ color: 0xdeb896, roughness: 0.45, metalness: 0.05 });
+      const skinMatWarm = new THREE.MeshStandardMaterial({ color: 0xe8c4a0, roughness: 0.4, metalness: 0.05 });
 
-      // Torso I
-      const torsoIMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.6 });
-      const torsoI = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.22, 0.55, 16), torsoIMat);
-      torsoI.position.y = 0.28;
-      charI.add(torsoI);
+      // --- Helper: Build a human body using LatheGeometry for organic curves ---
+      function buildHumanBody(opts) {
+        const g = new THREE.Group();
 
-      // Head I
-      const skinMat = new THREE.MeshStandardMaterial({ color: 0xfbd0b8, roughness: 0.4 });
-      const headI = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 16), skinMat);
-      headI.position.y = 0.65;
-      charI.add(headI);
+        // == HEAD ==
+        const head = new THREE.Mesh(new THREE.SphereGeometry(opts.headR, 24, 24), skinMatWarm);
+        head.position.y = opts.headY;
+        head.scale.set(1, 1.08, 0.95); // slight oval
+        g.add(head);
 
-      // Hair I
+        // == NECK ==
+        const neck = new THREE.Mesh(
+          new THREE.CylinderGeometry(opts.headR * 0.45, opts.headR * 0.5, 0.08, 16),
+          skinMat
+        );
+        neck.position.y = opts.headY - opts.headR - 0.02;
+        g.add(neck);
+
+        // == TORSO (LatheGeometry for organic shape) ==
+        const torsoProfile = new THREE.Path();
+        const sp = opts.shoulderW, wp = opts.waistW, hp = opts.hipW, th = opts.torsoH;
+        // Right side silhouette: shoulder → narrow waist → hip flare
+        torsoProfile.moveTo(0, 0);
+        torsoProfile.lineTo(sp, 0);
+        torsoProfile.quadraticCurveTo(sp * 1.05, th * 0.25, opts.chestW || sp * 0.95, th * 0.3);
+        torsoProfile.quadraticCurveTo(wp * 0.9, th * 0.5, wp, th * 0.55);
+        torsoProfile.quadraticCurveTo(hp * 0.85, th * 0.7, hp, th * 0.85);
+        torsoProfile.lineTo(hp * 0.7, th);
+        torsoProfile.lineTo(0, th);
+
+        const torsoShape = new THREE.Shape(torsoProfile.getPoints(20));
+        const torsoGeo = new THREE.ExtrudeGeometry(torsoShape, { depth: opts.bodyDepth || 0.18, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.02, bevelSegments: 4 });
+        torsoGeo.center();
+        const torso = new THREE.Mesh(torsoGeo, opts.clothMat);
+        torso.position.y = opts.torsoY;
+        torso.rotation.x = 0;
+        g.add(torso);
+
+        // == UPPER ARMS (skin visible) ==
+        const armGeo = new THREE.CylinderGeometry(0.045, 0.04, opts.armLen || 0.38, 12);
+        // Left arm
+        const armL = new THREE.Mesh(armGeo, skinMat);
+        armL.position.set(-sp - 0.04, opts.torsoY + 0.05, 0);
+        armL.rotation.z = opts.armAngleL || 0.35;
+        g.add(armL);
+        // Right arm
+        const armR = new THREE.Mesh(armGeo, skinMat);
+        armR.position.set(sp + 0.04, opts.torsoY + 0.05, 0);
+        armR.rotation.z = opts.armAngleR || -0.35;
+        g.add(armR);
+
+        // == HANDS (small spheres) ==
+        const handGeo = new THREE.SphereGeometry(0.035, 12, 12);
+        const handL = new THREE.Mesh(handGeo, skinMatWarm);
+        const alSin = Math.sin(opts.armAngleL || 0.35), alCos = Math.cos(opts.armAngleL || 0.35);
+        handL.position.set(-sp - 0.04 + alSin * (opts.armLen || 0.38) * 0.5, opts.torsoY + 0.05 - alCos * (opts.armLen || 0.38) * 0.5, 0);
+        g.add(handL);
+        const arSin = Math.sin(opts.armAngleR || -0.35), arCos = Math.cos(opts.armAngleR || -0.35);
+        const handR = new THREE.Mesh(handGeo, skinMatWarm);
+        handR.position.set(sp + 0.04 + arSin * (opts.armLen || 0.38) * 0.5, opts.torsoY + 0.05 - arCos * (opts.armLen || 0.38) * 0.5, 0);
+        g.add(handR);
+
+        // == LEGS (under duvet - just thigh hints) ==
+        const legGeo = new THREE.CylinderGeometry(0.065, 0.055, opts.legLen || 0.5, 14);
+        const legL = new THREE.Mesh(legGeo, opts.legMat || opts.clothMat);
+        legL.position.set(-0.08, opts.torsoY - th * 0.5 - 0.15, 0);
+        legL.rotation.z = 0.05;
+        g.add(legL);
+        const legR = new THREE.Mesh(legGeo, opts.legMat || opts.clothMat);
+        legR.position.set(0.08, opts.torsoY - th * 0.5 - 0.15, 0);
+        legR.rotation.z = -0.05;
+        g.add(legR);
+
+        // == HAIR ==
+        if (opts.hairParts) opts.hairParts.forEach(hp => g.add(hp));
+
+        return g;
+      }
+
+      // --- Avatar "I" (Partner I) - Athletic male build ---
+      const clothI = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.55 });
       const hairIMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.8 });
-      const hairI = new THREE.Mesh(new THREE.SphereGeometry(0.145, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.55), hairIMat);
-      hairI.position.y = 0.67;
-      charI.add(hairI);
+      // Short hair cap
+      const hairCapI = new THREE.Mesh(new THREE.SphereGeometry(0.145, 20, 20, 0, Math.PI * 2, 0, Math.PI * 0.5), hairIMat);
+      hairCapI.position.y = 0.7;
 
-      // Arms I (Resting / Ready to Embrace)
-      const armIMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.6 });
-      const armI = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.45, 12), armIMat);
-      armI.rotation.z = -Math.PI / 4;
-      armI.position.set(0.22, 0.28, 0.05);
-      charI.add(armI);
-
+      charI = buildHumanBody({
+        headR: 0.13, headY: 0.66,
+        shoulderW: 0.2, chestW: 0.19, waistW: 0.15, hipW: 0.14,
+        torsoH: 0.45, torsoY: 0.18, bodyDepth: 0.16,
+        armLen: 0.36, armAngleL: 0.4, armAngleR: -Math.PI / 4,
+        legLen: 0.45, legMat: clothI,
+        clothMat: clothI,
+        hairParts: [hairCapI]
+      });
+      charI.position.set(-0.35, 0, 0);
       coupleGroup.add(charI);
 
-      // --- Avatar "A" (Partner A) ---
-      charA = new THREE.Group();
+      // --- Avatar "A" (Partner A) - Feminine curvy build ---
+      const clothA = new THREE.MeshStandardMaterial({ color: 0xbe123c, roughness: 0.28, metalness: 0.1 }); // Silk nightwear
+      const hairAMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.45 });
+
+      // Long flowing hair
+      const hairCapA = new THREE.Mesh(new THREE.SphereGeometry(0.14, 20, 20, 0, Math.PI * 2, 0, Math.PI * 0.65), hairAMat);
+      hairCapA.position.y = 0.64;
+      // Hair flowing down back/shoulders
+      const hairFlowL = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.07, 0.32, 12), hairAMat);
+      hairFlowL.position.set(-0.08, 0.46, -0.05);
+      hairFlowL.rotation.z = 0.15;
+      const hairFlowR = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.065, 0.28, 12), hairAMat);
+      hairFlowR.position.set(0.07, 0.48, -0.04);
+      hairFlowR.rotation.z = -0.12;
+
+      charA = buildHumanBody({
+        headR: 0.12, headY: 0.60,
+        shoulderW: 0.15, chestW: 0.17, waistW: 0.11, hipW: 0.18,
+        torsoH: 0.42, torsoY: 0.15, bodyDepth: 0.16,
+        armLen: 0.32, armAngleL: 0.3, armAngleR: -0.5,
+        legLen: 0.45,
+        legMat: new THREE.MeshStandardMaterial({ color: 0xdeb896, roughness: 0.4 }), // bare legs
+        clothMat: clothA,
+        hairParts: [hairCapA, hairFlowL, hairFlowR]
+      });
       charA.position.set(0.35, 0, 0);
-
-      // Torso A (Velvet Rose Silk Nightwear)
-      const torsoAMat = new THREE.MeshStandardMaterial({ color: 0xbe123c, roughness: 0.3 });
-      const torsoA = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.2, 0.5, 16), torsoAMat);
-      torsoA.position.y = 0.25;
-      charA.add(torsoA);
-
-      // Head A
-      const headA = new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 16), skinMat);
-      headA.position.y = 0.60;
-      charA.add(headA);
-
-      // Flowing Dark Hair A
-      const hairAMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.5 });
-      const hairA = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.7), hairAMat);
-      hairA.position.y = 0.62;
-      charA.add(hairA);
-
-      // Hair strands flowing down
-      const hairStrand = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 0.35, 12), hairAMat);
-      hairStrand.position.set(-0.06, 0.45, -0.06);
-      hairStrand.rotation.z = 0.2;
-      charA.add(hairStrand);
-
       coupleGroup.add(charA);
       roomGroup.add(coupleGroup);
 
