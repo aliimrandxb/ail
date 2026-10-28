@@ -94,7 +94,7 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.4);
     }
 
-    /* Full-screen Romantic Screen Explosion Effect (TikTok style) */
+    /* Full-screen Romantic Screen Explosion Effect (Private Sanctuary) */
     @keyframes romanticBurst {
       0% { transform: scale(0.3) translateY(40px); opacity: 0; filter: blur(10px); }
       30% { transform: scale(1.15) translateY(-10px); opacity: 1; filter: blur(0px); }
@@ -359,10 +359,10 @@
       </div>
 
       <div class="flex items-center gap-1.5 shrink-0">
-        <!-- Identity Role Switcher (Ali / Ayesha) -->
+        <!-- Identity Role Switcher (I / A) -->
         <div class="flex bg-black/60 p-0.5 rounded-xl border border-rose-500/30 text-[11px] font-bold">
-          <button id="role-husband" onclick="switchRole('husband')" class="px-2.5 py-1 rounded-lg bg-rose-600 text-white transition-all shadow-sm">Ali</button>
-          <button id="role-wife" onclick="switchRole('wife')" class="px-2.5 py-1 rounded-lg text-rose-200/70 hover:text-white transition-all">Ayesha</button>
+          <button id="role-husband" onclick="switchRole('husband')" class="px-2.5 py-1 rounded-lg bg-rose-600 text-white transition-all shadow-sm">I</button>
+          <button id="role-wife" onclick="switchRole('wife')" class="px-2.5 py-1 rounded-lg text-rose-200/70 hover:text-white transition-all">A</button>
         </div>
 
         <!-- Panic / Stealth Hide Button -->
@@ -570,7 +570,7 @@
       <div id="panel-mood" class="hidden flex-1 overflow-y-auto p-4 space-y-3">
         <div class="text-xs text-rose-200 font-bold mb-1 flex items-center justify-between">
           <span>Private Bedroom Passions & Desires</span>
-          <span class="text-[9px] text-rose-400 font-mono">TikTok Style FX</span>
+          <span class="text-[9px] text-rose-400 font-mono">Private Bed Passions</span>
         </div>
         <div class="grid grid-cols-2 gap-2.5">
           <button onclick="triggerRomanticEffect('kiss')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
@@ -657,7 +657,7 @@
           </p>
           <div class="pt-2 border-t border-rose-500/20 flex justify-between items-center">
             <span class="text-xs font-serif-quote italic text-rose-200">"رسمِ وفا نبھانا تو غیرت کی بات ہے..."</span>
-            <span class="text-[11px] text-amber-300 font-mono">— Ali & Ayesha ❤️</span>
+            <span class="text-[11px] text-amber-300 font-mono">— A & I ❤️</span>
           </div>
         </div>
 
@@ -716,7 +716,7 @@
             <span class="text-[10px] text-amber-300 font-mono">Live in 3D</span>
           </div>
           <p class="text-[11px] text-slate-400">
-            Select a photo of Ali & Ayesha to place in the golden frame on our 3D bedroom wall:
+            Select a photo of A & I to place in the golden frame on our 3D bedroom wall:
           </p>
           <input type="file" id="portrait-photo-input" accept="image/*" class="hidden" onchange="handleWallpaperUpload(this)" />
           <div class="flex gap-2">
@@ -789,7 +789,7 @@
           </div>
           <div class="flex items-center justify-between text-[11px]">
             <span class="text-slate-400">Active Room:</span>
-            <span id="settings-room-label" class="text-rose-300 font-mono">ali-ayesha-2026</span>
+            <span id="settings-room-label" class="text-rose-300 font-mono">a-i-2026</span>
           </div>
           <button onclick="showNetworkDiagnostics()" class="w-full py-2 rounded-xl bg-white/5 border border-white/10 hover:border-rose-500/40 text-rose-200 font-semibold text-xs active:scale-95 transition-all flex items-center justify-center gap-2">
             <i data-lucide="radio" class="w-3.5 h-3.5"></i>
@@ -869,18 +869,18 @@
         <div>
           <label class="block text-[11px] text-rose-300 font-semibold mb-1">Shared Secret Room Key</label>
           <div class="flex gap-2">
-            <input id="custom-room-input" type="text" placeholder="ali-ayesha-2026"
+            <input id="custom-room-input" type="text" placeholder="a-i-2026"
               class="flex-1 bg-black/70 border border-rose-500/40 rounded-xl px-3 py-2 text-rose-100 font-mono-code focus:outline-none focus:border-rose-400 text-xs" />
             <button onclick="saveCustomRoomKey()" class="bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-bold px-3 py-2 rounded-xl">Save</button>
           </div>
-          <p class="text-[10px] text-slate-400 mt-1">Both you and Ayesha must have the exact same Room Key to connect directly.</p>
+          <p class="text-[10px] text-slate-400 mt-1">Both you and A must have the exact same Room Key to connect directly.</p>
         </div>
 
         <div class="bg-black/50 border border-white/10 rounded-2xl p-3 space-y-1.5 font-mono-code text-[11px]">
-          <div class="flex justify-between"><span class="text-slate-400">My Identity:</span><span id="diag-my-role" class="text-rose-300 font-bold">Ali</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">My Identity:</span><span id="diag-my-role" class="text-rose-300 font-bold">I</span></div>
           <div class="flex justify-between"><span class="text-slate-400">Signaling Server:</span><span id="diag-broker-status" class="text-emerald-400">Connected</span></div>
           <div class="flex justify-between"><span class="text-slate-400">P2P Channel:</span><span id="diag-p2p-status" class="text-amber-300">Searching...</span></div>
-          <div class="flex justify-between"><span class="text-slate-400">Active Room:</span><span id="diag-room-key" class="text-rose-300">ali-ayesha-2026</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Active Room:</span><span id="diag-room-key" class="text-rose-300">a-i-2026</span></div>
         </div>
 
         <div class="flex gap-2 pt-1">
@@ -906,7 +906,7 @@
 
     // Configuration & Session Room
     const urlParams = new URLSearchParams(window.location.search);
-    let ROOM_BASE = (urlParams.get('room') || localStorage.getItem('sanctuary_room_base') || 'ali-ayesha-2026').toLowerCase().replace(/[^a-z0-9_-]/g, '');
+    let ROOM_BASE = (urlParams.get('room') || localStorage.getItem('sanctuary_room_base') || 'a-i-2026').toLowerCase().replace(/[^a-z0-9_-]/g, '');
     let myRole = urlParams.get('role') || localStorage.getItem('sanctuary_role') || 'husband';
 
     // -------------------------------------------------------------
@@ -1030,7 +1030,7 @@
 
       peer.on('open', (id) => {
         console.log('[P2P] Connected to signaling server with ID:', id);
-        updatePeerUI('amber', `Online (${myRole === 'husband' ? 'Ali' : 'Ayesha'}). Waiting for partner...`, false);
+        updatePeerUI('amber', `Online (${myRole === 'husband' ? 'I' : 'A'}). Waiting for partner...`, false);
         attemptConnectPartner();
 
         // Heartbeat probe every 4 seconds until partner connects
@@ -1055,7 +1055,7 @@
         const isVideo = call.metadata && call.metadata.type === 'video';
         currentCallType = isVideo ? 'video' : 'audio';
 
-        document.getElementById('incoming-caller-name').textContent = myRole === 'husband' ? 'Ayesha ❤️' : 'Ali ❤️';
+        document.getElementById('incoming-caller-name').textContent = myRole === 'husband' ? 'A ❤️' : 'I ❤️';
         document.getElementById('incoming-call-type').textContent = isVideo ? 'Video Call' : 'Voice Call';
 
         // Play subtle ring tone via AudioContext
@@ -1067,7 +1067,7 @@
 
         // Push / System Notification if app is in background or tab hidden
         triggerSystemNotification(
-          `${myRole === 'husband' ? 'Ayesha' : 'Ali'} is calling you! ❤️`,
+          `${myRole === 'husband' ? 'A' : 'I'} is calling you! ❤️`,
           isVideo ? 'Direct video call incoming...' : 'Direct voice call incoming...'
         );
 
@@ -1088,7 +1088,7 @@
           // Partner has not opened yet - totally normal!
           isConnectingPartner = false;
           if (!partnerOnline) {
-            updatePeerUI('amber', `Waiting for ${myRole === 'husband' ? 'Ayesha' : 'Ali'}...`, false);
+            updatePeerUI('amber', `Waiting for ${myRole === 'husband' ? 'A' : 'I'}...`, false);
           }
         } else if (err.type === 'network' || err.type === 'server-error' || err.type === 'socket-error' || err.type === 'socket-closed') {
           updatePeerUI('amber', 'Reconnecting network...', false);
@@ -1144,7 +1144,7 @@
         isConnectingPartner = false;
         partnerOnline = true;
         console.log('[P2P] DataChannel OPEN! Partner connected.');
-        updatePeerUI('emerald', `❤️ Connected with ${myRole === 'husband' ? 'Ayesha' : 'Ali'}`, true);
+        updatePeerUI('emerald', `❤️ Connected with ${myRole === 'husband' ? 'A' : 'I'}`, true);
       });
 
       conn.on('data', (d) => {
@@ -1152,7 +1152,7 @@
         if (d.type === 'heartbeat_ping') return;
 
         if (!sanctuaryActive) {
-          showStealthAlert(`New ping from ${myRole === 'husband' ? 'Ayesha' : 'Ali'}`);
+          showStealthAlert(`New ping from ${myRole === 'husband' ? 'A' : 'I'}`);
         }
 
         if (d.type === 'chat') {
@@ -1161,7 +1161,7 @@
           saveMessageToDb({ id: msgId, type: 'chat', sender: d.sender, text: d.text, time: d.time, isMe: false, status: 'delivered' });
           playBeepAlert(800, 0.08);
           if (document.hidden || !sanctuaryActive) {
-            triggerSystemNotification(`Message from ${myRole === 'husband' ? 'Ayesha' : 'Ali'} ❤️`, d.text);
+            triggerSystemNotification(`Message from ${myRole === 'husband' ? 'A' : 'I'} ❤️`, d.text);
           } else {
             // Acknowledge seen if active in sanctuary chat
             sendPayload({ type: 'msg_seen', msgId: msgId });
@@ -1175,7 +1175,7 @@
           saveMessageToDb({ id: msgId, type: 'voice', sender: d.sender, audioBase64: d.audioBase64, time: d.time, isMe: false, status: 'delivered' });
           playBeepAlert(800, 0.08);
           if (document.hidden || !sanctuaryActive) {
-            triggerSystemNotification(`${myRole === 'husband' ? 'Ayesha' : 'Ali'} ❤️`, 'Sent a voice note 🎙️');
+            triggerSystemNotification(`${myRole === 'husband' ? 'A' : 'I'} ❤️`, 'Sent a voice note 🎙️');
           } else {
             sendPayload({ type: 'msg_seen', msgId: msgId });
           }
@@ -1185,7 +1185,7 @@
           saveMessageToDb({ id: msgId, type: 'media', sender: d.sender, mediaSrc: d.mediaSrc, mediaType: d.mediaType, time: d.time, isMe: false, status: 'delivered' });
           playBeepAlert(800, 0.08);
           if (document.hidden || !sanctuaryActive) {
-            triggerSystemNotification(`${myRole === 'husband' ? 'Ayesha' : 'Ali'} ❤️`, `Sent a ${d.mediaType} 📷`);
+            triggerSystemNotification(`${myRole === 'husband' ? 'A' : 'I'} ❤️`, `Sent a ${d.mediaType} 📷`);
           } else {
             sendPayload({ type: 'msg_seen', msgId: msgId });
           }
@@ -1208,16 +1208,16 @@
           // Partner device received call and is ringing
           const statusRole = document.getElementById('active-call-role');
           if (statusRole && statusRole.textContent.startsWith('Calling')) {
-            statusRole.textContent = `Ringing ${myRole === 'husband' ? 'Ayesha' : 'Ali'}... 🔔`;
+            statusRole.textContent = `Ringing ${myRole === 'husband' ? 'A' : 'I'}... 🔔`;
             setCallBtnState(currentCallType, true, 'Ringing...');
           }
         } else if (d.type === 'call_declined') {
-          showTelepathyBanner(`${myRole === 'husband' ? 'Ayesha' : 'Ali'} declined the call`);
+          showTelepathyBanner(`${myRole === 'husband' ? 'A' : 'I'} declined the call`);
           logCallEventToChat(currentCallType, 'Declined Call');
           endLiveCall(false);
         } else if (d.type === 'love_letter') {
           addLoveLetterToMemory(d.sender, d.letter, d.time, false, d.imageSrc, d.id);
-          showTelepathyBanner(`💌 New Memory from ${myRole === 'husband' ? 'Ayesha' : 'Ali'}`);
+          showTelepathyBanner(`💌 New Memory from ${myRole === 'husband' ? 'A' : 'I'}`);
           playBeepAlert(1000, 0.2);
         } else if (d.type === 'edit_msg') {
           applyRemoteEditChatMessage(d.msgId, d.newText);
@@ -1298,7 +1298,7 @@
           localVideo.srcObject = localStream;
         } else {
           document.getElementById('active-call-banner').classList.remove('hidden');
-          document.getElementById('active-call-role').textContent = `Calling ${myRole === 'husband' ? 'Ayesha' : 'Ali'}...`;
+          document.getElementById('active-call-role').textContent = `Calling ${myRole === 'husband' ? 'A' : 'I'}...`;
         }
 
         activeMediaCall = peer.call(partnerId, localStream, { metadata: { type: type } });
@@ -1350,7 +1350,7 @@
           document.getElementById('local-video').srcObject = localStream;
         } else {
           document.getElementById('active-call-banner').classList.remove('hidden');
-          document.getElementById('active-call-role').textContent = `In Call with ${myRole === 'husband' ? 'Ayesha' : 'Ali'}`;
+          document.getElementById('active-call-role').textContent = `In Call with ${myRole === 'husband' ? 'A' : 'I'}`;
         }
 
         activeMediaCall.answer(localStream);
@@ -1394,7 +1394,7 @@
         const rAudio = document.getElementById('remote-audio');
         rAudio.srcObject = remoteStream;
         rAudio.play().catch(()=>{});
-        document.getElementById('active-call-role').textContent = `Connected with ${myRole === 'husband' ? 'Ayesha' : 'Ali'}`;
+        document.getElementById('active-call-role').textContent = `Connected with ${myRole === 'husband' ? 'A' : 'I'}`;
       }
       setCallBtnState(type, true, 'Connected (End)');
     }
@@ -1820,7 +1820,7 @@
     function appendChatBubble(sender, text, isMe, timeStr, msgId = '', status = 'sent', isEdited = false) {
       const box = document.getElementById('chat-messages');
       const time = timeStr || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const senderName = isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali');
+      const senderName = isMe ? 'You' : (myRole === 'husband' ? 'A' : 'I');
 
       const tickStatus = isMe 
         ? `<span id="status-${msgId}" class="ml-1 text-[10px]">${status === 'seen' ? '<span class="text-sky-400 font-bold">✓✓</span>' : '<span class="text-slate-400 font-bold">✓</span>'}</span>`
@@ -1861,7 +1861,7 @@
     function appendVoiceBubble(sender, src, isMe, timeStr, msgId = '', status = 'sent') {
       const box = document.getElementById('chat-messages');
       const time = timeStr || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const senderName = isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali');
+      const senderName = isMe ? 'You' : (myRole === 'husband' ? 'A' : 'I');
 
       const tickStatus = isMe 
         ? `<span id="status-${msgId}" class="ml-1 text-[10px]">${status === 'seen' ? '<span class="text-sky-400 font-bold">✓✓</span>' : '<span class="text-slate-400 font-bold">✓</span>'}</span>`
@@ -1895,7 +1895,7 @@
     function appendMediaBubble(sender, src, type, isMe, timeStr, msgId = '', status = 'sent') {
       const box = document.getElementById('chat-messages');
       const time = timeStr || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const senderName = isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali');
+      const senderName = isMe ? 'You' : (myRole === 'husband' ? 'A' : 'I');
 
       const tickStatus = isMe 
         ? `<span id="status-${msgId}" class="ml-1 text-[10px]">${status === 'seen' ? '<span class="text-sky-400 font-bold">✓✓</span>' : '<span class="text-slate-400 font-bold">✓</span>'}</span>`
@@ -2050,7 +2050,7 @@
       const pId = getPartnerPeerId();
       
       const roleElem = document.getElementById('diag-my-role');
-      if (roleElem) roleElem.textContent = myRole === 'husband' ? 'Ali (Husband)' : 'Ayesha (Wife)';
+      if (roleElem) roleElem.textContent = myRole === 'husband' ? 'I (Husband)' : 'A (Wife)';
       
       const brokerElem = document.getElementById('diag-broker-status');
       if (brokerElem) {
@@ -2103,10 +2103,10 @@
     function copyPairingLink() {
       const url = new URL(window.location.href);
       url.searchParams.set('room', ROOM_BASE);
-      // If Ali copies, link defaults partner to Ayesha
+      // If I copies, link defaults partner to A
       url.searchParams.set('role', getPartnerRole());
       navigator.clipboard.writeText(url.toString()).then(() => {
-        alert(`Pairing link copied! Send this link to ${myRole === 'husband' ? 'Ayesha' : 'Ali'} so you connect automatically.`);
+        alert(`Pairing link copied! Send this link to ${myRole === 'husband' ? 'A' : 'I'} so you connect automatically.`);
       }).catch(() => {
         prompt('Copy this pairing link:', url.toString());
       });
@@ -2164,21 +2164,35 @@
 
     function playYtSong(videoId, syncToPartner = false) {
       currentPlayingVideoId = videoId;
+      // UNIFIED AUDIO: Display console in drawer so two iframes do NOT echo at the same time!
       document.getElementById('yt-player-container').innerHTML = `
-        <iframe id="yt-active-iframe" class="w-full h-full absolute inset-0" 
-          src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1" 
-          frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen>
-        </iframe>
+        <div class="relative w-full h-full bg-black flex flex-col items-center justify-center overflow-hidden">
+          <img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" class="absolute inset-0 w-full h-full object-cover opacity-60 filter blur-[2px]" />
+          <div class="relative z-10 flex flex-col items-center justify-center p-4 text-center">
+            <div class="w-12 h-12 rounded-full bg-rose-600/90 flex items-center justify-center shadow-lg mb-2 animate-pulse">
+              <i data-lucide="tv" class="w-6 h-6 text-white"></i>
+            </div>
+            <span class="text-xs font-bold text-white drop-shadow">Live Video Playing on 3D Room TV</span>
+            <span class="text-[10px] text-rose-300 mt-1 font-mono">Synced for A & I • Zero Echo</span>
+            <div class="flex items-center gap-1 mt-3">
+              <button onclick="closeDrawer()" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow active:scale-95 transition-all">
+                <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                <span>View 3D TV Screen</span>
+              </button>
+            </div>
+          </div>
+        </div>
       `;
+      lucide.createIcons();
       
-      // Render Live Video Thumbnail onto 3D Bedroom TV Mesh
+      // Render Live Video onto 3D Bedroom TV Screen
       renderYtOn3DTV(videoId);
 
       // Update In-App Floating PiP Thumbnail
       const pipThumb = document.getElementById('pip-thumb');
       if (pipThumb) pipThumb.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
       const pipRole = document.getElementById('pip-role-tag');
-      if (pipRole) pipRole.textContent = syncToPartner ? 'By You' : (myRole === 'husband' ? 'By Ayesha' : 'By Ali');
+      if (pipRole) pipRole.textContent = syncToPartner ? 'By You' : (myRole === 'husband' ? 'By A' : 'By I');
       
       // Keep MediaSession active for lockscreen & notification shade playback controls
       setupMediaSessionForTrack(videoId);
@@ -2188,7 +2202,7 @@
 
       const controllerLabel = document.getElementById('theatre-controller-label');
       if (controllerLabel) {
-        controllerLabel.textContent = syncToPartner ? `Controlled by You` : `Controlled by ${myRole === 'husband' ? 'Ayesha' : 'Ali'}`;
+        controllerLabel.textContent = syncToPartner ? `Controlled by You` : `Controlled by ${myRole === 'husband' ? 'A' : 'I'}`;
       }
       if (syncToPartner) {
         sendPayload({ type: 'youtube_sync', videoId });
@@ -2200,7 +2214,7 @@
       try {
         navigator.mediaSession.metadata = new MediaMetadata({
           title: 'Sanctuary Shared Cinema',
-          artist: myRole === 'husband' ? 'Ali & Ayesha ❤️' : 'Ayesha & Ali ❤️',
+          artist: myRole === 'husband' ? 'A & I ❤️' : 'A & I ❤️',
           album: 'Private Sanctuary',
           artwork: [
             { src: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`, sizes: '480x360', type: 'image/jpeg' },
@@ -2253,7 +2267,7 @@
                 <span style="width:8px;height:8px;border-radius:50%;background:#10b981;"></span>
                 <span style="font-size:12px;font-weight:bold;color:#f43f5e;">Sanctuary Always-On-Top</span>
               </div>
-              <span style="font-size:10px;color:#94a3b8;font-family:monospace;">Ali & Ayesha</span>
+              <span style="font-size:10px;color:#94a3b8;font-family:monospace;">A & I</span>
             </div>
             <div style="flex:1;background:#000;border-radius:12px;overflow:hidden;position:relative;border:1px solid rgba(244,63,94,0.3);">
               ${currentPlayingVideoId ? `
@@ -2474,7 +2488,7 @@
       container.innerHTML = vaultLetters.map((l) => `
         <div id="memory-card-${l.id}" class="bg-black/50 border border-rose-500/25 rounded-xl p-3 space-y-2 group transition-all">
           <div class="flex items-center justify-between text-[10px]">
-            <span class="font-bold ${l.isMe ? 'text-rose-300' : 'text-amber-300'}">${l.isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali')}</span>
+            <span class="font-bold ${l.isMe ? 'text-rose-300' : 'text-amber-300'}">${l.isMe ? 'You' : (myRole === 'husband' ? 'A' : 'I')}</span>
             <div class="flex items-center gap-2">
               <span class="text-slate-400 font-mono">${l.time}</span>
               <button onclick="editMemoryItem('${l.id}')" title="Edit note" class="hover:text-rose-200 text-rose-400/80 p-0.5">
@@ -2585,33 +2599,78 @@
       const title = document.getElementById('romantic-fx-title');
       const sub = document.getElementById('romantic-fx-sub');
 
-      if (!overlay || !content) return;
+      if (overlay && content) {
+        icon.textContent = preset.icon;
+        title.textContent = preset.title;
+        sub.textContent = `"${preset.sub}" — ${isMe ? 'You' : (myRole === 'husband' ? 'A' : 'I')}`;
 
-      icon.textContent = preset.icon;
-      title.textContent = preset.title;
-      sub.textContent = `"${preset.sub}" — ${isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali')}`;
+        overlay.classList.remove('hidden');
+        content.classList.remove('romantic-burst-anim');
+        void content.offsetWidth;
+        content.classList.add('romantic-burst-anim');
 
-      overlay.classList.remove('hidden');
-      content.classList.remove('romantic-burst-anim');
-      void content.offsetWidth; // trigger reflow
-      content.classList.add('romantic-burst-anim');
-
-      showTelepathyBanner(`🔥 Sent: ${preset.title}`);
-
-      // Temporary sensual neon glow in 3D room
-      if (pointLight1) {
-        const origColor = pointLight1.color.getHex();
-        pointLight1.color.setHex(0xe11d48);
-        pointLight1.intensity = 3.5;
         setTimeout(() => {
-          pointLight1.color.setHex(origColor);
-          pointLight1.intensity = 2.2;
-        }, 3200);
+          overlay.classList.add('hidden');
+        }, 3300);
       }
 
-      setTimeout(() => {
-        overlay.classList.add('hidden');
-      }, 3300);
+      showTelepathyBanner(`🔥 ${preset.title} active in our room!`);
+
+      // TRIGGER REAL INTIMACY IN 3D ROOM: Characters embrace & room transforms
+      triggerIntimateBedEncounter(key);
+    }
+
+    function triggerIntimateBedEncounter(key) {
+      isIntimacyAnimating = true;
+
+      // 1. Double heartbeat vibration
+      if (navigator.vibrate) navigator.vibrate([100, 80, 150, 80]);
+      playBeepAlert(880, 0.25);
+
+      // 2. Dim room lights into deep candlelight & sensual crimson under-bed surge
+      if (pointLight1 && pointLight2 && bedGlowLight) {
+        pointLight1.color.setHex(0x831843);
+        pointLight1.intensity = 0.8;
+        pointLight2.color.setHex(0xf59e0b);
+        pointLight2.intensity = 0.6;
+
+        bedGlowLight.intensity = 4.0;
+        bedGlowLight.color.setHex(0xe11d48);
+
+        if (candleLight) candleLight.intensity = 2.6;
+
+        setTimeout(() => {
+          pointLight1.color.setHex(0xf43f5e);
+          pointLight1.intensity = 2.2;
+          pointLight2.color.setHex(0xfbbf24);
+          pointLight2.intensity = 1.4;
+          if (bedGlowLight) bedGlowLight.intensity = 1.6;
+          if (candleLight) candleLight.intensity = 1.4;
+          isIntimacyAnimating = false;
+        }, 5000);
+      }
+
+      // 3. Characters lean in and embrace closely on the bed
+      if (charI && charA) {
+        charI.position.x = -0.15;
+        charI.rotation.z = 0.25;
+        charI.rotation.y = 0.3;
+
+        charA.position.x = 0.15;
+        charA.rotation.z = -0.35;
+        charA.rotation.y = -0.3;
+
+        setTimeout(() => {
+          if (charI && charA) {
+            charI.position.x = -0.35;
+            charI.rotation.z = 0;
+            charI.rotation.y = 0;
+            charA.position.x = 0.35;
+            charA.rotation.z = 0;
+            charA.rotation.y = 0;
+          }
+        }, 5000);
+      }
     }
 
     // Wallpaper / Memories Wall Portrait Uploader
@@ -2698,7 +2757,7 @@
           }
           ctx.fillStyle = '#fbbf24';
           ctx.font = 'bold 20px sans-serif';
-          ctx.fillText((current.isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali')) + ' • ' + current.time, 30, canvas.height - 35);
+          ctx.fillText((current.isMe ? 'You' : (myRole === 'husband' ? 'A' : 'I')) + ' • ' + current.time, 30, canvas.height - 35);
 
           applyCanvasToWallFrame(canvas);
         };
@@ -2715,7 +2774,7 @@
 
         ctx.fillStyle = '#f43f5e';
         ctx.font = 'bold 36px serif';
-        ctx.textAlign = 'center';
+        ctx.textIgn = 'center';
         ctx.fillText('Sanctuary Memory', canvas.width / 2, 100);
 
         ctx.fillStyle = '#fff1f2';
@@ -2741,7 +2800,7 @@
 
         ctx.fillStyle = '#fbbf24';
         ctx.font = 'bold 22px sans-serif';
-        ctx.fillText('— ' + (current.isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali')) + ' (' + current.time + ')', canvas.width / 2, canvas.height - 80);
+        ctx.fillText('— ' + (current.isMe ? 'You' : (myRole === 'husband' ? 'A' : 'I')) + ' (' + current.time + ')', canvas.width / 2, canvas.height - 80);
 
         applyCanvasToWallFrame(canvas);
       }
@@ -3027,10 +3086,29 @@
     function updateFloatingPiPState(activePanel) {
       const pip = document.getElementById('pip-mini-player');
       if (!pip) return;
-      if (currentPlayingVideoId && activePanel !== 'music') {
-        pip.classList.remove('hidden');
-      } else {
+      const isDrawerOpen = document.getElementById('sanctuary-drawer').classList.contains('open');
+
+      if (!currentPlayingVideoId) {
         pip.classList.add('hidden');
+        return;
+      }
+
+      // If drawer is open and user is on Chat or Memories, do NOT block the bottom input!
+      if (isDrawerOpen) {
+        if (activePanel === 'chat' || activePanel === 'letters') {
+          // Hide from bottom so chat input is 100% unobstructed
+          pip.classList.add('hidden');
+        } else if (activePanel === 'music') {
+          pip.classList.add('hidden');
+        } else {
+          // Show compact at top-right
+          pip.classList.remove('hidden');
+          pip.className = 'absolute top-14 right-3 z-50 bg-[#0f081d]/95 border border-rose-500/40 rounded-full px-3 py-1.5 shadow-2xl backdrop-blur-md flex items-center gap-2 max-w-[240px] transition-all';
+        }
+      } else {
+        // Drawer is closed (viewing 3D room): show full sleek mini-player above dock
+        pip.classList.remove('hidden');
+        pip.className = 'absolute bottom-16 right-3 z-50 bg-[#0f081d]/95 border border-rose-500/40 rounded-2xl p-2.5 shadow-2xl backdrop-blur-md flex items-center gap-3 max-w-[310px] transition-all duration-300 animate-fade-in';
       }
     }
 
@@ -3043,6 +3121,7 @@
     // -------------------------------------------------------------
     let scene, camera, renderer, controls, candleLight, bedGlowLight, pointLight1, pointLight2, tvScreenMesh, threeInitialized = false;
     let cssScene, css3dRenderer, cssTvObject;
+    let coupleGroup, charI, charA, passionParticles, isIntimacyAnimating = false;
     let wallPhotoIndex = 0;
     let wallSlideshowTimer = null;
 
@@ -3216,6 +3295,86 @@
       bedGroup.add(lampWarmLight);
 
       roomGroup.add(bedGroup);
+      // ==========================================
+      // STYLIZED COUPLE AVATARS (A & I) ON THE BED
+      // ==========================================
+      coupleGroup = new THREE.Group();
+      coupleGroup.position.set(-1.4, 0.65, -1.55);
+
+      // --- Avatar "I" (Partner I) ---
+      charI = new THREE.Group();
+      charI.position.set(-0.35, 0, 0);
+
+      // Torso I
+      const torsoIMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.6 });
+      const torsoI = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.22, 0.55, 16), torsoIMat);
+      torsoI.position.y = 0.28;
+      charI.add(torsoI);
+
+      // Head I
+      const skinMat = new THREE.MeshStandardMaterial({ color: 0xfbd0b8, roughness: 0.4 });
+      const headI = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 16), skinMat);
+      headI.position.y = 0.65;
+      charI.add(headI);
+
+      // Hair I
+      const hairIMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.8 });
+      const hairI = new THREE.Mesh(new THREE.SphereGeometry(0.145, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.55), hairIMat);
+      hairI.position.y = 0.67;
+      charI.add(hairI);
+
+      // Arms I (Resting / Ready to Embrace)
+      const armIMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.6 });
+      const armI = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.45, 12), armIMat);
+      armI.rotation.z = -Math.PI / 4;
+      armI.position.set(0.22, 0.28, 0.05);
+      charI.add(armI);
+
+      coupleGroup.add(charI);
+
+      // --- Avatar "A" (Partner A) ---
+      charA = new THREE.Group();
+      charA.position.set(0.35, 0, 0);
+
+      // Torso A (Velvet Rose Silk Nightwear)
+      const torsoAMat = new THREE.MeshStandardMaterial({ color: 0xbe123c, roughness: 0.3 });
+      const torsoA = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.2, 0.5, 16), torsoAMat);
+      torsoA.position.y = 0.25;
+      charA.add(torsoA);
+
+      // Head A
+      const headA = new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 16), skinMat);
+      headA.position.y = 0.60;
+      charA.add(headA);
+
+      // Flowing Dark Hair A
+      const hairAMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.5 });
+      const hairA = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.7), hairAMat);
+      hairA.position.y = 0.62;
+      charA.add(hairA);
+
+      // Hair strands flowing down
+      const hairStrand = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 0.35, 12), hairAMat);
+      hairStrand.position.set(-0.06, 0.45, -0.06);
+      hairStrand.rotation.z = 0.2;
+      charA.add(hairStrand);
+
+      coupleGroup.add(charA);
+      roomGroup.add(coupleGroup);
+
+      // Romantic Passion Aura Swirl around Couple
+      const passionGeom = new THREE.BufferGeometry();
+      const pCount = 35;
+      const pPos = new Float32Array(pCount * 3);
+      for (let i = 0; i < pCount * 3; i += 3) {
+        pPos[i] = -1.4 + (Math.random() - 0.5) * 1.8;
+        pPos[i + 1] = 0.7 + Math.random() * 1.2;
+        pPos[i + 2] = -1.5 + (Math.random() - 0.5) * 1.8;
+      }
+      passionGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+      const passionMat = new THREE.PointsMaterial({ color: 0xf43f5e, size: 0.05, transparent: true, opacity: 0.75 });
+      passionParticles = new THREE.Points(passionGeom, passionMat);
+      roomGroup.add(passionParticles);
 
       // ==========================================
       // BIG WALL-MOUNTED LCD THEATRE TV (INTERACTIVE)
@@ -3312,7 +3471,7 @@
         mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
         raycaster.setFromCamera(mouse, camera);
 
-        const clickable = [tvScreenMesh, wallPhotoMesh, ...bedInteractiveMeshes];
+        const clickable = [tvScreenMesh, wallPhotoMesh, ...bedInteractiveMeshes, charI, charA];
         const intersects = raycaster.intersectObjects(clickable, false);
         if (intersects.length > 0) {
           const hit = intersects[0].object;
@@ -3321,8 +3480,8 @@
             showTelepathyBanner('📺 Opening Synced YouTube Theatre...');
           } else if (hit === wallPhotoMesh) {
             cycleWallFrameNext();
-          } else if (bedInteractiveMeshes.includes(hit)) {
-            handleBedInteraction();
+          } else if (bedInteractiveMeshes.includes(hit) || hit === charI || hit === charA || charI.children.includes(hit) || charA.children.includes(hit)) {
+            triggerIntimateBedEncounter('passion');
           }
         }
       });
@@ -3340,6 +3499,14 @@
         // Smooth breathing under-bed glow
         if (bedGlowLight) {
           bedGlowLight.intensity = 1.4 + Math.sin(t * 1.8) * 0.45;
+        }
+
+        // Gentle breathing and intimate sway for A & I
+        if (coupleGroup && !isIntimacyAnimating) {
+          coupleGroup.position.y = 0.65 + Math.sin(t * 1.8) * 0.015;
+        }
+        if (passionParticles) {
+          passionParticles.rotation.y = t * 0.08;
         }
 
         controls.update();
@@ -3505,7 +3672,7 @@
           showTelepathyBanner('🔔 Notifications enabled! You will get alerts.');
           try {
             new Notification('Sanctuary Connected ❤️', {
-              body: 'Private alerts enabled for Ali & Ayesha.',
+              body: 'Private alerts enabled for A & I.',
               icon: 'icon-192.png'
             });
           } catch(e) {}
