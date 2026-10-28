@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>DailySync — Tasks & Utilities</title>
+
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="DailySync" />
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" />
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+
+  <style>
+    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden; background: #0f172a;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none;
+    }
+    .bottom-sheet { transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); transform: translateY(105%); }
+    .bottom-sheet.open { transform: translateY(0%); }
+    @keyframes pulse-ring { 0% { transform: scale(0.9); opacity: 0.8; } 100% { transform: scale(1.6); opacity: 0; } }
+    .ring-anim::before { content: ''; position: absolute; inset: -6px; border-radius: 9999px; border: 2px solid #f43f5e; animation: pulse-ring 1.5s infinite; }
+  </style>
+</head>
+<body class="text-slate-100 select-none">
+
+  <!-- DECOY UTILITY SCREEN -->
+  <div id="decoy-screen" class="w-full h-full flex flex-col bg-slate-900 z-30 relative">
+    <header class="px-4 pt-3 pb-2.5 bg-slate-900/95 border-b border-slate-800 flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-2.5" id="secret-logo-hold">
+        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+          <i data-lucide="check-square" class="w-4 h-4"></i>
+        </div>
+        <div>
+          <h1 class="text-sm font-semibold tracking-tight text-white leading-none">DailySync</h1>
+          <p id="auth-badge-sub" class="text-[11px] text-slate-400 mt-0.5">Local Mode • Tap Sync to Backup</p>
+        </div>
+      </div>
+
+      <button id="stealth-alert-pill" onclick="attemptUnlockSanctuary('chat')" class="hidden items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs animate-pulse">
+        <i data-lucide="cloud-lightning" class="w-3.5 h-3.5"></i>
+        <span>1 Sync Pending</span>
+      </button>
+
+      <button onclick="openAuthModal()" id="sync-account-btn" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-300">
+        <i data-lucide="cloud" class="w-3.5 h-3.5 text-emerald-400"></i>
+        <span id="sync-btn-label">Cloud Sync</span>
+      </button>
+    </header>
+
+    <main class="flex-1 overflow-y-auto p-4 space-y-4">
+      <section id="decoy-tab-notes" class="space-y-3">
+        <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-3">
+          <label class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">Quick Add Item</label>
+          <div class="mt-1.5 flex gap-2">
+            <input id="grocery-input" type="text" placeholder="Milk, bread, diapers..." 
+              class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500" />
+            <button onclick="handleGroceryAdd()" class="bg-emerald-600 active:scale-95 text-white px-4 py-2 rounded-lg text-sm font-medium">Add</button>
+          </div>
+        </div>
+        <div id="grocery-list" class="space-y-2"></div>
+      </section>
+
+      <section id="decoy-tab-weather" class="hidden space-y-3">
+        <div class="bg-gradient-to-br from-sky-900/60 to-slate-800 border border-sky-700/40 rounded-2xl p-4">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-xs uppercase tracking-wider text-sky-300 font-semibold">Dubai, UAE</span>
+              <div class="text-4xl font-bold text-white mt-1">31°C</div>
+              <p class="text-xs text-slate-300 mt-1">Clear Sky • Feels like 33°C</p>
+            </div>
+            <i data-lucide="sun" class="w-12 h-12 text-amber-400"></i>
+          </div>
+          <div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-white/10 text-center">
+            <div onclick="handleHumidityTap()" class="bg-slate-900/50 rounded-xl p-2.5 cursor-pointer">
+              <div class="text-[11px] text-slate-400">Humidity</div>
+              <div class="text-sm font-semibold text-sky-300 mt-0.5">52%</div>
+            </div>
+            <div class="bg-slate-900/50 rounded-xl p-2.5">
+              <div class="text-[11px] text-slate-400">UV Index</div>
+              <div class="text-sm font-semibold text-amber-300 mt-0.5">7 High</div>
+            </div>
+            <div class="bg-slate-900/50 rounded-xl p-2.5">
+              <div class="text-[11px] text-slate-400">AQI</div>
+              <div class="text-sm font-semibold text-emerald-400 mt-0.5">48 Good</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="decoy-tab-radio" class="hidden space-y-3">
+        <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 text-center space-y-4">
+          <div class="w-20 h-20 mx-auto rounded-2xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center">
+            <i data-lucide="headphones" class="w-9 h-9 text-indigo-400"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-semibold text-white">Desert Rain & Focus</h3>
+            <p class="text-xs text-slate-400">Ambient Background Generator</p>
+          </div>
+          <div class="space-y-1">
+            <input id="radio-slider" type="range" min="0" max="200" value="45" oninput="handleRadioScrub(this.value)" class="w-full accent-indigo-500" />
+            <div class="flex justify-between text-[11px] font-mono text-slate-400">
+              <span id="radio-time-label">00:45</span>
+              <span>03:20</span>
+            </div>
+          </div>
+          <button onclick="toggleAmbientDrone()" id="ambient-btn" class="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-medium text-sm">Play Ambient Drone</button>
+        </div>
+      </section>
+
+      <section id="decoy-tab-calc" class="hidden space-y-3">
+        <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 max-w-xs mx-auto">
+          <div id="calc-display" class="w-full bg-slate-950 rounded-xl p-3.5 text-right font-mono text-2xl text-emerald-400 mb-3 overflow-x-auto">0</div>
+          <div class="grid grid-cols-4 gap-2 text-base font-semibold">
+            <button onclick="calcPress('C')" class="p-3 rounded-xl bg-rose-500/20 text-rose-300">C</button>
+            <button onclick="calcPress('/')" class="p-3 rounded-xl bg-slate-700">÷</button>
+            <button onclick="calcPress('*')" class="p-3 rounded-xl bg-slate-700">×</button>
+            <button onclick="calcPress('-')" class="p-3 rounded-xl bg-slate-700">−</button>
+            <button onclick="calcPress('7')" class="p-3 rounded-xl bg-slate-900">7</button>
+            <button onclick="calcPress('8')" class="p-3 rounded-xl bg-slate-900">8</button>
+            <button onclick="calcPress('9')" class="p-3 rounded-xl bg-slate-900">9</button>
+            <button onclick="calcPress('+')" class="p-3 rounded-xl bg-slate-700">+</button>
+            <button onclick="calcPress('4')" class="p-3 rounded-xl bg-slate-900">4</button>
+            <button onclick="calcPress('5')" class="p-3 rounded-xl bg-slate-900">5</button>
+            <button onclick="calcPress('6')" class="p-3 rounded-xl bg-slate-900">6</button>
+            <button onclick="calcPress('=')" class="row-span-2 p-3 rounded-xl bg-emerald-600 text-white">=</button>
+            <button onclick="calcPress('1')" class="p-3 rounded-xl bg-slate-900">1</button>
+            <button onclick="calcPress('2')" class="p-3 rounded-xl bg-slate-900">2</button>
+            <button onclick="calcPress('3')" class="p-3 rounded-xl bg-slate-900">3</button>
+            <button onclick="calcPress('0')" class="col-span-2 p-3 rounded-xl bg-slate-900">0</button>
+            <button onclick="calcPress('.')" class="p-3 rounded-xl bg-slate-900">.</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bg-slate-900 border-t border-slate-800 grid grid-cols-4 py-1.5 shrink-0">
+      <button onclick="switchDecoyTab('notes')" id="dnav-notes" class="flex flex-col items-center py-1 text-emerald-400">
+        <i data-lucide="list-todo" class="w-5 h-5"></i><span class="text-[10px] mt-0.5 font-medium">Checklist</span>
+      </button>
+      <button onclick="switchDecoyTab('weather')" id="dnav-weather" class="flex flex-col items-center py-1 text-slate-400">
+        <i data-lucide="cloud-sun" class="w-5 h-5"></i><span class="text-[10px] mt-0.5 font-medium">Weather</span>
+      </button>
+      <button onclick="switchDecoyTab('radio')" id="dnav-radio" class="flex flex-col items-center py-1 text-slate-400">
+        <i data-lucide="radio" class="w-5 h-5"></i><span class="text-[10px] mt-0.5 font-medium">Sounds</span>
+      </button>
+      <button onclick="switchDecoyTab('calc')" id="dnav-calc" class="flex flex-col items-center py-1 text-slate-400">
+        <i data-lucide="calculator" class="w-5 h-5"></i><span class="text-[10px] mt-0.5 font-medium">Calc</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div id="auth-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 max-w-xs w-full space-y-4 text-center">
+      <div class="w-12 h-12 rounded-full bg-emerald-500/15 border border-emerald-500/30 mx-auto flex items-center justify-center text-emerald-400">
+        <i data-lucide="shield-check" class="w-6 h-6"></i>
+      </div>
+      <div>
+        <h3 class="text-sm font-bold text-white">Household Cloud Sync</h3>
+        <p class="text-xs text-slate-400 mt-1">Sign in with your authorized Google account to sync household data.</p>
+      </div>
+      <div id="google-btn-container" class="flex justify-center py-1"></div>
+      <p id="auth-error-msg" class="hidden text-xs text-rose-400 font-medium"></p>
+      <button onclick="closeAuthModal()" class="w-full py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-medium">Close</button>
+    </div>
+  </div>
+
+  <!-- 3D MOBILE LOVE SANCTUARY -->
+  <div id="sanctuary-screen" class="hidden fixed inset-0 w-full h-full bg-[#090514] z-40 flex flex-col justify-between overflow-hidden">
+    <div id="three-container" class="absolute inset-0 w-full h-full z-0"></div>
+
+    <header class="relative z-20 px-3 pt-2.5 pb-2 bg-gradient-to-b from-black/80 via-black/40 to-transparent flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 min-w-0">
+        <span id="peer-dot" class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0 animate-pulse"></span>
+        <div class="truncate">
+          <div class="text-xs font-bold text-rose-200 flex items-center gap-1">
+            <span id="sanctuary-welcome">Our Sanctuary</span>
+            <i data-lucide="heart" class="w-3 h-3 text-rose-400 fill-rose-400"></i>
+          </div>
+          <p id="peer-status-text" class="text-[10px] text-rose-300/80 truncate">Verified Google Session</p>
+        </div>
+      </div>
+
+      <button onclick="triggerPanic()" class="shrink-0 flex items-center gap-1.5 bg-rose-600 active:scale-95 text-white font-semibold text-xs px-3 py-2 rounded-full shadow-lg border border-rose-400/40">
+        <i data-lucide="eye-off" class="w-3.5 h-3.5"></i>
+        <span>Fam Nearby (Hide)</span>
+      </button>
+    </header>
+
+    <div id="incoming-call-modal" class="hidden relative z-30 mx-4 bg-rose-950/95 border border-rose-500/60 rounded-2xl p-3.5 shadow-2xl flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-rose-500 flex items-center justify-center text-white animate-bounce">
+          <i data-lucide="phone-incoming" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="text-sm font-bold text-white">Incoming Secret Call</div>
+          <div class="text-xs text-rose-200">Tap Answer to connect voice</div>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="answerLiveCall()" class="bg-emerald-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold">Answer</button>
+        <button onclick="endLiveCall()" class="bg-slate-800 text-slate-300 px-3 py-2 rounded-xl text-xs">Decline</button>
+      </div>
+    </div>
+
+    <div id="telepathy-toast" class="hidden relative z-20 mx-auto px-4 py-2 rounded-full bg-fuchsia-950/90 border border-fuchsia-400/50 text-fuchsia-100 text-xs font-medium shadow-xl"></div>
+
+    <div class="flex-1 pointer-events-none flex flex-col justify-end items-center pb-2 relative z-10">
+      <div class="bg-black/45 backdrop-blur-md border border-white/10 rounded-full px-3 py-1 text-[11px] text-rose-200/90 pointer-events-auto">
+        Drag to rotate 3D room • Tap dock below
+      </div>
+    </div>
+
+    <div id="sanctuary-drawer" class="bottom-sheet fixed inset-x-0 bottom-14 z-30 bg-[#120924]/95 backdrop-blur-xl border-t border-rose-500/30 rounded-t-3xl max-h-[74dvh] flex flex-col shadow-2xl">
+      <div class="px-4 pt-2.5 pb-2 border-b border-white/10 flex items-center justify-between shrink-0">
+        <span id="drawer-title" class="text-sm font-bold text-rose-200">Secret Line & Calling</span>
+        <button onclick="closeDrawer()" class="p-1.5 rounded-full bg-white/10 text-slate-300"><i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+      </div>
+
+      <div id="panel-chat" class="flex-1 overflow-y-auto p-3.5 space-y-3 flex flex-col">
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-2.5 flex items-center justify-between">
+          <div class="text-xs text-rose-200">
+            Logged in as: <b id="my-role-badge" class="uppercase text-emerald-400">HUSBAND</b>
+          </div>
+          <span id="partner-online-badge" class="text-[11px] text-amber-300 font-medium">Waiting for partner...</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 shrink-0">
+          <button id="btn-live-call" onclick="toggleLiveCall()" class="relative flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-emerald-600 active:scale-95 text-white font-semibold text-xs shadow-lg">
+            <i data-lucide="phone-call" class="w-4 h-4"></i>
+            <span id="live-call-label">Start Live Call</span>
+          </button>
+          <button id="btn-voice-drop" onclick="toggleVoiceRecording()" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-rose-600 active:scale-95 text-white font-semibold text-xs shadow-lg">
+            <i data-lucide="mic" class="w-4 h-4"></i>
+            <span id="voice-drop-label">Tap to Record Voice</span>
+          </button>
+        </div>
+
+        <audio id="remote-audio" autoplay playsinline class="hidden"></audio>
+
+        <div id="chat-messages" class="flex-1 min-h-[150px] max-h-[200px] overflow-y-auto bg-black/40 border border-white/10 rounded-2xl p-3 space-y-2.5">
+          <div class="text-center text-[11px] text-rose-200/60 py-4">Google-verified private channel • Encrypted P2P Media</div>
+        </div>
+
+        <input type="file" id="media-file-input" accept="image/*,video/*" class="hidden" onchange="handleMediaUpload(this)" />
+
+        <div class="flex gap-2 shrink-0 pt-1 items-center">
+          <button onclick="document.getElementById('media-file-input').click()" class="p-2.5 rounded-xl bg-white/10 text-rose-200 active:scale-95" title="Attach Photo or Video">
+            <i data-lucide="paperclip" class="w-4 h-4"></i>
+          </button>
+          <input id="chat-input" type="text" placeholder="Whisper something sweet..." onkeydown="if(event.key==='Enter') sendChatMessage()"
+            class="flex-1 bg-black/50 border border-rose-400/30 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-rose-400" />
+          <button onclick="sendChatMessage()" class="bg-rose-600 text-white px-4 py-2.5 rounded-xl flex items-center justify-center"><i data-lucide="send" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+
+      <div id="panel-mood" class="hidden flex-1 overflow-y-auto p-4 space-y-3">
+        <div class="grid grid-cols-2 gap-2.5">
+          <button onclick="sendTelepathy('☕ Craving Karak Chai together')" class="p-3 rounded-2xl bg-white/5 border border-white/10 text-left">
+            <div class="text-lg">☕</div><div class="text-xs font-bold text-white mt-1">Karak Chai Craving</div>
+          </button>
+          <button onclick="sendTelepathy('🫂 Need a tight hug right now')" class="p-3 rounded-2xl bg-white/5 border border-white/10 text-left">
+            <div class="text-lg">🫂</div><div class="text-xs font-bold text-white mt-1">Need a Tight Hug</div>
+          </button>
+          <button onclick="sendTelepathy('🌙 Late night drive tonight?')" class="p-3 rounded-2xl bg-white/5 border border-white/10 text-left">
+            <div class="text-lg">🌙</div><div class="text-xs font-bold text-white mt-1">Late Night Drive</div>
+          </button>
+          <button onclick="sendTelepathy('💓 Looking at you across the room')" class="p-3 rounded-2xl bg-white/5 border border-white/10 text-left">
+            <div class="text-lg">💓</div><div class="text-xs font-bold text-white mt-1">Secret Heart Pulse</div>
+          </button>
+        </div>
+      </div>
+
+      <div id="panel-letters" class="hidden flex-1 overflow-y-auto p-4 space-y-3">
+        <div class="bg-gradient-to-br from-rose-950/90 to-purple-950/80 border border-rose-400/30 rounded-2xl p-4 space-y-2">
+          <div class="text-xs font-bold text-amber-300 uppercase">Happy Anniversary, My Love</div>
+          <p class="text-xs text-rose-100 leading-relaxed">
+            Even in a house full of people, my favorite place in the world will always be the quiet world we share together.
+          </p>
+          <p class="text-xs font-serif italic text-rose-300 pt-1 border-t border-white/10">
+            "رسمِ وفا نبھانا تو غیرت کی بات ہے..." — Forever yours ❤️
+          </p>
+        </div>
+      </div>
+
+      <div id="panel-room" class="hidden flex-1 overflow-y-auto p-4 space-y-3">
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="setRoomTheme('rose')" class="py-2.5 px-3 rounded-xl bg-rose-600/30 border border-rose-400 text-xs text-rose-200">Rose Glow</button>
+          <button onclick="setRoomTheme('gold')" class="py-2.5 px-3 rounded-xl bg-amber-600/30 border border-amber-400 text-xs text-amber-200">Golden Hour</button>
+          <button onclick="setRoomTheme('starlight')" class="py-2.5 px-3 rounded-xl bg-indigo-600/30 border border-indigo-400 text-xs text-indigo-200">Starlight</button>
+        </div>
+      </div>
+    </div>
+
+    <nav class="relative z-40 h-14 bg-[#0d061a]/95 border-t border-rose-500/30 grid grid-cols-4 px-2 shrink-0">
+      <button onclick="openDrawer('chat')" id="snav-chat" class="flex flex-col items-center justify-center text-rose-400"><i data-lucide="phone-call" class="w-5 h-5"></i><span class="text-[10px] mt-0.5 font-semibold">Call & Chat</span></button>
+      <button onclick="openDrawer('mood')" id="snav-mood" class="flex flex-col items-center justify-center text-slate-400"><i data-lucide="sparkles" class="w-5 h-5"></i><span class="text-[10px] mt-0.5 font-semibold">Telepathy</span></button>
+      <button onclick="openDrawer('letters')" id="snav-letters" class="flex flex-col items-center justify-center text-slate-400"><i data-lucide="mail-heart" class="w-5 h-5"></i><span class="text-[10px] mt-0.5 font-semibold">Love Note</span></button>
+      <button onclick="openDrawer('room')" id="snav-room" class="flex flex-col items-center justify-center text-slate-400"><i data-lucide="box" class="w-5 h-5"></i><span class="text-[10px] mt-0.5 font-semibold">3D Room</span></button>
+    </nav>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const AUTH_CONFIG = {
+      GOOGLE_CLIENT_ID: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
+      HUSBAND_EMAIL: "alisaraimir@gmail.com",
+      WIFE_EMAIL: "ayeshaimran.in@gmail.com",
+      SECRET_ROOM_ID: "ali-ayesha-sanctuary-2026"
+    };
+
+    let verifiedUser = JSON.parse(localStorage.getItem('dailysync_verified_user') || 'null');
+    let myRole = verifiedUser ? verifiedUser.role : 'husband';
+
+    function decodeJwtPayload(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+    }
+
+    function handleGoogleCredentialResponse(response) {
+      const payload = decodeJwtPayload(response.credential);
+      const email = (payload.email || '').toLowerCase().trim();
+      const errEl = document.getElementById('auth-error-msg');
+
+      if (email === AUTH_CONFIG.HUSBAND_EMAIL.toLowerCase().trim()) {
+        verifiedUser = { email, name: payload.given_name || 'Ali', role: 'husband' };
+      } else if (email === AUTH_CONFIG.WIFE_EMAIL.toLowerCase().trim()) {
+        verifiedUser = { email, name: payload.given_name || 'Ayesha', role: 'wife' };
+      } else {
+        errEl.textContent = "Cloud Sync is restricted to household owner accounts.";
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      myRole = verifiedUser.role;
+      localStorage.setItem('dailysync_verified_user', JSON.stringify(verifiedUser));
+      updateAuthUI();
+      closeAuthModal();
+      initPeerConnection();
+    }
+
+    function updateAuthUI() {
+      if (verifiedUser) {
+        document.getElementById('auth-badge-sub').textContent = `Synced • ${verifiedUser.email}`;
+        document.getElementById('sync-btn-label').textContent = 'Synced ✓';
+        document.getElementById('my-role-badge').textContent = verifiedUser.role.toUpperCase();
+      }
+    }
+
+    function openAuthModal() {
+      document.getElementById('auth-modal').classList.remove('hidden');
+      if (window.google && AUTH_CONFIG.GOOGLE_CLIENT_ID.indexOf('YOUR_') === -1) {
+        google.accounts.id.initialize({
+          client_id: AUTH_CONFIG.GOOGLE_CLIENT_ID,
+          callback: handleGoogleCredentialResponse,
+          auto_select: true
+        });
+        google.accounts.id.renderButton(
+          document.getElementById('google-btn-container'),
+          { theme: 'filled_black', size: 'large', shape: 'pill', text: 'continue_with' }
+        );
+      }
+    }
+    function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+
+    function attemptUnlockSanctuary(tab = 'chat') {
+      if (!verifiedUser && AUTH_CONFIG.GOOGLE_CLIENT_ID.indexOf('YOUR_') === -1) {
+        openAuthModal();
+        return;
+      }
+      unlockSanctuary(tab);
+    }
+
+    let groceries = [
+      { text: 'Fresh Milk & Laban', done: false },
+      { text: 'Whole Wheat Bread', done: true },
+      { text: 'Baby Wipes & Supplies', done: false },
+      { text: 'Karak Tea Bags & Cardamom', done: false }
+    ];
+    function renderGroceries() {
+      document.getElementById('grocery-list').innerHTML = groceries.map((item, idx) => `
+        <div onclick="groceries[${idx}].done=!groceries[${idx}].done;renderGroceries()" class="flex items-center gap-3 bg-slate-800/60 border border-slate-700/60 rounded-xl px-3.5 py-2.5 cursor-pointer">
+          <div class="w-5 h-5 rounded-md border ${item.done ? 'bg-emerald-500 border-emerald-500' : 'border-slate-500'} flex items-center justify-center text-white text-xs">${item.done ? '✓' : ''}</div>
+          <span class="text-sm ${item.done ? 'line-through text-slate-500' : 'text-slate-200'}">${item.text}</span>
+        </div>
+      `).join('');
+    }
+    renderGroceries();
+
+    function handleGroceryAdd() {
+      const input = document.getElementById('grocery-input');
+      const val = input.value.trim();
+      if (!val) return;
+      if (['143', 'love', 'anniversary'].includes(val.toLowerCase())) {
+        input.value = '';
+        attemptUnlockSanctuary('chat');
+        return;
+      }
+      groceries.unshift({ text: val, done: false });
+      input.value = '';
+      renderGroceries();
+    }
+
+    let humTaps = 0, humTimer = null;
+    function handleHumidityTap() {
+      humTaps++; clearTimeout(humTimer);
+      if (humTaps >= 3) { humTaps = 0; attemptUnlockSanctuary('chat'); }
+      else { humTimer = setTimeout(() => humTaps = 0, 1200); }
+    }
+
+    function handleRadioScrub(val) {
+      const v = parseInt(val, 10);
+      document.getElementById('radio-time-label').textContent = `${String(Math.floor(v/60)).padStart(2,'0')}:${String(v%60).padStart(2,'0')}`;
+      if (v === 103) attemptUnlockSanctuary('chat');
+    }
+
+    let audioCtx = null, droneOsc = null;
+    function toggleAmbientDrone() {
+      const btn = document.getElementById('ambient-btn');
+      if (!droneOsc) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        droneOsc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        droneOsc.frequency.value = 174; gain.gain.value = 0.04;
+        droneOsc.connect(gain); gain.connect(audioCtx.destination);
+        droneOsc.start(); btn.textContent = 'Stop Ambient Drone';
+      } else {
+        droneOsc.stop(); droneOsc = null; btn.textContent = 'Play Ambient Drone';
+      }
+    }
+
+    let calcExpr = '';
+    function calcPress(key) {
+      const disp = document.getElementById('calc-display');
+      if (key === 'C') { calcExpr = ''; disp.textContent = '0'; return; }
+      if (key === '=') {
+        if (calcExpr === '143') { calcExpr = ''; disp.textContent = '0'; attemptUnlockSanctuary('chat'); return; }
+        try { calcExpr = String(Function('"use strict";return (' + calcExpr + ')')()); disp.textContent = calcExpr; }
+        catch { disp.textContent = 'Error'; calcExpr = ''; }
+        return;
+      }
+      calcExpr += key; disp.textContent = calcExpr;
+    }
+
+    function switchDecoyTab(tab) {
+      ['notes', 'weather', 'radio', 'calc'].forEach(t => {
+        document.getElementById(`decoy-tab-${t}`).classList.toggle('hidden', t !== tab);
+        document.getElementById(`dnav-${t}`).className = `flex flex-col items-center py-1 ${t === tab ? 'text-emerald-400' : 'text-slate-400'}`;
+      });
+    }
+
+    let sanctuaryActive = false, peer = null, dataConn = null, activeMediaCall = null, localStream = null, mediaRecorder = null, audioChunks = [];
+
+    function unlockSanctuary(initialTab = 'chat') {
+      sanctuaryActive = true;
+      document.getElementById('stealth-alert-pill').classList.add('hidden');
+      document.getElementById('decoy-screen').classList.add('hidden');
+      document.getElementById('sanctuary-screen').classList.remove('hidden');
+      initThreeRoom(); onWindowResize(); openDrawer(initialTab);
+      if (!peer) initPeerConnection();
+    }
+
+    function triggerPanic() {
+      sanctuaryActive = false;
+      endLiveCall();
+      if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+      if (droneOsc) { droneOsc.stop(); droneOsc = null; }
+      document.getElementById('sanctuary-screen').classList.add('hidden');
+      document.getElementById('decoy-screen').classList.remove('hidden');
+      switchDecoyTab('notes');
+    }
+
+    function openDrawer(panel) {
+      document.getElementById('sanctuary-drawer').classList.add('open');
+      ['chat', 'mood', 'letters', 'room'].forEach(p => {
+        document.getElementById(`panel-${p}`).classList.toggle('hidden', p !== panel);
+        document.getElementById(`snav-${p}`).className = `flex flex-col items-center justify-center ${p === panel ? 'text-rose-400' : 'text-slate-400'}`;
+      });
+    }
+    function closeDrawer() { document.getElementById('sanctuary-drawer').classList.remove('open'); }
+
+    function initPeerConnection() {
+      if (peer) { try { peer.destroy(); } catch (e) {} }
+      const room = AUTH_CONFIG.SECRET_ROOM_ID;
+      const myPeerId = `${room}-${myRole}`;
+      const partnerPeerId = `${room}-${myRole === 'husband' ? 'wife' : 'husband'}`;
+
+      peer = new Peer(myPeerId, {
+        config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun.cloudflare.com:3478' }] }
+      });
+
+      peer.on('open', () => {
+        document.getElementById('peer-status-text').textContent = `Secured as ${myRole.toUpperCase()}`;
+        const conn = peer.connect(partnerPeerId, { reliable: true });
+        setupDataChannel(conn);
+      });
+      peer.on('connection', setupDataChannel);
+      peer.on('call', (call) => {
+        activeMediaCall = call;
+        if (sanctuaryActive) document.getElementById('incoming-call-modal').classList.remove('hidden');
+        else { const pill = document.getElementById('stealth-alert-pill'); pill.classList.remove('hidden'); pill.classList.add('flex'); }
+      });
+    }
+
+    function setupDataChannel(conn) {
+      dataConn = conn;
+      conn.on('open', () => {
+        const b = document.getElementById('partner-online-badge');
+        b.textContent = '❤️ Partner Online!'; b.className = 'text-[11px] text-emerald-400 font-bold';
+      });
+      conn.on('data', (d) => {
+        if (!sanctuaryActive) { const pill = document.getElementById('stealth-alert-pill'); pill.classList.remove('hidden'); pill.classList.add('flex'); }
+        if (d.type === 'chat') appendChatBubble(d.text, false);
+        if (d.type === 'voice') appendVoiceBubble(d.audioBase64, false);
+        if (d.type === 'media') appendMediaBubble(d.mediaSrc, d.mediaType, false);
+        if (d.type === 'telepathy') { showTelepathyBanner(d.text); appendChatBubble(d.text, false); }
+      });
+    }
+
+    function sendPayload(payload) {
+      const partnerPeerId = `${AUTH_CONFIG.SECRET_ROOM_ID}-${myRole === 'husband' ? 'wife' : 'husband'}`;
+      if (dataConn && dataConn.open) dataConn.send(payload);
+      else if (peer && !peer.disconnected) {
+        const c = peer.connect(partnerPeerId, { reliable: true });
+        c.on('open', () => { setupDataChannel(c); c.send(payload); });
+      }
+    }
+
+    async function toggleLiveCall() {
+      if (activeMediaCall) { endLiveCall(); return; }
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const partnerPeerId = `${AUTH_CONFIG.SECRET_ROOM_ID}-${myRole === 'husband' ? 'wife' : 'husband'}`;
+        activeMediaCall = peer.call(partnerPeerId, localStream);
+        document.getElementById('live-call-label').textContent = 'Calling...';
+        activeMediaCall.on('stream', (rs) => {
+          const a = document.getElementById('remote-audio'); a.srcObject = rs; a.play().catch(()=>{});
+          document.getElementById('live-call-label').textContent = 'Connected (Tap to End)';
+        });
+        activeMediaCall.on('close', endLiveCall);
+      } catch (e) { alert('Allow microphone permission in browser settings.'); }
+    }
+
+    async function answerLiveCall() {
+      document.getElementById('incoming-call-modal').classList.add('hidden');
+      if (!activeMediaCall) return;
+      localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      activeMediaCall.answer(localStream);
+      document.getElementById('live-call-label').textContent = 'Connected (Tap to End)';
+      activeMediaCall.on('stream', (rs) => {
+        const a = document.getElementById('remote-audio'); a.srcObject = rs; a.play().catch(()=>{});
+      });
+      activeMediaCall.on('close', endLiveCall);
+    }
+
+    function endLiveCall() {
+      document.getElementById('incoming-call-modal').classList.add('hidden');
+      if (activeMediaCall) { try { activeMediaCall.close(); } catch(e){} activeMediaCall = null; }
+      if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+      document.getElementById('live-call-label').textContent = 'Start Live Call';
+    }
+
+    async function toggleVoiceRecording() {
+      const label = document.getElementById('voice-drop-label');
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop(); label.textContent = 'Tap to Record Voice'; return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunks = [];
+        const mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : 'audio/webm';
+        mediaRecorder = new MediaRecorder(stream, { mimeType });
+        mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+        mediaRecorder.onstop = () => {
+          stream.getTracks().forEach(t => t.stop());
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            appendVoiceBubble(reader.result, true);
+            sendPayload({ type: 'voice', audioBase64: reader.result });
+          };
+          reader.readAsDataURL(new Blob(audioChunks, { type: mediaRecorder.mimeType }));
+        };
+        mediaRecorder.start(); label.textContent = 'Recording... Tap to Send';
+      } catch (e) { alert('Microphone permission needed.'); }
+    }
+
+    function handleMediaUpload(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Data = reader.result;
+        const mediaType = file.type.startsWith('video') ? 'video' : 'image';
+        appendMediaBubble(base64Data, mediaType, true);
+        sendPayload({ type: 'media', mediaSrc: base64Data, mediaType: mediaType });
+        input.value = '';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim(); if (!text) return;
+      input.value = ''; appendChatBubble(text, true);
+      sendPayload({ type: 'chat', text });
+    }
+    function appendChatBubble(text, isMe) {
+      const box = document.getElementById('chat-messages');
+      box.innerHTML += `<div class="flex ${isMe?'justify-end':'justify-start'}"><div class="max-w-[80%] px-3 py-2 rounded-2xl text-xs ${isMe?'bg-rose-600 text-white':'bg-white/10 text-rose-100'}">${text}</div></div>`;
+      box.scrollTop = box.scrollHeight;
+    }
+    function appendVoiceBubble(src, isMe) {
+      const box = document.getElementById('chat-messages');
+      box.innerHTML += `<div class="flex ${isMe?'justify-end':'justify-start'}"><div class="px-3 py-2 rounded-2xl ${isMe?'bg-rose-600':'bg-white/15'}"><audio controls src="${src}" class="h-7 w-36"></audio></div></div>`;
+      box.scrollTop = box.scrollHeight;
+    }
+    function appendMediaBubble(src, type, isMe) {
+      const box = document.getElementById('chat-messages');
+      const content = type === 'video'
+        ? `<video controls src="${src}" class="max-w-[200px] rounded-xl"></video>`
+        : `<img src="${src}" class="max-w-[200px] rounded-xl cursor-pointer" onclick="window.open('${src}')" />`;
+      box.innerHTML += `<div class="flex ${isMe?'justify-end':'justify-start'}"><div class="p-1 rounded-2xl ${isMe?'bg-rose-600':'bg-white/15'}">${content}</div></div>`;
+      box.scrollTop = box.scrollHeight;
+    }
+    function sendTelepathy(text) {
+      showTelepathyBanner(`Sent: ${text}`); appendChatBubble(text, true);
+      sendPayload({ type: 'telepathy', text });
+    }
+    function showTelepathyBanner(msg) {
+      const t = document.getElementById('telepathy-toast'); t.textContent = msg; t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 4000);
+    }
+
+    let scene, camera, renderer, controls, heartMesh, pointLight1, pointLight2, threeInitialized = false;
+    function initThreeRoom() {
+      if (threeInitialized) return; threeInitialized = true;
+      const container = document.getElementById('three-container');
+      scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x090514, 0.035);
+      camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(9, 8, 9);
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true; controls.enablePan = false;
+      controls.target.set(0, -1, 0);
+
+      scene.add(new THREE.AmbientLight(0xffe4e6, 0.6));
+      pointLight1 = new THREE.PointLight(0xf43f5e, 1.6, 18); pointLight1.position.set(2, 4, 2); scene.add(pointLight1);
+      pointLight2 = new THREE.PointLight(0xf59e0b, 1.2, 15); pointLight2.position.set(-3, 3, -2); scene.add(pointLight2);
+
+      const floor = new THREE.Mesh(new THREE.BoxGeometry(6, 0.3, 6), new THREE.MeshStandardMaterial({ color: 0x1e1136 }));
+      floor.position.y = -0.15; scene.add(floor);
+      const w1 = new THREE.Mesh(new THREE.BoxGeometry(6, 4, 0.25), new THREE.MeshStandardMaterial({ color: 0x2a164d }));
+      w1.position.set(0, 2, -2.875); scene.add(w1);
+      const w2 = new THREE.Mesh(new THREE.BoxGeometry(0.25, 4, 6), new THREE.MeshStandardMaterial({ color: 0x2a164d }));
+      w2.position.set(-2.875, 2, 0); scene.add(w2);
+
+      heartMesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.6, 1), new THREE.MeshStandardMaterial({ color: 0xfb7185, emissive: 0xe11d48, emissiveIntensity: 0.7 }));
+      heartMesh.position.set(0.3, 1.7, 0.3); scene.add(heartMesh);
+
+      window.addEventListener('resize', onWindowResize);
+      (function animate() {
+        requestAnimationFrame(animate);
+        const t = performance.now() * 0.001;
+        if (heartMesh) { heartMesh.rotation.y = t; heartMesh.position.y = 1.65 + Math.sin(t * 2) * 0.15; }
+        controls.update(); renderer.render(scene, camera);
+      })();
+    }
+    function setRoomTheme(theme) {
+      if (!pointLight1) return;
+      if (theme === 'rose') { pointLight1.color.setHex(0xf43f5e); pointLight2.color.setHex(0xf59e0b); }
+      if (theme === 'gold') { pointLight1.color.setHex(0xfbbf24); pointLight2.color.setHex(0xf97316); }
+      if (theme === 'starlight') { pointLight1.color.setHex(0x818cf8); pointLight2.color.setHex(0x38bdf8); }
+    }
+    function onWindowResize() {
+      if (!camera || !renderer) return;
+      camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    updateAuthUI();
+    if (verifiedUser) initPeerConnection();
+  </script>
+</body>
+</html>
