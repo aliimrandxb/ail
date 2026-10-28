@@ -12,7 +12,6 @@
   <meta name="apple-mobile-web-app-title" content="DailySync" />
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" />
 
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -33,7 +32,7 @@
 </head>
 <body class="text-slate-100 select-none">
 
-  <!-- DECOY UTILITY SCREEN -->
+  <!-- ================= DECOY UTILITY SCREEN ================= -->
   <div id="decoy-screen" class="w-full h-full flex flex-col bg-slate-900 z-30 relative">
     <header class="px-4 pt-3 pb-2.5 bg-slate-900/95 border-b border-slate-800 flex items-center justify-between shrink-0">
       <div class="flex items-center gap-2.5" id="secret-logo-hold">
@@ -42,19 +41,19 @@
         </div>
         <div>
           <h1 class="text-sm font-semibold tracking-tight text-white leading-none">DailySync</h1>
-          <p id="auth-badge-sub" class="text-[11px] text-slate-400 mt-0.5">Local Mode • Tap Sync to Backup</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">Household & Utility Manager</p>
         </div>
       </div>
 
-      <button id="stealth-alert-pill" onclick="attemptUnlockSanctuary('chat')" class="hidden items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs animate-pulse">
+      <button id="stealth-alert-pill" onclick="unlockSanctuary('chat')" class="hidden items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs animate-pulse">
         <i data-lucide="cloud-lightning" class="w-3.5 h-3.5"></i>
-        <span>1 Sync Pending</span>
+        <span>1 New Message</span>
       </button>
 
-      <button onclick="openAuthModal()" id="sync-account-btn" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-300">
-        <i data-lucide="cloud" class="w-3.5 h-3.5 text-emerald-400"></i>
-        <span id="sync-btn-label">Cloud Sync</span>
-      </button>
+      <div class="text-right text-[11px] text-slate-400">
+        <div id="decoy-clock" class="font-mono text-slate-200 font-medium">12:00</div>
+        <div>Dubai, UAE</div>
+      </div>
     </header>
 
     <main class="flex-1 overflow-y-auto p-4 space-y-4">
@@ -159,23 +158,7 @@
     </nav>
   </div>
 
-  <!-- AUTH MODAL -->
-  <div id="auth-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 max-w-xs w-full space-y-4 text-center">
-      <div class="w-12 h-12 rounded-full bg-emerald-500/15 border border-emerald-500/30 mx-auto flex items-center justify-center text-emerald-400">
-        <i data-lucide="shield-check" class="w-6 h-6"></i>
-      </div>
-      <div>
-        <h3 class="text-sm font-bold text-white">Household Cloud Sync</h3>
-        <p class="text-xs text-slate-400 mt-1">Sign in with your authorized Google account to sync household data.</p>
-      </div>
-      <div id="google-btn-container" class="flex justify-center py-1"></div>
-      <p id="auth-error-msg" class="hidden text-xs text-rose-400 font-medium"></p>
-      <button onclick="closeAuthModal()" class="w-full py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-medium">Close</button>
-    </div>
-  </div>
-
-  <!-- 3D MOBILE LOVE SANCTUARY -->
+  <!-- ================= 3D ISOMETRIC LOVE SANCTUARY ================= -->
   <div id="sanctuary-screen" class="hidden fixed inset-0 w-full h-full bg-[#090514] z-40 flex flex-col justify-between overflow-hidden">
     <div id="three-container" class="absolute inset-0 w-full h-full z-0"></div>
 
@@ -184,19 +167,26 @@
         <span id="peer-dot" class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0 animate-pulse"></span>
         <div class="truncate">
           <div class="text-xs font-bold text-rose-200 flex items-center gap-1">
-            <span id="sanctuary-welcome">Our Sanctuary</span>
+            <span>Our Sanctuary</span>
             <i data-lucide="heart" class="w-3 h-3 text-rose-400 fill-rose-400"></i>
           </div>
-          <p id="peer-status-text" class="text-[10px] text-rose-300/80 truncate">Verified Google Session</p>
+          <p id="peer-status-text" class="text-[10px] text-rose-300/80 truncate">Connecting P2P...</p>
         </div>
       </div>
 
-      <button onclick="triggerPanic()" class="shrink-0 flex items-center gap-1.5 bg-rose-600 active:scale-95 text-white font-semibold text-xs px-3 py-2 rounded-full shadow-lg border border-rose-400/40">
+      <!-- ROLE TOGGLE -->
+      <div class="flex bg-black/60 p-0.5 rounded-lg border border-white/10 text-[10px] font-semibold shrink-0">
+        <button id="role-husband" onclick="switchRole('husband')" class="px-2 py-1 rounded-md bg-rose-600 text-white">Ali</button>
+        <button id="role-wife" onclick="switchRole('wife')" class="px-2 py-1 rounded-md text-slate-300">Ayesha</button>
+      </div>
+
+      <button onclick="triggerPanic()" class="shrink-0 flex items-center gap-1.5 bg-rose-600 active:scale-95 text-white font-semibold text-xs px-2.5 py-1.5 rounded-full shadow-lg border border-rose-400/40">
         <i data-lucide="eye-off" class="w-3.5 h-3.5"></i>
-        <span>Fam Nearby (Hide)</span>
+        <span>Hide</span>
       </button>
     </header>
 
+    <!-- INCOMING CALL POPUP -->
     <div id="incoming-call-modal" class="hidden relative z-30 mx-4 bg-rose-950/95 border border-rose-500/60 rounded-2xl p-3.5 shadow-2xl flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-full bg-rose-500 flex items-center justify-center text-white animate-bounce">
@@ -221,35 +211,30 @@
       </div>
     </div>
 
-    <div id="sanctuary-drawer" class="bottom-sheet fixed inset-x-0 bottom-14 z-30 bg-[#120924]/95 backdrop-blur-xl border-t border-rose-500/30 rounded-t-3xl max-h-[74dvh] flex flex-col shadow-2xl">
+    <!-- MOBILE BOTTOM SHEET DRAWERS -->
+    <div id="sanctuary-drawer" class="bottom-sheet fixed inset-x-0 bottom-14 z-30 bg-[#120924]/95 backdrop-blur-xl border-t border-rose-500/30 rounded-t-3xl max-h-[78dvh] flex flex-col shadow-2xl">
       <div class="px-4 pt-2.5 pb-2 border-b border-white/10 flex items-center justify-between shrink-0">
         <span id="drawer-title" class="text-sm font-bold text-rose-200">Secret Line & Calling</span>
         <button onclick="closeDrawer()" class="p-1.5 rounded-full bg-white/10 text-slate-300"><i data-lucide="chevron-down" class="w-4 h-4"></i></button>
       </div>
 
+      <!-- PANEL 1: WHATSAPP FEATURES (Call, Voice Note, Chat, Media) -->
       <div id="panel-chat" class="flex-1 overflow-y-auto p-3.5 space-y-3 flex flex-col">
-        <div class="bg-white/5 border border-white/10 rounded-2xl p-2.5 flex items-center justify-between">
-          <div class="text-xs text-rose-200">
-            Logged in as: <b id="my-role-badge" class="uppercase text-emerald-400">HUSBAND</b>
-          </div>
-          <span id="partner-online-badge" class="text-[11px] text-amber-300 font-medium">Waiting for partner...</span>
-        </div>
-
         <div class="grid grid-cols-2 gap-2 shrink-0">
-          <button id="btn-live-call" onclick="toggleLiveCall()" class="relative flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-emerald-600 active:scale-95 text-white font-semibold text-xs shadow-lg">
+          <button id="btn-live-call" onclick="toggleLiveCall()" class="relative flex items-center justify-center gap-2 py-2 px-2 rounded-xl bg-emerald-600 active:scale-95 text-white font-semibold text-xs shadow-lg">
             <i data-lucide="phone-call" class="w-4 h-4"></i>
-            <span id="live-call-label">Start Live Call</span>
+            <span id="live-call-label">Start Call</span>
           </button>
-          <button id="btn-voice-drop" onclick="toggleVoiceRecording()" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-rose-600 active:scale-95 text-white font-semibold text-xs shadow-lg">
+          <button id="btn-voice-drop" onclick="toggleVoiceRecording()" class="flex items-center justify-center gap-2 py-2 px-2 rounded-xl bg-rose-600 active:scale-95 text-white font-semibold text-xs shadow-lg">
             <i data-lucide="mic" class="w-4 h-4"></i>
-            <span id="voice-drop-label">Tap to Record Voice</span>
+            <span id="voice-drop-label">Voice Note</span>
           </button>
         </div>
 
         <audio id="remote-audio" autoplay playsinline class="hidden"></audio>
 
-        <div id="chat-messages" class="flex-1 min-h-[150px] max-h-[200px] overflow-y-auto bg-black/40 border border-white/10 rounded-2xl p-3 space-y-2.5">
-          <div class="text-center text-[11px] text-rose-200/60 py-4">Google-verified private channel • Encrypted P2P Media</div>
+        <div id="chat-messages" class="flex-1 min-h-[140px] max-h-[190px] overflow-y-auto bg-black/40 border border-white/10 rounded-2xl p-3 space-y-2.5">
+          <div class="text-center text-[11px] text-rose-200/60 py-2">P2P Encrypted Channel • Direct Phone-to-Phone</div>
         </div>
 
         <input type="file" id="media-file-input" accept="image/*,video/*" class="hidden" onchange="handleMediaUpload(this)" />
@@ -258,12 +243,34 @@
           <button onclick="document.getElementById('media-file-input').click()" class="p-2.5 rounded-xl bg-white/10 text-rose-200 active:scale-95" title="Attach Photo or Video">
             <i data-lucide="paperclip" class="w-4 h-4"></i>
           </button>
-          <input id="chat-input" type="text" placeholder="Whisper something sweet..." onkeydown="if(event.key==='Enter') sendChatMessage()"
+          <input id="chat-input" type="text" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendChatMessage()"
             class="flex-1 bg-black/50 border border-rose-400/30 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-rose-400" />
           <button onclick="sendChatMessage()" class="bg-rose-600 text-white px-4 py-2.5 rounded-xl flex items-center justify-center"><i data-lucide="send" class="w-4 h-4"></i></button>
         </div>
       </div>
 
+      <!-- PANEL 2: YOUTUBE THEATRE -->
+      <div id="panel-music" class="hidden flex-1 overflow-y-auto p-3.5 space-y-3 flex flex-col">
+        <div class="text-xs font-bold text-rose-200 flex items-center gap-1.5">
+          <i data-lucide="youtube" class="w-4 h-4 text-rose-500"></i>
+          <span>Our Ad-Free YouTube Theatre</span>
+        </div>
+        <div class="flex gap-2">
+          <input id="yt-link-input" type="text" placeholder="Paste YouTube link here..." 
+            class="flex-1 bg-black/50 border border-rose-400/30 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-rose-400" />
+          <button onclick="addYouTubeSong()" class="bg-rose-600 active:scale-95 text-white px-4 py-2 rounded-xl text-xs font-bold shrink-0">Add Song</button>
+        </div>
+        <div id="yt-player-container" class="w-full aspect-video bg-black rounded-2xl overflow-hidden border border-rose-500/30 flex items-center justify-center relative shrink-0">
+          <div class="text-center p-4 text-slate-400 text-xs">
+            <i data-lucide="film" class="w-8 h-8 mx-auto text-rose-400/60 mb-1"></i>
+            <span>Select a song below to start theatre</span>
+          </div>
+        </div>
+        <div class="text-[11px] font-bold text-rose-200">Shared Playlist:</div>
+        <div id="yt-playlist" class="flex-1 min-h-[110px] max-h-[140px] overflow-y-auto space-y-2"></div>
+      </div>
+
+      <!-- PANEL 3: TELEPATHY -->
       <div id="panel-mood" class="hidden flex-1 overflow-y-auto p-4 space-y-3">
         <div class="grid grid-cols-2 gap-2.5">
           <button onclick="sendTelepathy('☕ Craving Karak Chai together')" class="p-3 rounded-2xl bg-white/5 border border-white/10 text-left">
@@ -281,6 +288,7 @@
         </div>
       </div>
 
+      <!-- PANEL 4: LETTERS -->
       <div id="panel-letters" class="hidden flex-1 overflow-y-auto p-4 space-y-3">
         <div class="bg-gradient-to-br from-rose-950/90 to-purple-950/80 border border-rose-400/30 rounded-2xl p-4 space-y-2">
           <div class="text-xs font-bold text-amber-300 uppercase">Happy Anniversary, My Love</div>
@@ -292,102 +300,297 @@
           </p>
         </div>
       </div>
-
-      <div id="panel-room" class="hidden flex-1 overflow-y-auto p-4 space-y-3">
-        <div class="grid grid-cols-3 gap-2">
-          <button onclick="setRoomTheme('rose')" class="py-2.5 px-3 rounded-xl bg-rose-600/30 border border-rose-400 text-xs text-rose-200">Rose Glow</button>
-          <button onclick="setRoomTheme('gold')" class="py-2.5 px-3 rounded-xl bg-amber-600/30 border border-amber-400 text-xs text-amber-200">Golden Hour</button>
-          <button onclick="setRoomTheme('starlight')" class="py-2.5 px-3 rounded-xl bg-indigo-600/30 border border-indigo-400 text-xs text-indigo-200">Starlight</button>
-        </div>
-      </div>
     </div>
 
-    <nav class="relative z-40 h-14 bg-[#0d061a]/95 border-t border-rose-500/30 grid grid-cols-4 px-2 shrink-0">
-      <button onclick="openDrawer('chat')" id="snav-chat" class="flex flex-col items-center justify-center text-rose-400"><i data-lucide="phone-call" class="w-5 h-5"></i><span class="text-[10px] mt-0.5 font-semibold">Call & Chat</span></button>
-      <button onclick="openDrawer('mood')" id="snav-mood" class="flex flex-col items-center justify-center text-slate-400"><i data-lucide="sparkles" class="w-5 h-5"></i><span class="text-[10px] mt-0.5 font-semibold">Telepathy</span></button>
-      <button onclick="openDrawer('letters')" id="snav-letters" class="flex flex-col items-center justify-center text-slate-400"><i data-lucide="mail-heart" class="w-5 h-5"></i><span class="text-[10px] mt-0.5 font-semibold">Love Note</span></button>
-      <button onclick="openDrawer('room')" id="snav-room" class="flex flex-col items-center justify-center text-slate-400"><i data-lucide="box" class="w-5 h-5"></i><span class="text-[10px] mt-0.5 font-semibold">3D Room</span></button>
+    <!-- MOBILE THUMB BOTTOM DOCK -->
+    <nav class="relative z-40 h-14 bg-[#0d061a]/95 border-t border-rose-500/30 grid grid-cols-4 px-1 shrink-0">
+      <button onclick="openDrawer('chat')" id="snav-chat" class="flex flex-col items-center justify-center text-rose-400"><i data-lucide="message-circle" class="w-4 h-4"></i><span class="text-[9px] mt-0.5 font-semibold">Chat</span></button>
+      <button onclick="openDrawer('music')" id="snav-music" class="flex flex-col items-center justify-center text-slate-400"><i data-lucide="youtube" class="w-4 h-4"></i><span class="text-[9px] mt-0.5 font-semibold">Theatre</span></button>
+      <button onclick="openDrawer('mood')" id="snav-mood" class="flex flex-col items-center justify-center text-slate-400"><i data-lucide="sparkles" class="w-4 h-4"></i><span class="text-[9px] mt-0.5 font-semibold">Telepathy</span></button>
+      <button onclick="openDrawer('room')" id="snav-room" class="flex flex-col items-center justify-center text-slate-400"><i data-lucide="box" class="w-4 h-4"></i><span class="text-[9px] mt-0.5 font-semibold">3D Room</span></button>
     </nav>
   </div>
 
   <script>
     lucide.createIcons();
 
-    const AUTH_CONFIG = {
-      GOOGLE_CLIENT_ID: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
-      HUSBAND_EMAIL: "alisaraimir@gmail.com",
-      WIFE_EMAIL: "ayeshaimran.in@gmail.com",
-      SECRET_ROOM_ID: "ali-ayesha-sanctuary-2026"
-    };
+    // ================= P2P CONFIGURATION =================
+    const ROOM_ID = "ali-ayesha-sanctuary-2026";
+    let myRole = localStorage.getItem('sanctuary_role') || 'husband'; // husband = Ali, wife = Ayesha
 
-    let verifiedUser = JSON.parse(localStorage.getItem('dailysync_verified_user') || 'null');
-    let myRole = verifiedUser ? verifiedUser.role : 'husband';
-
-    function decodeJwtPayload(token) {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      return JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
-    }
-
-    function handleGoogleCredentialResponse(response) {
-      const payload = decodeJwtPayload(response.credential);
-      const email = (payload.email || '').toLowerCase().trim();
-      const errEl = document.getElementById('auth-error-msg');
-
-      if (email === AUTH_CONFIG.HUSBAND_EMAIL.toLowerCase().trim()) {
-        verifiedUser = { email, name: payload.given_name || 'Ali', role: 'husband' };
-      } else if (email === AUTH_CONFIG.WIFE_EMAIL.toLowerCase().trim()) {
-        verifiedUser = { email, name: payload.given_name || 'Ayesha', role: 'wife' };
-      } else {
-        errEl.textContent = "Cloud Sync is restricted to household owner accounts.";
-        errEl.classList.remove('hidden');
-        return;
-      }
-
-      myRole = verifiedUser.role;
-      localStorage.setItem('dailysync_verified_user', JSON.stringify(verifiedUser));
-      updateAuthUI();
-      closeAuthModal();
+    function switchRole(role) {
+      myRole = role;
+      localStorage.setItem('sanctuary_role', role);
+      document.getElementById('role-husband').className = `px-2 py-1 rounded-md ${role === 'husband' ? 'bg-rose-600 text-white' : 'text-slate-300'}`;
+      document.getElementById('role-wife').className = `px-2 py-1 rounded-md ${role === 'wife' ? 'bg-rose-600 text-white' : 'text-slate-300'}`;
       initPeerConnection();
     }
 
-    function updateAuthUI() {
-      if (verifiedUser) {
-        document.getElementById('auth-badge-sub').textContent = `Synced • ${verifiedUser.email}`;
-        document.getElementById('sync-btn-label').textContent = 'Synced ✓';
-        document.getElementById('my-role-badge').textContent = verifiedUser.role.toUpperCase();
-      }
+    let peer = null;
+    let dataConn = null;
+    let activeMediaCall = null;
+    let localStream = null;
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let ytPlaylist = JSON.parse(localStorage.getItem('sanctuary_yt_playlist') || '[]');
+
+    function initPeerConnection() {
+      if (peer) { try { peer.destroy(); } catch (e) {} }
+      const myPeerId = `${ROOM_ID}-${myRole}`;
+      const partnerRole = myRole === 'husband' ? 'wife' : 'husband';
+      const partnerPeerId = `${ROOM_ID}-${partnerRole}`;
+
+      updatePeerUI('amber', `Connecting as ${myRole}...`);
+
+      peer = new Peer(myPeerId, {
+        config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun.cloudflare.com:3478' }] }
+      });
+
+      peer.on('open', () => {
+        updatePeerUI('emerald', `Online (${myRole})`);
+        connectToPartner(partnerPeerId);
+      });
+
+      peer.on('connection', (conn) => {
+        setupDataChannel(conn);
+      });
+
+      peer.on('call', (call) => {
+        activeMediaCall = call;
+        if (sanctuaryActive) {
+          document.getElementById('incoming-call-modal').classList.remove('hidden');
+        } else {
+          document.getElementById('stealth-alert-pill').classList.remove('hidden');
+        }
+      });
     }
 
-    function openAuthModal() {
-      document.getElementById('auth-modal').classList.remove('hidden');
-      if (window.google && AUTH_CONFIG.GOOGLE_CLIENT_ID.indexOf('YOUR_') === -1) {
-        google.accounts.id.initialize({
-          client_id: AUTH_CONFIG.GOOGLE_CLIENT_ID,
-          callback: handleGoogleCredentialResponse,
-          auto_select: true
+    function connectToPartner(partnerPeerId) {
+      if (!peer || peer.disconnected) return;
+      const conn = peer.connect(partnerPeerId, { reliable: true });
+      setupDataChannel(conn);
+    }
+
+    function setupDataChannel(conn) {
+      dataConn = conn;
+      conn.on('open', () => {
+        updatePeerUI('emerald', '❤️ Connected Live!');
+      });
+      conn.on('data', (d) => {
+        if (!sanctuaryActive) document.getElementById('stealth-alert-pill').classList.remove('hidden');
+        if (d.type === 'chat') appendChatBubble(d.sender, d.text, false);
+        if (d.type === 'voice') appendVoiceBubble(d.sender, d.audioBase64, false);
+        if (d.type === 'media') appendMediaBubble(d.sender, d.mediaSrc, d.mediaType, false);
+        if (d.type === 'youtube') {
+          ytPlaylist.push(d.song);
+          localStorage.setItem('sanctuary_yt_playlist', JSON.stringify(ytPlaylist));
+          renderYtPlaylist();
+          showTelepathyBanner(`🎵 Partner added a song!`);
+        }
+        if (d.type === 'telepathy') {
+          showTelepathyBanner(d.text);
+          appendChatBubble(d.sender, d.text, false);
+        }
+      });
+      conn.on('close', () => {
+        updatePeerUI('amber', 'Partner offline');
+      });
+    }
+
+    function updatePeerUI(color, text) {
+      const dot = document.getElementById('peer-dot');
+      if (dot) dot.className = `w-2.5 h-2.5 rounded-full shrink-0 bg-${color}-400`;
+      const status = document.getElementById('peer-status-text');
+      if (status) status.textContent = text;
+    }
+
+    function sendPayload(payload) {
+      const partnerRole = myRole === 'husband' ? 'wife' : 'husband';
+      const partnerPeerId = `${ROOM_ID}-${partnerRole}`;
+      if (dataConn && dataConn.open) {
+        dataConn.send(payload);
+      } else if (peer && !peer.disconnected) {
+        const c = peer.connect(partnerPeerId, { reliable: true });
+        c.on('open', () => {
+          setupDataChannel(c);
+          c.send(payload);
         });
-        google.accounts.id.renderButton(
-          document.getElementById('google-btn-container'),
-          { theme: 'filled_black', size: 'large', shape: 'pill', text: 'continue_with' }
-        );
       }
     }
-    function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
 
-    function attemptUnlockSanctuary(tab = 'chat') {
-      if (!verifiedUser && AUTH_CONFIG.GOOGLE_CLIENT_ID.indexOf('YOUR_') === -1) {
-        openAuthModal();
+    // --- WHATSAPP FEATURES LOGIC ---
+    async function toggleLiveCall() {
+      if (activeMediaCall) { endLiveCall(); return; }
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        const partnerRole = myRole === 'husband' ? 'wife' : 'husband';
+        const partnerPeerId = `${ROOM_ID}-${partnerRole}`;
+        activeMediaCall = peer.call(partnerPeerId, localStream);
+        setCallBtnState(true, 'Calling...');
+        activeMediaCall.on('stream', (rs) => {
+          const a = document.getElementById('remote-audio');
+          a.srcObject = rs; a.play().catch(()=>{});
+          setCallBtnState(true, 'Connected (End)');
+        });
+        activeMediaCall.on('close', endLiveCall);
+      } catch (e) { alert('Microphone permission required for calls.'); }
+    }
+
+    async function answerLiveCall() {
+      document.getElementById('incoming-call-modal').classList.add('hidden');
+      if (!activeMediaCall) return;
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        activeMediaCall.answer(localStream);
+        setCallBtnState(true, 'Connected (End)');
+        activeMediaCall.on('stream', (rs) => {
+          const a = document.getElementById('remote-audio');
+          a.srcObject = rs; a.play().catch(()=>{});
+        });
+        activeMediaCall.on('close', endLiveCall);
+      } catch (e) { alert('Microphone permission required.'); }
+    }
+
+    function endLiveCall() {
+      document.getElementById('incoming-call-modal').classList.add('hidden');
+      if (activeMediaCall) { try { activeMediaCall.close(); } catch(e){} activeMediaCall = null; }
+      if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+      setCallBtnState(false, 'Start Call');
+    }
+
+    function setCallBtnState(active, label) {
+      const btn = document.getElementById('btn-live-call');
+      document.getElementById('live-call-label').textContent = label;
+      btn.className = active ? 'relative ring-anim flex items-center justify-center gap-2 py-2 px-2 rounded-xl bg-rose-600 text-white font-semibold text-xs shadow-lg' : 'relative flex items-center justify-center gap-2 py-2 px-2 rounded-xl bg-emerald-600 text-white font-semibold text-xs shadow-lg';
+    }
+
+    async function toggleVoiceRecording() {
+      const label = document.getElementById('voice-drop-label');
+      const btn = document.getElementById('btn-voice-drop');
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        btn.classList.remove('ring-anim', 'bg-amber-600');
+        btn.classList.add('bg-rose-600');
+        label.textContent = 'Voice Note';
         return;
       }
-      unlockSanctuary(tab);
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunks = [];
+        const mime = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : 'audio/webm';
+        mediaRecorder = new MediaRecorder(stream, { mimeType: mime });
+        mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+        mediaRecorder.onstop = () => {
+          stream.getTracks().forEach(t => t.stop());
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            appendVoiceBubble(myRole, reader.result, true);
+            sendPayload({ type: 'voice', sender: myRole, audioBase64: reader.result });
+          };
+          reader.readAsDataURL(new Blob(audioChunks, { type: mediaRecorder.mimeType }));
+        };
+        mediaRecorder.start();
+        btn.classList.remove('bg-rose-600');
+        btn.classList.add('ring-anim', 'bg-amber-600');
+        label.textContent = 'Recording... (Tap to Send)';
+      } catch (e) { alert('Microphone permission required for voice notes.'); }
     }
 
+    function handleMediaUpload(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = reader.result;
+        const type = file.type.startsWith('video') ? 'video' : 'image';
+        appendMediaBubble(myRole, base64, type, true);
+        sendPayload({ type: 'media', sender: myRole, mediaSrc: base64, mediaType: type });
+        input.value = '';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim(); if (!text) return;
+      input.value = '';
+      appendChatBubble(myRole, text, true);
+      sendPayload({ type: 'chat', sender: myRole, text });
+    }
+
+    function sendTelepathy(text) {
+      showTelepathyBanner(`Sent: ${text}`);
+      appendChatBubble(myRole, text, true);
+      sendPayload({ type: 'telepathy', sender: myRole, text });
+    }
+
+    function appendChatBubble(sender, text, isMe) {
+      const box = document.getElementById('chat-messages');
+      box.innerHTML += `<div class="flex ${isMe?'justify-end':'justify-start'}"><div class="max-w-[80%] px-3 py-2 rounded-2xl text-xs ${isMe?'bg-rose-600 text-white':'bg-white/10 text-rose-100'}">${text}</div></div>`;
+      box.scrollTop = box.scrollHeight;
+    }
+    function appendVoiceBubble(sender, src, isMe) {
+      const box = document.getElementById('chat-messages');
+      box.innerHTML += `<div class="flex ${isMe?'justify-end':'justify-start'}"><div class="px-3 py-2 rounded-2xl ${isMe?'bg-rose-600':'bg-white/15'}"><audio controls src="${src}" class="h-7 w-36"></audio></div></div>`;
+      box.scrollTop = box.scrollHeight;
+    }
+    function appendMediaBubble(sender, src, type, isMe) {
+      const box = document.getElementById('chat-messages');
+      const content = type === 'video' ? `<video controls src="${src}" class="max-w-[180px] rounded-xl"></video>` : `<img src="${src}" class="max-w-[180px] rounded-xl cursor-pointer" onclick="window.open('${src}')" />`;
+      box.innerHTML += `<div class="flex ${isMe?'justify-end':'justify-start'}"><div class="p-1 rounded-2xl ${isMe?'bg-rose-600':'bg-white/15'}">${content}</div></div>`;
+      box.scrollTop = box.scrollHeight;
+    }
+    function showTelepathyBanner(msg) {
+      const t = document.getElementById('telepathy-toast'); t.textContent = msg; t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 4000);
+    }
+
+    // --- YOUTUBE THEATRE LOGIC ---
+    function extractYouTubeId(url) {
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    function addYouTubeSong() {
+      const input = document.getElementById('yt-link-input');
+      const val = input.value.trim(); if (!val) return;
+      const videoId = extractYouTubeId(val);
+      if (!videoId) { alert('Invalid YouTube link.'); return; }
+      const song = { id: videoId, title: `Song (${ytPlaylist.length + 1})` };
+      ytPlaylist.push(song);
+      localStorage.setItem('sanctuary_yt_playlist', JSON.stringify(ytPlaylist));
+      input.value = '';
+      renderYtPlaylist();
+      playYtSong(videoId);
+      sendPayload({ type: 'youtube', song });
+    }
+
+    function renderYtPlaylist() {
+      const container = document.getElementById('yt-playlist');
+      if (ytPlaylist.length === 0) {
+        container.innerHTML = `<div class="text-[11px] text-slate-500 text-center py-3">No songs yet.</div>`;
+        return;
+      }
+      container.innerHTML = ytPlaylist.map((s, i) => `
+        <div onclick="playYtSong('${s.id}')" class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl p-2 cursor-pointer">
+          <i data-lucide="play" class="w-3.5 h-3.5 text-rose-400 fill-rose-400"></i>
+          <span class="text-xs text-rose-100 truncate">${s.title}</span>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+    renderYtPlaylist();
+
+    function playYtSong(videoId) {
+      document.getElementById('yt-player-container').innerHTML = `<iframe class="w-full h-full absolute inset-0" src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    }
+
+    // --- DECOY & NAVIGATION LOGIC ---
     let groceries = [
       { text: 'Fresh Milk & Laban', done: false },
       { text: 'Whole Wheat Bread', done: true },
-      { text: 'Baby Wipes & Supplies', done: false },
-      { text: 'Karak Tea Bags & Cardamom', done: false }
+      { text: 'Baby Wipes & Supplies', done: false }
     ];
     function renderGroceries() {
       document.getElementById('grocery-list').innerHTML = groceries.map((item, idx) => `
@@ -401,29 +604,25 @@
 
     function handleGroceryAdd() {
       const input = document.getElementById('grocery-input');
-      const val = input.value.trim();
-      if (!val) return;
+      const val = input.value.trim(); if (!val) return;
       if (['143', 'love', 'anniversary'].includes(val.toLowerCase())) {
-        input.value = '';
-        attemptUnlockSanctuary('chat');
-        return;
+        input.value = ''; unlockSanctuary('chat'); return;
       }
       groceries.unshift({ text: val, done: false });
-      input.value = '';
-      renderGroceries();
+      input.value = ''; renderGroceries();
     }
 
     let humTaps = 0, humTimer = null;
     function handleHumidityTap() {
       humTaps++; clearTimeout(humTimer);
-      if (humTaps >= 3) { humTaps = 0; attemptUnlockSanctuary('chat'); }
+      if (humTaps >= 3) { humTaps = 0; unlockSanctuary('chat'); }
       else { humTimer = setTimeout(() => humTaps = 0, 1200); }
     }
 
     function handleRadioScrub(val) {
       const v = parseInt(val, 10);
       document.getElementById('radio-time-label').textContent = `${String(Math.floor(v/60)).padStart(2,'0')}:${String(v%60).padStart(2,'0')}`;
-      if (v === 103) attemptUnlockSanctuary('chat');
+      if (v === 103) unlockSanctuary('chat');
     }
 
     let audioCtx = null, droneOsc = null;
@@ -446,7 +645,7 @@
       const disp = document.getElementById('calc-display');
       if (key === 'C') { calcExpr = ''; disp.textContent = '0'; return; }
       if (key === '=') {
-        if (calcExpr === '143') { calcExpr = ''; disp.textContent = '0'; attemptUnlockSanctuary('chat'); return; }
+        if (calcExpr === '143') { calcExpr = ''; disp.textContent = '0'; unlockSanctuary('chat'); return; }
         try { calcExpr = String(Function('"use strict";return (' + calcExpr + ')')()); disp.textContent = calcExpr; }
         catch { disp.textContent = 'Error'; calcExpr = ''; }
         return;
@@ -461,8 +660,11 @@
       });
     }
 
-    let sanctuaryActive = false, peer = null, dataConn = null, activeMediaCall = null, localStream = null, mediaRecorder = null, audioChunks = [];
+    setInterval(() => {
+      document.getElementById('decoy-clock').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }, 1000);
 
+    let sanctuaryActive = false;
     function unlockSanctuary(initialTab = 'chat') {
       sanctuaryActive = true;
       document.getElementById('stealth-alert-pill').classList.add('hidden');
@@ -475,7 +677,6 @@
     function triggerPanic() {
       sanctuaryActive = false;
       endLiveCall();
-      if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
       if (droneOsc) { droneOsc.stop(); droneOsc = null; }
       document.getElementById('sanctuary-screen').classList.add('hidden');
       document.getElementById('decoy-screen').classList.remove('hidden');
@@ -484,208 +685,58 @@
 
     function openDrawer(panel) {
       document.getElementById('sanctuary-drawer').classList.add('open');
-      ['chat', 'mood', 'letters', 'room'].forEach(p => {
-        document.getElementById(`panel-${p}`).classList.toggle('hidden', p !== panel);
-        document.getElementById(`snav-${p}`).className = `flex flex-col items-center justify-center ${p === panel ? 'text-rose-400' : 'text-slate-400'}`;
+      ['chat', 'music', 'mood', 'letters', 'room'].forEach(p => {
+        const el = document.getElementById(`panel-${p}`);
+        if (el) el.classList.toggle('hidden', p !== panel);
+        const navBtn = document.getElementById(`snav-${p}`);
+        if (navBtn) navBtn.className = `flex flex-col items-center justify-center ${p === panel ? 'text-rose-400' : 'text-slate-400'}`;
       });
     }
     function closeDrawer() { document.getElementById('sanctuary-drawer').classList.remove('open'); }
 
-    function initPeerConnection() {
-      if (peer) { try { peer.destroy(); } catch (e) {} }
-      const room = AUTH_CONFIG.SECRET_ROOM_ID;
-      const myPeerId = `${room}-${myRole}`;
-      const partnerPeerId = `${room}-${myRole === 'husband' ? 'wife' : 'husband'}`;
-
-      peer = new Peer(myPeerId, {
-        config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun.cloudflare.com:3478' }] }
-      });
-
-      peer.on('open', () => {
-        document.getElementById('peer-status-text').textContent = `Secured as ${myRole.toUpperCase()}`;
-        const conn = peer.connect(partnerPeerId, { reliable: true });
-        setupDataChannel(conn);
-      });
-      peer.on('connection', setupDataChannel);
-      peer.on('call', (call) => {
-        activeMediaCall = call;
-        if (sanctuaryActive) document.getElementById('incoming-call-modal').classList.remove('hidden');
-        else { const pill = document.getElementById('stealth-alert-pill'); pill.classList.remove('hidden'); pill.classList.add('flex'); }
-      });
-    }
-
-    function setupDataChannel(conn) {
-      dataConn = conn;
-      conn.on('open', () => {
-        const b = document.getElementById('partner-online-badge');
-        b.textContent = '❤️ Partner Online!'; b.className = 'text-[11px] text-emerald-400 font-bold';
-      });
-      conn.on('data', (d) => {
-        if (!sanctuaryActive) { const pill = document.getElementById('stealth-alert-pill'); pill.classList.remove('hidden'); pill.classList.add('flex'); }
-        if (d.type === 'chat') appendChatBubble(d.text, false);
-        if (d.type === 'voice') appendVoiceBubble(d.audioBase64, false);
-        if (d.type === 'media') appendMediaBubble(d.mediaSrc, d.mediaType, false);
-        if (d.type === 'telepathy') { showTelepathyBanner(d.text); appendChatBubble(d.text, false); }
-      });
-    }
-
-    function sendPayload(payload) {
-      const partnerPeerId = `${AUTH_CONFIG.SECRET_ROOM_ID}-${myRole === 'husband' ? 'wife' : 'husband'}`;
-      if (dataConn && dataConn.open) dataConn.send(payload);
-      else if (peer && !peer.disconnected) {
-        const c = peer.connect(partnerPeerId, { reliable: true });
-        c.on('open', () => { setupDataChannel(c); c.send(payload); });
-      }
-    }
-
-    async function toggleLiveCall() {
-      if (activeMediaCall) { endLiveCall(); return; }
-      try {
-        localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const partnerPeerId = `${AUTH_CONFIG.SECRET_ROOM_ID}-${myRole === 'husband' ? 'wife' : 'husband'}`;
-        activeMediaCall = peer.call(partnerPeerId, localStream);
-        document.getElementById('live-call-label').textContent = 'Calling...';
-        activeMediaCall.on('stream', (rs) => {
-          const a = document.getElementById('remote-audio'); a.srcObject = rs; a.play().catch(()=>{});
-          document.getElementById('live-call-label').textContent = 'Connected (Tap to End)';
-        });
-        activeMediaCall.on('close', endLiveCall);
-      } catch (e) { alert('Allow microphone permission in browser settings.'); }
-    }
-
-    async function answerLiveCall() {
-      document.getElementById('incoming-call-modal').classList.add('hidden');
-      if (!activeMediaCall) return;
-      localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      activeMediaCall.answer(localStream);
-      document.getElementById('live-call-label').textContent = 'Connected (Tap to End)';
-      activeMediaCall.on('stream', (rs) => {
-        const a = document.getElementById('remote-audio'); a.srcObject = rs; a.play().catch(()=>{});
-      });
-      activeMediaCall.on('close', endLiveCall);
-    }
-
-    function endLiveCall() {
-      document.getElementById('incoming-call-modal').classList.add('hidden');
-      if (activeMediaCall) { try { activeMediaCall.close(); } catch(e){} activeMediaCall = null; }
-      if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
-      document.getElementById('live-call-label').textContent = 'Start Live Call';
-    }
-
-    async function toggleVoiceRecording() {
-      const label = document.getElementById('voice-drop-label');
-      if (mediaRecorder && mediaRecorder.state === 'recording') {
-        mediaRecorder.stop(); label.textContent = 'Tap to Record Voice'; return;
-      }
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        audioChunks = [];
-        const mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : 'audio/webm';
-        mediaRecorder = new MediaRecorder(stream, { mimeType });
-        mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-        mediaRecorder.onstop = () => {
-          stream.getTracks().forEach(t => t.stop());
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            appendVoiceBubble(reader.result, true);
-            sendPayload({ type: 'voice', audioBase64: reader.result });
-          };
-          reader.readAsDataURL(new Blob(audioChunks, { type: mediaRecorder.mimeType }));
-        };
-        mediaRecorder.start(); label.textContent = 'Recording... Tap to Send';
-      } catch (e) { alert('Microphone permission needed.'); }
-    }
-
-    function handleMediaUpload(input) {
-      const file = input.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64Data = reader.result;
-        const mediaType = file.type.startsWith('video') ? 'video' : 'image';
-        appendMediaBubble(base64Data, mediaType, true);
-        sendPayload({ type: 'media', mediaSrc: base64Data, mediaType: mediaType });
-        input.value = '';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function sendChatMessage() {
-      const input = document.getElementById('chat-input');
-      const text = input.value.trim(); if (!text) return;
-      input.value = ''; appendChatBubble(text, true);
-      sendPayload({ type: 'chat', text });
-    }
-    function appendChatBubble(text, isMe) {
-      const box = document.getElementById('chat-messages');
-      box.innerHTML += `<div class="flex ${isMe?'justify-end':'justify-start'}"><div class="max-w-[80%] px-3 py-2 rounded-2xl text-xs ${isMe?'bg-rose-600 text-white':'bg-white/10 text-rose-100'}">${text}</div></div>`;
-      box.scrollTop = box.scrollHeight;
-    }
-    function appendVoiceBubble(src, isMe) {
-      const box = document.getElementById('chat-messages');
-      box.innerHTML += `<div class="flex ${isMe?'justify-end':'justify-start'}"><div class="px-3 py-2 rounded-2xl ${isMe?'bg-rose-600':'bg-white/15'}"><audio controls src="${src}" class="h-7 w-36"></audio></div></div>`;
-      box.scrollTop = box.scrollHeight;
-    }
-    function appendMediaBubble(src, type, isMe) {
-      const box = document.getElementById('chat-messages');
-      const content = type === 'video'
-        ? `<video controls src="${src}" class="max-w-[200px] rounded-xl"></video>`
-        : `<img src="${src}" class="max-w-[200px] rounded-xl cursor-pointer" onclick="window.open('${src}')" />`;
-      box.innerHTML += `<div class="flex ${isMe?'justify-end':'justify-start'}"><div class="p-1 rounded-2xl ${isMe?'bg-rose-600':'bg-white/15'}">${content}</div></div>`;
-      box.scrollTop = box.scrollHeight;
-    }
-    function sendTelepathy(text) {
-      showTelepathyBanner(`Sent: ${text}`); appendChatBubble(text, true);
-      sendPayload({ type: 'telepathy', text });
-    }
-    function showTelepathyBanner(msg) {
-      const t = document.getElementById('telepathy-toast'); t.textContent = msg; t.classList.remove('hidden');
-      setTimeout(() => t.classList.add('hidden'), 4000);
-    }
-
+    // --- 3D ROOM ---
     let scene, camera, renderer, controls, heartMesh, pointLight1, pointLight2, threeInitialized = false;
     function initThreeRoom() {
       if (threeInitialized) return; threeInitialized = true;
       const container = document.getElementById('three-container');
       scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x090514, 0.035);
-      camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
-      camera.position.set(9, 8, 9);
+      
+      const isMobile = window.innerWidth < 768;
+      camera = new THREE.PerspectiveCamera(isMobile ? 55 : 45, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(isMobile ? 9 : 7, isMobile ? 8 : 6, isMobile ? 9 : 7);
+
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       container.appendChild(renderer.domElement);
 
       controls = new THREE.OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true; controls.enablePan = false;
-      controls.target.set(0, -1, 0);
+      controls.enableDamping = true; controls.dampingFactor = 0.05;
+      controls.enablePan = false; controls.minDistance = 4; controls.maxDistance = 16;
+      controls.target.set(0, 0, 0);
 
       scene.add(new THREE.AmbientLight(0xffe4e6, 0.6));
-      pointLight1 = new THREE.PointLight(0xf43f5e, 1.6, 18); pointLight1.position.set(2, 4, 2); scene.add(pointLight1);
-      pointLight2 = new THREE.PointLight(0xf59e0b, 1.2, 15); pointLight2.position.set(-3, 3, -2); scene.add(pointLight2);
+      pointLight1 = new THREE.PointLight(0xf43f5e, 1.8, 20); pointLight1.position.set(2, 5, 2); scene.add(pointLight1);
+      pointLight2 = new THREE.PointLight(0xf59e0b, 1.3, 16); pointLight2.position.set(-3, 3, -2); scene.add(pointLight2);
 
+      const roomGroup = new THREE.Group(); scene.add(roomGroup);
       const floor = new THREE.Mesh(new THREE.BoxGeometry(6, 0.3, 6), new THREE.MeshStandardMaterial({ color: 0x1e1136 }));
-      floor.position.y = -0.15; scene.add(floor);
-      const w1 = new THREE.Mesh(new THREE.BoxGeometry(6, 4, 0.25), new THREE.MeshStandardMaterial({ color: 0x2a164d }));
-      w1.position.set(0, 2, -2.875); scene.add(w1);
-      const w2 = new THREE.Mesh(new THREE.BoxGeometry(0.25, 4, 6), new THREE.MeshStandardMaterial({ color: 0x2a164d }));
-      w2.position.set(-2.875, 2, 0); scene.add(w2);
+      floor.position.y = -0.15; roomGroup.add(floor);
 
-      heartMesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.6, 1), new THREE.MeshStandardMaterial({ color: 0xfb7185, emissive: 0xe11d48, emissiveIntensity: 0.7 }));
-      heartMesh.position.set(0.3, 1.7, 0.3); scene.add(heartMesh);
+      const wallMat = new THREE.MeshStandardMaterial({ color: 0x2a164d });
+      const backWall = new THREE.Mesh(new THREE.BoxGeometry(6, 4, 0.25), wallMat); backWall.position.set(0, 2, -2.875); roomGroup.add(backWall);
+      const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.25, 4, 6), wallMat); leftWall.position.set(-2.875, 2, 0); roomGroup.add(leftWall);
+
+      heartMesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.55, 1), new THREE.MeshStandardMaterial({ color: 0xfb7185, emissive: 0xe11d48, emissiveIntensity: 0.8 }));
+      heartMesh.position.set(0.3, 1.8, 0.3); roomGroup.add(heartMesh);
 
       window.addEventListener('resize', onWindowResize);
       (function animate() {
         requestAnimationFrame(animate);
         const t = performance.now() * 0.001;
-        if (heartMesh) { heartMesh.rotation.y = t; heartMesh.position.y = 1.65 + Math.sin(t * 2) * 0.15; }
+        if (heartMesh) { heartMesh.rotation.y = t * 1.2; heartMesh.position.y = 1.75 + Math.sin(t * 2.2) * 0.15; }
         controls.update(); renderer.render(scene, camera);
       })();
-    }
-    function setRoomTheme(theme) {
-      if (!pointLight1) return;
-      if (theme === 'rose') { pointLight1.color.setHex(0xf43f5e); pointLight2.color.setHex(0xf59e0b); }
-      if (theme === 'gold') { pointLight1.color.setHex(0xfbbf24); pointLight2.color.setHex(0xf97316); }
-      if (theme === 'starlight') { pointLight1.color.setHex(0x818cf8); pointLight2.color.setHex(0x38bdf8); }
     }
     function onWindowResize() {
       if (!camera || !renderer) return;
@@ -693,8 +744,7 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    updateAuthUI();
-    if (verifiedUser) initPeerConnection();
+    switchRole(myRole);
   </script>
 </body>
 </html>
