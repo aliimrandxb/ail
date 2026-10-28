@@ -834,6 +834,30 @@
             <span>Open P2P Network Diagnostics</span>
           </button>
         </div>
+
+        <!-- 3D Bed Couple Avatar (360° Image / Photo Cutout) -->
+        <div class="bg-black/40 border border-rose-500/30 rounded-2xl p-3.5 space-y-2.5">
+          <div class="font-bold text-rose-200 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="image" class="w-4 h-4 text-rose-400"></i>
+              3D Bed Characters (360° Living Image)
+            </span>
+            <span class="text-[9px] text-amber-300 font-mono">Living Cutout</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Upload your own romantic couple photo / cutout to appear directly in the 3D Master Bed. It tracks the 360° camera smoothly without any boxy polygons!
+          </p>
+          <div class="flex items-center gap-2 pt-1">
+            <label class="flex-1 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 text-white font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <i data-lucide="upload" class="w-4 h-4"></i>
+              <span>Upload Couple Photo</span>
+              <input type="file" accept="image/*" class="hidden" onchange="handleCoupleAvatarUpload(this)" />
+            </label>
+            <button onclick="resetCoupleAvatarToDefault()" title="Reset to romantic art" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 text-xs active:scale-95 transition-all">
+              Reset Art
+            </button>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -1270,6 +1294,8 @@
           playBeepAlert(850, 0.25);
         } else if (d.type === 'wallpaper_sync') {
           applyWallpaperTexture(d.imageSrc);
+        } else if (d.type === 'couple_avatar_sync') {
+          setCustomCoupleAvatar(d.dataUrl, false);
         }
       });
 
@@ -2750,61 +2776,350 @@
       triggerIntimateBedEncounter(key);
     }
 
+    // -------------------------------------------------------------
+    // LIGHTWEIGHT 360° IMAGE-BASED LIVING COUPLE AVATAR SYSTEM
+    // -------------------------------------------------------------
+    let customCoupleAvatarDataUrl = localStorage.getItem('sanctuary_couple_custom_avatar') || null;
+
+    function setCustomCoupleAvatar(dataUrl, broadcast = true) {
+      customCoupleAvatarDataUrl = dataUrl;
+      if (dataUrl) {
+        localStorage.setItem('sanctuary_couple_custom_avatar', dataUrl);
+      } else {
+        localStorage.removeItem('sanctuary_couple_custom_avatar');
+      }
+      updateCoupleBillboardTexture(currentCouplePose || 'cuddle');
+      if (broadcast && dataUrl) {
+        sendPayload({ type: 'couple_avatar_sync', dataUrl });
+      }
+      showTelepathyBanner(dataUrl ? '✨ Couple 3D Avatar Updated!' : '🔄 Reset to romantic art avatar');
+    }
+
+    function handleCoupleAvatarUpload(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setCustomCoupleAvatar(e.target.result, true);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetCoupleAvatarToDefault() {
+      setCustomCoupleAvatar(null, true);
+    }
+
+    function renderAestheticCoupleArt(ctx, w, h, poseKey) {
+      ctx.save();
+      ctx.clearRect(0, 0, w, h);
+
+      // 1. Soft romantic ambient glow behind couple
+      const glow = ctx.createRadialGradient(w * 0.5, h * 0.55, 30, w * 0.5, h * 0.55, w * 0.45);
+      glow.addColorStop(0, 'rgba(244, 63, 94, 0.45)');
+      glow.addColorStop(0.5, 'rgba(190, 24, 93, 0.2)');
+      glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, w, h);
+
+      // Pose offsets
+      let headShiftI = 0, headShiftA = 0;
+      let blush = 'rgba(244, 63, 94, 0.35)';
+      if (poseKey === 'kiss') {
+        headShiftI = 35; headShiftA = -35;
+        blush = 'rgba(225, 29, 72, 0.55)';
+      } else if (poseKey === 'neck' || poseKey === 'touch') {
+        headShiftI = 25; headShiftA = -15;
+        blush = 'rgba(217, 70, 239, 0.45)';
+      } else if (poseKey === 'massage') {
+        headShiftI = 0; headShiftA = 10;
+      }
+
+      // --- Partner I (Husband - Left/Center) ---
+      // Torso / Loungewear
+      ctx.beginPath();
+      ctx.fillStyle = '#1e293b';
+      ctx.moveTo(w * 0.22, h * 0.95);
+      ctx.quadraticCurveTo(w * 0.26, h * 0.55, w * 0.38 + headShiftI * 0.3, h * 0.52);
+      ctx.quadraticCurveTo(w * 0.50, h * 0.52, w * 0.58, h * 0.65);
+      ctx.quadraticCurveTo(w * 0.62, h * 0.85, w * 0.60, h * 0.95);
+      ctx.closePath();
+      ctx.fill();
+
+      // Partner I - Neck & Jaw
+      ctx.beginPath();
+      const skinGradI = ctx.createLinearGradient(w * 0.35, h * 0.35, w * 0.48, h * 0.52);
+      skinGradI.addColorStop(0, '#eac0a2');
+      skinGradI.addColorStop(1, '#c99675');
+      ctx.fillStyle = skinGradI;
+      ctx.moveTo(w * 0.38 + headShiftI, h * 0.40);
+      ctx.quadraticCurveTo(w * 0.45 + headShiftI, h * 0.48, w * 0.43 + headShiftI * 0.5, h * 0.52);
+      ctx.lineTo(w * 0.35 + headShiftI * 0.5, h * 0.52);
+      ctx.closePath();
+      ctx.fill();
+
+      // Partner I - Head
+      ctx.beginPath();
+      ctx.arc(w * 0.38 + headShiftI, h * 0.35, 65, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Partner I - Hair (Dark, stylized)
+      ctx.beginPath();
+      ctx.fillStyle = '#0f172a';
+      ctx.arc(w * 0.37 + headShiftI, h * 0.33, 70, Math.PI * 0.8, Math.PI * 2.2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(w * 0.32 + headShiftI, h * 0.30);
+      ctx.quadraticCurveTo(w * 0.42 + headShiftI, h * 0.25, w * 0.45 + headShiftI, h * 0.32);
+      ctx.quadraticCurveTo(w * 0.40 + headShiftI, h * 0.32, w * 0.32 + headShiftI, h * 0.30);
+      ctx.fill();
+
+      // Partner I - Left Arm Embracing A
+      ctx.beginPath();
+      ctx.lineWidth = 36;
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineCap = 'round';
+      ctx.moveTo(w * 0.28, h * 0.58);
+      ctx.quadraticCurveTo(w * 0.45, h * 0.72, w * 0.62, h * 0.68);
+      ctx.stroke();
+
+      // Partner I - Hand
+      ctx.beginPath();
+      ctx.fillStyle = skinGradI;
+      ctx.arc(w * 0.62, h * 0.68, 22, 0, Math.PI * 2);
+      ctx.fill();
+
+      // --- Partner A (Wife - Right/Center, nestled close) ---
+      // Flowing dark hair back layer
+      ctx.beginPath();
+      ctx.fillStyle = '#18181b';
+      ctx.moveTo(w * 0.48 + headShiftA, h * 0.40);
+      ctx.quadraticCurveTo(w * 0.72 + headShiftA, h * 0.55, w * 0.68, h * 0.95);
+      ctx.lineTo(w * 0.42, h * 0.95);
+      ctx.closePath();
+      ctx.fill();
+
+      // Partner A - Silk Velvet Dress/Nightwear
+      ctx.beginPath();
+      const silkGrad = ctx.createLinearGradient(w * 0.45, h * 0.55, w * 0.70, h * 0.95);
+      silkGrad.addColorStop(0, '#be123c');
+      silkGrad.addColorStop(0.5, '#881337');
+      silkGrad.addColorStop(1, '#4c0519');
+      ctx.fillStyle = silkGrad;
+      ctx.moveTo(w * 0.46 + headShiftA * 0.3, h * 0.58);
+      ctx.quadraticCurveTo(w * 0.58, h * 0.52, w * 0.68 + headShiftA * 0.2, h * 0.65);
+      ctx.quadraticCurveTo(w * 0.74, h * 0.82, w * 0.72, h * 0.95);
+      ctx.lineTo(w * 0.44, h * 0.95);
+      ctx.closePath();
+      ctx.fill();
+
+      // Silk strap & sheen
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(255, 228, 230, 0.6)';
+      ctx.lineWidth = 3;
+      ctx.moveTo(w * 0.52 + headShiftA * 0.3, h * 0.52);
+      ctx.lineTo(w * 0.50 + headShiftA * 0.3, h * 0.58);
+      ctx.stroke();
+
+      // Partner A - Neck & Collarbone
+      ctx.beginPath();
+      const skinGradA = ctx.createLinearGradient(w * 0.45, h * 0.38, w * 0.60, h * 0.54);
+      skinGradA.addColorStop(0, '#f8dcd0');
+      skinGradA.addColorStop(1, '#dfaf9b');
+      ctx.fillStyle = skinGradA;
+      ctx.moveTo(w * 0.50 + headShiftA, h * 0.42);
+      ctx.quadraticCurveTo(w * 0.55 + headShiftA, h * 0.50, w * 0.58 + headShiftA * 0.5, h * 0.54);
+      ctx.lineTo(w * 0.47 + headShiftA * 0.5, h * 0.54);
+      ctx.closePath();
+      ctx.fill();
+
+      // Partner A - Head
+      ctx.beginPath();
+      ctx.arc(w * 0.52 + headShiftA, h * 0.38, 58, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Partner A - Soft Rosy Cheek Blush
+      ctx.beginPath();
+      ctx.fillStyle = blush;
+      ctx.arc(w * 0.49 + headShiftA, h * 0.40, 18, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Partner A - Hair Front Waves
+      ctx.beginPath();
+      ctx.fillStyle = '#18181b';
+      ctx.arc(w * 0.53 + headShiftA, h * 0.36, 62, Math.PI * 1.1, Math.PI * 2.3);
+      ctx.fill();
+
+      // Flowing hair strands cascading down front
+      ctx.beginPath();
+      ctx.fillStyle = '#18181b';
+      ctx.moveTo(w * 0.46 + headShiftA, h * 0.38);
+      ctx.quadraticCurveTo(w * 0.43 + headShiftA, h * 0.50, w * 0.47, h * 0.68);
+      ctx.quadraticCurveTo(w * 0.51, h * 0.55, w * 0.49 + headShiftA, h * 0.42);
+      ctx.closePath();
+      ctx.fill();
+
+      // Partner A - Arm reaching around I
+      ctx.beginPath();
+      ctx.lineWidth = 26;
+      ctx.strokeStyle = skinGradA;
+      ctx.lineCap = 'round';
+      ctx.moveTo(w * 0.66 + headShiftA * 0.2, h * 0.64);
+      ctx.quadraticCurveTo(w * 0.55, h * 0.60, w * 0.38, h * 0.56);
+      ctx.stroke();
+
+      // Intimate Duvet White Silk Swathe at bottom
+      ctx.beginPath();
+      const duvetGrad = ctx.createLinearGradient(0, h * 0.85, 0, h);
+      duvetGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+      duvetGrad.addColorStop(0.3, 'rgba(248, 250, 252, 0.85)');
+      duvetGrad.addColorStop(1, 'rgba(241, 245, 249, 0.98)');
+      ctx.fillStyle = duvetGrad;
+      ctx.moveTo(w * 0.15, h);
+      ctx.quadraticCurveTo(w * 0.40, h * 0.84, w * 0.85, h);
+      ctx.closePath();
+      ctx.fill();
+
+      // Sparkling romantic motes
+      const sparks = [
+        { x: w * 0.25, y: h * 0.30, r: 3 },
+        { x: w * 0.72, y: h * 0.35, r: 4 },
+        { x: w * 0.50, y: h * 0.22, r: 3 },
+        { x: w * 0.32, y: h * 0.75, r: 2.5 },
+        { x: w * 0.68, y: h * 0.72, r: 3 }
+      ];
+      ctx.fillStyle = 'rgba(254, 205, 211, 0.8)';
+      sparks.forEach(s => {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Initials badge
+      ctx.font = 'bold 22px sans-serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+      ctx.textAlign = 'center';
+      ctx.shadowColor = 'rgba(0,0,0,0.8)';
+      ctx.shadowBlur = 8;
+      ctx.fillText('A & I ❤️', w * 0.5, h - 25);
+
+      ctx.restore();
+    }
+
+    function updateCoupleBillboardTexture(poseKey) {
+      if (!coupleCanvas || !coupleCtx) return;
+      const w = coupleCanvas.width;
+      const h = coupleCanvas.height;
+
+      if (customCoupleAvatarDataUrl) {
+        const img = new Image();
+        img.onload = () => {
+          coupleCtx.clearRect(0, 0, w, h);
+          coupleCtx.save();
+          // Soft ambient glow
+          const radGrad = coupleCtx.createRadialGradient(w/2, h/2, w*0.25, w/2, h/2, w*0.48);
+          radGrad.addColorStop(0, 'rgba(244, 63, 94, 0.4)');
+          radGrad.addColorStop(0.7, 'rgba(225, 29, 72, 0.15)');
+          radGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          coupleCtx.fillStyle = radGrad;
+          coupleCtx.fillRect(0, 0, w, h);
+
+          // Arched romantic portrait cutout
+          coupleCtx.beginPath();
+          const r = 40;
+          const pad = 30;
+          if (coupleCtx.roundRect) {
+            coupleCtx.roundRect(pad, pad, w - pad*2, h - pad*2, [r, r, r, r]);
+          } else {
+            coupleCtx.rect(pad, pad, w - pad*2, h - pad*2);
+          }
+          coupleCtx.clip();
+
+          // Cover-fit image
+          const aspect = img.width / img.height;
+          let dw = w, dh = h, dx = 0, dy = 0;
+          if (aspect > 1) {
+            dw = h * aspect;
+            dx = (w - dw) / 2;
+          } else {
+            dh = w / aspect;
+            dy = (h - dh) / 2;
+          }
+          coupleCtx.drawImage(img, dx, dy, dw, dh);
+
+          // Warm romantic vignette overlay
+          const warmGrad = coupleCtx.createLinearGradient(0, h * 0.4, 0, h);
+          warmGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+          warmGrad.addColorStop(0.7, 'rgba(136, 19, 55, 0.25)');
+          warmGrad.addColorStop(1, 'rgba(9, 5, 20, 0.7)');
+          coupleCtx.fillStyle = warmGrad;
+          coupleCtx.fillRect(0, 0, w, h);
+
+          // "A & I" badge
+          coupleCtx.font = 'bold 32px sans-serif';
+          coupleCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+          coupleCtx.textAlign = 'center';
+          coupleCtx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+          coupleCtx.shadowBlur = 10;
+          coupleCtx.fillText('A & I ❤️', w / 2, h - 55);
+
+          coupleCtx.restore();
+          if (coupleTexture) coupleTexture.needsUpdate = true;
+        };
+        img.src = customCoupleAvatarDataUrl;
+        return;
+      }
+
+      // Default high-aesthetic artistic couple illustration
+      renderAestheticCoupleArt(coupleCtx, w, h, poseKey);
+      if (coupleTexture) coupleTexture.needsUpdate = true;
+    }
+
     function triggerIntimateBedEncounter(key) {
       if (isIntimacyAnimating) return; // prevent stacking
       isIntimacyAnimating = true;
+      currentCouplePose = key;
 
       // Per-preset unique pose configurations
       const POSE_MAP = {
         kiss: {
           dur: 8000, vib: [100, 80, 150, 80, 100],
-          I: { x: -0.12, z: 0.3, y: 0.35 }, A: { x: 0.12, z: -0.35, y: -0.35 },
-          light: 0xe11d48, glow: 5.0, candle: 2.8, p1: 0x831843, p2: 0xf59e0b
+          light: 0xe11d48, glow: 5.0, candle: 2.8, p1: 0x831843, p2: 0xf59e0b, scale: 1.14
         },
         touch: {
           dur: 9000, vib: [60, 40, 120, 60, 150, 80],
-          I: { x: -0.08, z: 0.15, y: 0.5 }, A: { x: 0.10, z: -0.2, y: -0.5 },
-          light: 0xf59e0b, glow: 4.5, candle: 2.5, p1: 0xb45309, p2: 0xf43f5e
+          light: 0xf59e0b, glow: 4.5, candle: 2.5, p1: 0xb45309, p2: 0xf43f5e, scale: 1.10
         },
         cuddle: {
           dur: 10000, vib: [80, 60, 100, 60],
-          I: { x: -0.1, z: 0.2, y: 0.2 }, A: { x: 0.08, z: -0.25, y: -0.15 },
-          light: 0xa855f7, glow: 3.5, candle: 2.2, p1: 0x6b21a8, p2: 0xd946ef
+          light: 0xa855f7, glow: 3.5, candle: 2.2, p1: 0x6b21a8, p2: 0xd946ef, scale: 1.08
         },
         tease: {
           dur: 7000, vib: [50, 30, 80, 40, 120],
-          I: { x: -0.2, z: 0.1, y: 0.15 }, A: { x: 0.22, z: -0.1, y: -0.15 },
-          light: 0xef4444, glow: 4.0, candle: 2.4, p1: 0x991b1b, p2: 0xfb923c
+          light: 0xef4444, glow: 4.0, candle: 2.4, p1: 0x991b1b, p2: 0xfb923c, scale: 1.08
         },
         massage: {
           dur: 12000, vib: [40, 80, 40, 80, 40, 80],
-          I: { x: -0.06, z: 0.4, y: 0.6 }, A: { x: 0.06, z: -0.1, y: -0.05 },
-          light: 0xd97706, glow: 3.0, candle: 3.0, p1: 0x92400e, p2: 0xfbbf24
+          light: 0xd97706, glow: 3.0, candle: 3.0, p1: 0x92400e, p2: 0xfbbf24, scale: 1.10
         },
         blindfold: {
           dur: 10000, vib: [30, 100, 30, 100, 30, 200],
-          I: { x: -0.14, z: 0.2, y: 0.45 }, A: { x: 0.14, z: -0.3, y: -0.4 },
-          light: 0x7c3aed, glow: 5.5, candle: 1.0, p1: 0x3b0764, p2: 0x6d28d9
+          light: 0x7c3aed, glow: 5.5, candle: 1.0, p1: 0x3b0764, p2: 0x6d28d9, scale: 1.12
         },
         undress: {
           dur: 10000, vib: [100, 50, 100, 50, 150, 60, 200],
-          I: { x: -0.1, z: 0.18, y: 0.4 }, A: { x: 0.1, z: -0.2, y: -0.35 },
-          light: 0xec4899, glow: 4.8, candle: 2.6, p1: 0x831843, p2: 0xfb7185
+          light: 0xec4899, glow: 4.8, candle: 2.6, p1: 0x831843, p2: 0xfb7185, scale: 1.12
         },
         neck: {
           dur: 9000, vib: [60, 40, 80, 50, 100, 40],
-          I: { x: -0.08, z: 0.35, y: 0.55 }, A: { x: 0.05, z: -0.15, y: -0.2 },
-          light: 0xc026d3, glow: 4.2, candle: 2.3, p1: 0x701a75, p2: 0xe879f9
+          light: 0xc026d3, glow: 4.2, candle: 2.3, p1: 0x701a75, p2: 0xe879f9, scale: 1.14
         },
         pin: {
           dur: 10000, vib: [200, 100, 250, 100],
-          I: { x: -0.05, z: 0.45, y: 0.6 }, A: { x: 0.05, z: -0.05, y: -0.05 },
-          light: 0x94a3b8, glow: 5.0, candle: 1.5, p1: 0x1e293b, p2: 0x475569
+          light: 0x94a3b8, glow: 5.0, candle: 1.5, p1: 0x1e293b, p2: 0x475569, scale: 1.12
         },
         surrender: {
           dur: 12000, vib: [100, 60, 150, 60, 200, 80, 250],
-          I: { x: -0.06, z: 0.35, y: 0.5 }, A: { x: 0.06, z: -0.35, y: -0.45 },
-          light: 0xfb7185, glow: 6.0, candle: 3.2, p1: 0x9f1239, p2: 0xfda4af
+          light: 0xfb7185, glow: 6.0, candle: 3.2, p1: 0x9f1239, p2: 0xfda4af, scale: 1.15
         }
       };
 
@@ -2848,67 +3163,38 @@
         }, holdTime);
       }
 
-      // 3. Unique character pose per desire — smooth multi-stage animation
-      if (charI && charA) {
-        // Stage 1: Lean in (1.5s ease)
-        const leanDur = 1500;
-        const startI = { x: charI.position.x, rz: charI.rotation.z, ry: charI.rotation.y };
-        const startA = { x: charA.position.x, rz: charA.rotation.z, ry: charA.rotation.y };
-        const endI = pose.I, endA = pose.A;
+      // 3. Update character pose on 360 image-based billboard & animate pulse
+      updateCoupleBillboardTexture(key);
+      if (coupleBillboardMesh) {
+        const startScale = 1.0;
+        const targetScale = pose.scale || 1.12;
+        const animStart = performance.now();
+        const pulseDur = 1200;
 
-        let leanStart = performance.now();
-        function animateLeanIn() {
-          const elapsed = performance.now() - leanStart;
-          const p = Math.min(elapsed / leanDur, 1);
-          const ease = 1 - Math.pow(1 - p, 3); // easeOutCubic
-          charI.position.x = startI.x + (endI.x - startI.x) * ease;
-          charI.rotation.z = startI.rz + (endI.z - startI.rz) * ease;
-          charI.rotation.y = startI.ry + (endI.y - startI.ry) * ease;
-          charA.position.x = startA.x + (endA.x - startA.x) * ease;
-          charA.rotation.z = startA.rz + (endA.z - startA.rz) * ease;
-          charA.rotation.y = startA.ry + (endA.y - startA.ry) * ease;
-          if (p < 1) requestAnimationFrame(animateLeanIn);
+        function pulseIn() {
+          const elapsed = performance.now() - animStart;
+          const p = Math.min(elapsed / pulseDur, 1);
+          const s = startScale + (targetScale - startScale) * (1 - Math.pow(1 - p, 3));
+          if (coupleBillboardMesh) coupleBillboardMesh.scale.set(s, s, s);
+          if (p < 1) requestAnimationFrame(pulseIn);
         }
-        animateLeanIn();
+        pulseIn();
 
-        // Stage 2: Intimate micro-sway while holding (breathing rhythm)
-        const swayStart = performance.now() + leanDur;
-        function animateSway() {
-          if (performance.now() < swayStart) { requestAnimationFrame(animateSway); return; }
-          const elapsed = performance.now() - swayStart;
-          if (elapsed > pose.dur - leanDur - 2000) return;
-          const breath = Math.sin(elapsed * 0.003) * 0.02;
-          charI.position.y = breath;
-          charA.position.y = -breath * 0.8;
-          charI.rotation.z = endI.z + Math.sin(elapsed * 0.002) * 0.03;
-          charA.rotation.z = endA.z - Math.sin(elapsed * 0.002) * 0.025;
-          requestAnimationFrame(animateSway);
-        }
-        animateSway();
-
-        // Stage 3: Slow release back to resting (2s ease)
+        // Release back to normal cuddle pose
         setTimeout(() => {
-          if (!charI || !charA) return;
+          currentCouplePose = 'cuddle';
+          updateCoupleBillboardTexture('cuddle');
           const relStart = performance.now();
-          const relDur = 2000;
-          const curI = { x: charI.position.x, rz: charI.rotation.z, ry: charI.rotation.y };
-          const curA = { x: charA.position.x, rz: charA.rotation.z, ry: charA.rotation.y };
-          function animateRelease() {
+          const relDur = 1500;
+          function pulseOut() {
             const elapsed = performance.now() - relStart;
             const p = Math.min(elapsed / relDur, 1);
-            const ease = p * p * (3 - 2 * p); // smoothstep
-            charI.position.x = curI.x + (-0.35 - curI.x) * ease;
-            charI.position.y = 0;
-            charI.rotation.z = curI.rz * (1 - ease);
-            charI.rotation.y = curI.ry * (1 - ease);
-            charA.position.x = curA.x + (0.35 - curA.x) * ease;
-            charA.position.y = 0;
-            charA.rotation.z = curA.rz * (1 - ease);
-            charA.rotation.y = curA.ry * (1 - ease);
-            if (p < 1) requestAnimationFrame(animateRelease);
+            const s = targetScale + (1.0 - targetScale) * (p * p * (3 - 2 * p));
+            if (coupleBillboardMesh) coupleBillboardMesh.scale.set(s, s, s);
+            if (p < 1) requestAnimationFrame(pulseOut);
           }
-          animateRelease();
-        }, pose.dur - 2000);
+          pulseOut();
+        }, pose.dur - 1500);
       }
 
       // 4. Passion particles surge during encounter
@@ -3373,7 +3659,9 @@
     // -------------------------------------------------------------
     let scene, camera, renderer, controls, candleLight, bedGlowLight, pointLight1, pointLight2, tvScreenMesh, threeInitialized = false;
     let cssScene, css3dRenderer, cssTvObject;
-    let coupleGroup, charI, charA, passionParticles, isIntimacyAnimating = false;
+    let coupleGroup, coupleBillboardMesh, coupleShadowMesh, coupleCanvas, coupleCtx, coupleTexture;
+    let currentCouplePose = 'cuddle';
+    let charI = null, charA = null, passionParticles, isIntimacyAnimating = false;
     let wallPhotoIndex = 0;
     let wallSlideshowTimer = null;
 
@@ -3555,140 +3843,52 @@
 
       roomGroup.add(bedGroup);
       // ==========================================
-      // REALISTIC COUPLE AVATARS (A & I) ON THE BED
+      // LIGHTWEIGHT 360° LIVING COUPLE AVATAR (A & I)
       // ==========================================
       coupleGroup = new THREE.Group();
-      coupleGroup.position.set(-1.4, 0.65, -1.55);
+      coupleGroup.position.set(-1.4, 0.70, -1.55);
 
-      // Shared materials
-      const skinMat = new THREE.MeshStandardMaterial({ color: 0xdeb896, roughness: 0.45, metalness: 0.05 });
-      const skinMatWarm = new THREE.MeshStandardMaterial({ color: 0xe8c4a0, roughness: 0.4, metalness: 0.05 });
+      // Contact shadow under the couple on the bed duvet
+      const shadowGeo = new THREE.PlaneGeometry(1.3, 0.8);
+      const shadowCanvas = document.createElement('canvas');
+      shadowCanvas.width = 128; shadowCanvas.height = 128;
+      const sctx = shadowCanvas.getContext('2d');
+      const sgrad = sctx.createRadialGradient(64, 64, 5, 64, 64, 60);
+      sgrad.addColorStop(0, 'rgba(0, 0, 0, 0.65)');
+      sgrad.addColorStop(0.5, 'rgba(15, 5, 25, 0.35)');
+      sgrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      sctx.fillStyle = sgrad;
+      sctx.fillRect(0, 0, 128, 128);
+      const shadowTex = new THREE.CanvasTexture(shadowCanvas);
+      const shadowMat = new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false });
+      coupleShadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
+      coupleShadowMesh.rotation.x = -Math.PI / 2;
+      coupleShadowMesh.position.y = 0.01;
+      coupleGroup.add(coupleShadowMesh);
 
-      // --- Helper: Build a human body using LatheGeometry for organic curves ---
-      function buildHumanBody(opts) {
-        const g = new THREE.Group();
+      // High-resolution 360° Living Billboard Canvas
+      coupleCanvas = document.createElement('canvas');
+      coupleCanvas.width = 768;
+      coupleCanvas.height = 768;
+      coupleCtx = coupleCanvas.getContext('2d');
+      coupleTexture = new THREE.CanvasTexture(coupleCanvas);
+      if (THREE.SRGBColorSpace) coupleTexture.colorSpace = THREE.SRGBColorSpace;
 
-        // == HEAD ==
-        const head = new THREE.Mesh(new THREE.SphereGeometry(opts.headR, 24, 24), skinMatWarm);
-        head.position.y = opts.headY;
-        head.scale.set(1, 1.08, 0.95); // slight oval
-        g.add(head);
+      // Render default couple art or custom saved photo
+      updateCoupleBillboardTexture(currentCouplePose || 'cuddle');
 
-        // == NECK ==
-        const neck = new THREE.Mesh(
-          new THREE.CylinderGeometry(opts.headR * 0.45, opts.headR * 0.5, 0.08, 16),
-          skinMat
-        );
-        neck.position.y = opts.headY - opts.headR - 0.02;
-        g.add(neck);
-
-        // == TORSO (LatheGeometry for organic shape) ==
-        const torsoProfile = new THREE.Path();
-        const sp = opts.shoulderW, wp = opts.waistW, hp = opts.hipW, th = opts.torsoH;
-        // Right side silhouette: shoulder → narrow waist → hip flare
-        torsoProfile.moveTo(0, 0);
-        torsoProfile.lineTo(sp, 0);
-        torsoProfile.quadraticCurveTo(sp * 1.05, th * 0.25, opts.chestW || sp * 0.95, th * 0.3);
-        torsoProfile.quadraticCurveTo(wp * 0.9, th * 0.5, wp, th * 0.55);
-        torsoProfile.quadraticCurveTo(hp * 0.85, th * 0.7, hp, th * 0.85);
-        torsoProfile.lineTo(hp * 0.7, th);
-        torsoProfile.lineTo(0, th);
-
-        const torsoShape = new THREE.Shape(torsoProfile.getPoints(20));
-        const torsoGeo = new THREE.ExtrudeGeometry(torsoShape, { depth: opts.bodyDepth || 0.18, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.02, bevelSegments: 4 });
-        torsoGeo.center();
-        const torso = new THREE.Mesh(torsoGeo, opts.clothMat);
-        torso.position.y = opts.torsoY;
-        torso.rotation.x = 0;
-        g.add(torso);
-
-        // == UPPER ARMS (skin visible) ==
-        const armGeo = new THREE.CylinderGeometry(0.045, 0.04, opts.armLen || 0.38, 12);
-        // Left arm
-        const armL = new THREE.Mesh(armGeo, skinMat);
-        armL.position.set(-sp - 0.04, opts.torsoY + 0.05, 0);
-        armL.rotation.z = opts.armAngleL || 0.35;
-        g.add(armL);
-        // Right arm
-        const armR = new THREE.Mesh(armGeo, skinMat);
-        armR.position.set(sp + 0.04, opts.torsoY + 0.05, 0);
-        armR.rotation.z = opts.armAngleR || -0.35;
-        g.add(armR);
-
-        // == HANDS (small spheres) ==
-        const handGeo = new THREE.SphereGeometry(0.035, 12, 12);
-        const handL = new THREE.Mesh(handGeo, skinMatWarm);
-        const alSin = Math.sin(opts.armAngleL || 0.35), alCos = Math.cos(opts.armAngleL || 0.35);
-        handL.position.set(-sp - 0.04 + alSin * (opts.armLen || 0.38) * 0.5, opts.torsoY + 0.05 - alCos * (opts.armLen || 0.38) * 0.5, 0);
-        g.add(handL);
-        const arSin = Math.sin(opts.armAngleR || -0.35), arCos = Math.cos(opts.armAngleR || -0.35);
-        const handR = new THREE.Mesh(handGeo, skinMatWarm);
-        handR.position.set(sp + 0.04 + arSin * (opts.armLen || 0.38) * 0.5, opts.torsoY + 0.05 - arCos * (opts.armLen || 0.38) * 0.5, 0);
-        g.add(handR);
-
-        // == LEGS (under duvet - just thigh hints) ==
-        const legGeo = new THREE.CylinderGeometry(0.065, 0.055, opts.legLen || 0.5, 14);
-        const legL = new THREE.Mesh(legGeo, opts.legMat || opts.clothMat);
-        legL.position.set(-0.08, opts.torsoY - th * 0.5 - 0.15, 0);
-        legL.rotation.z = 0.05;
-        g.add(legL);
-        const legR = new THREE.Mesh(legGeo, opts.legMat || opts.clothMat);
-        legR.position.set(0.08, opts.torsoY - th * 0.5 - 0.15, 0);
-        legR.rotation.z = -0.05;
-        g.add(legR);
-
-        // == HAIR ==
-        if (opts.hairParts) opts.hairParts.forEach(hp => g.add(hp));
-
-        return g;
-      }
-
-      // --- Avatar "I" (Partner I) - Athletic male build ---
-      const clothI = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.55 });
-      const hairIMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.8 });
-      // Short hair cap
-      const hairCapI = new THREE.Mesh(new THREE.SphereGeometry(0.145, 20, 20, 0, Math.PI * 2, 0, Math.PI * 0.5), hairIMat);
-      hairCapI.position.y = 0.7;
-
-      charI = buildHumanBody({
-        headR: 0.13, headY: 0.66,
-        shoulderW: 0.2, chestW: 0.19, waistW: 0.15, hipW: 0.14,
-        torsoH: 0.45, torsoY: 0.18, bodyDepth: 0.16,
-        armLen: 0.36, armAngleL: 0.4, armAngleR: -Math.PI / 4,
-        legLen: 0.45, legMat: clothI,
-        clothMat: clothI,
-        hairParts: [hairCapI]
+      const billboardGeo = new THREE.PlaneGeometry(1.45, 1.45);
+      const billboardMat = new THREE.MeshStandardMaterial({
+        map: coupleTexture,
+        transparent: true,
+        alphaTest: 0.05,
+        roughness: 0.55,
+        metalness: 0.1,
+        side: THREE.DoubleSide
       });
-      charI.position.set(-0.35, 0, 0);
-      coupleGroup.add(charI);
-
-      // --- Avatar "A" (Partner A) - Feminine curvy build ---
-      const clothA = new THREE.MeshStandardMaterial({ color: 0xbe123c, roughness: 0.28, metalness: 0.1 }); // Silk nightwear
-      const hairAMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.45 });
-
-      // Long flowing hair
-      const hairCapA = new THREE.Mesh(new THREE.SphereGeometry(0.14, 20, 20, 0, Math.PI * 2, 0, Math.PI * 0.65), hairAMat);
-      hairCapA.position.y = 0.64;
-      // Hair flowing down back/shoulders
-      const hairFlowL = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.07, 0.32, 12), hairAMat);
-      hairFlowL.position.set(-0.08, 0.46, -0.05);
-      hairFlowL.rotation.z = 0.15;
-      const hairFlowR = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.065, 0.28, 12), hairAMat);
-      hairFlowR.position.set(0.07, 0.48, -0.04);
-      hairFlowR.rotation.z = -0.12;
-
-      charA = buildHumanBody({
-        headR: 0.12, headY: 0.60,
-        shoulderW: 0.15, chestW: 0.17, waistW: 0.11, hipW: 0.18,
-        torsoH: 0.42, torsoY: 0.15, bodyDepth: 0.16,
-        armLen: 0.32, armAngleL: 0.3, armAngleR: -0.5,
-        legLen: 0.45,
-        legMat: new THREE.MeshStandardMaterial({ color: 0xdeb896, roughness: 0.4 }), // bare legs
-        clothMat: clothA,
-        hairParts: [hairCapA, hairFlowL, hairFlowR]
-      });
-      charA.position.set(0.35, 0, 0);
-      coupleGroup.add(charA);
+      coupleBillboardMesh = new THREE.Mesh(billboardGeo, billboardMat);
+      coupleBillboardMesh.position.y = 0.68;
+      coupleGroup.add(coupleBillboardMesh);
       roomGroup.add(coupleGroup);
 
       // Romantic Passion Aura Swirl around Couple
@@ -3800,7 +4000,7 @@
         mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
         raycaster.setFromCamera(mouse, camera);
 
-        const clickable = [tvScreenMesh, wallPhotoMesh, ...bedInteractiveMeshes, charI, charA];
+        const clickable = [tvScreenMesh, wallPhotoMesh, ...bedInteractiveMeshes, coupleBillboardMesh, coupleGroup];
         const intersects = raycaster.intersectObjects(clickable, true);
         if (intersects.length > 0) {
           const hit = intersects[0].object;
@@ -3814,7 +4014,7 @@
             let isCoupleOrBed = false;
             let curr = hit;
             while (curr && curr !== scene) {
-              if (curr === charI || curr === charA || curr === coupleGroup || bedInteractiveMeshes.includes(curr)) {
+              if (curr === coupleBillboardMesh || curr === coupleGroup || bedInteractiveMeshes.includes(curr)) {
                 isCoupleOrBed = true;
                 break;
               }
@@ -3842,9 +4042,19 @@
           bedGlowLight.intensity = 1.4 + Math.sin(t * 1.8) * 0.45;
         }
 
+        // 360° Cylindrical billboarding: couple smoothly tracks camera from all 360° viewing angles
+        if (coupleBillboardMesh && camera && coupleGroup) {
+          const dx = camera.position.x - coupleGroup.position.x;
+          const dz = camera.position.z - coupleGroup.position.z;
+          coupleBillboardMesh.rotation.y = Math.atan2(dx, dz);
+        }
+
         // Gentle breathing and intimate sway for A & I
-        if (coupleGroup && !isIntimacyAnimating) {
-          coupleGroup.position.y = 0.65 + Math.sin(t * 1.8) * 0.015;
+        if (coupleBillboardMesh && !isIntimacyAnimating) {
+          const breath = Math.sin(t * 2.2) * 0.012;
+          coupleBillboardMesh.position.y = 0.68 + breath;
+          coupleBillboardMesh.scale.x = 1.0 + Math.sin(t * 2.2) * 0.008;
+          coupleBillboardMesh.scale.y = 1.0 + Math.cos(t * 2.2) * 0.01;
         }
         if (passionParticles) {
           passionParticles.rotation.y = t * 0.08;
