@@ -1,10 +1,11 @@
 // Service Worker for DailySync / Sanctuary PWA
-const CACHE_NAME = 'dailysync-sanctuary-v1';
+const CACHE_NAME = 'dailysync-sanctuary-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  'https://cdn-icons-png.flaticon.com/512/3209/3209265.png'
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 // 1. Install Event: Cache app shell
