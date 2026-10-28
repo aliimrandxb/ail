@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="DailySync" />
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -654,18 +654,32 @@
           </div>
         </div>
 
-        <!-- Secret Capsule Writer -->
+        <!-- Secret Capsule Writer with Photo & Note Support -->
         <div class="bg-black/40 border border-rose-500/30 rounded-2xl p-3.5 space-y-2.5">
           <div class="text-xs font-bold text-rose-200 flex items-center justify-between">
-            <span>Write a Love Letter / Note</span>
-            <span class="text-[10px] text-slate-400 font-mono">Syncs to Partner</span>
+            <span>Save Memory (Photo & Romantic Note)</span>
+            <span class="text-[10px] text-amber-300 font-mono">Slides in 3D Wall Frame</span>
           </div>
-          <textarea id="love-letter-input" rows="3" placeholder="Leave a sweet whispered note in the vault..." 
+          <textarea id="love-letter-input" rows="2" placeholder="Leave a sweet whispered note in the vault..." 
             class="w-full bg-black/60 border border-rose-500/30 rounded-xl p-3 text-xs text-rose-100 placeholder-slate-500 focus:outline-none focus:border-rose-400 resize-none"></textarea>
-          <button onclick="saveAndSendLoveLetter()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-2">
-            <i data-lucide="feather" class="w-3.5 h-3.5"></i>
-            <span>Seal & Put in Vault</span>
-          </button>
+          
+          <!-- Memory Photo Attachment & Preview -->
+          <input type="file" id="memory-photo-file" accept="image/*" class="hidden" onchange="handleMemoryPhotoSelect(this)" />
+          <div id="memory-photo-preview-wrap" class="hidden relative inline-block">
+            <img id="memory-photo-preview" src="" class="w-16 h-16 object-cover rounded-xl border border-rose-400 shadow-md" />
+            <button onclick="clearSelectedMemoryPhoto()" class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-rose-600 text-white rounded-full flex items-center justify-center text-[10px] font-bold shadow">✕</button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="document.getElementById('memory-photo-file').click()" class="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-rose-500/30 text-rose-200 hover:text-white text-xs flex items-center gap-1.5 active:scale-95 transition-all">
+              <i data-lucide="image" class="w-3.5 h-3.5 text-rose-400"></i>
+              <span id="memory-photo-btn-text">Attach Photo</span>
+            </button>
+            <button onclick="saveAndSendLoveLetter()" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 text-white font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-2">
+              <i data-lucide="feather" class="w-3.5 h-3.5"></i>
+              <span>Seal in Vault & Frame</span>
+            </button>
+          </div>
         </div>
 
         <!-- Stored Letters Stream -->
@@ -1163,9 +1177,17 @@
           logCallEventToChat(currentCallType, 'Declined Call');
           endLiveCall(false);
         } else if (d.type === 'love_letter') {
-          addLoveLetterToMemory(d.sender, d.letter, d.time, false);
-          showTelepathyBanner(`💌 New Love Letter from ${myRole === 'husband' ? 'Ayesha' : 'Ali'}`);
+          addLoveLetterToMemory(d.sender, d.letter, d.time, false, d.imageSrc, d.id);
+          showTelepathyBanner(`💌 New Memory from ${myRole === 'husband' ? 'Ayesha' : 'Ali'}`);
           playBeepAlert(1000, 0.2);
+        } else if (d.type === 'edit_msg') {
+          applyRemoteEditChatMessage(d.msgId, d.newText);
+        } else if (d.type === 'delete_msg') {
+          applyRemoteDeleteChatMessage(d.msgId);
+        } else if (d.type === 'edit_memory') {
+          applyRemoteEditMemory(d.id, d.newText);
+        } else if (d.type === 'delete_memory') {
+          applyRemoteDeleteMemory(d.id);
         } else if (d.type === 'romantic_fx') {
           playRomanticAnimation(d.fxKey, false);
           playBeepAlert(850, 0.25);
@@ -1756,7 +1778,7 @@
       sendPayload({ type: 'telepathy', sender: myRole, text: text });
     }
 
-    function appendChatBubble(sender, text, isMe, timeStr, msgId = '', status = 'sent') {
+    function appendChatBubble(sender, text, isMe, timeStr, msgId = '', status = 'sent', isEdited = false) {
       const box = document.getElementById('chat-messages');
       const time = timeStr || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const senderName = isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali');
@@ -1765,15 +1787,35 @@
         ? `<span id="status-${msgId}" class="ml-1 text-[10px]">${status === 'seen' ? '<span class="text-sky-400 font-bold">✓✓</span>' : '<span class="text-slate-400 font-bold">✓</span>'}</span>`
         : '';
 
+      const editBtn = isMe ? `
+        <button onclick="startEditChatMessage('${msgId}')" title="Edit message" class="hover:text-rose-200 text-rose-400/80 p-0.5 transition-colors">
+          <i data-lucide="pencil" class="w-3 h-3"></i>
+        </button>
+      ` : '';
+
+      const deleteBtn = `
+        <button onclick="deleteSingleChatMessage('${msgId}')" title="Delete message" class="hover:text-red-400 text-rose-400/80 p-0.5 transition-colors">
+          <i data-lucide="trash-2" class="w-3 h-3"></i>
+        </button>
+      `;
+
       const html = `
-        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
-          <span class="text-[9px] text-rose-300/60 px-1 mb-0.5 flex items-center">${senderName} • ${time} ${tickStatus}</span>
-          <div class="max-w-[82%] px-3.5 py-2.5 rounded-2xl text-xs leading-relaxed ${isMe ? 'bubble-sent text-white' : 'bubble-received text-rose-100'}">
-            ${escapeHtml(text)}
+        <div id="chat-bubble-${msgId}" class="group flex flex-col ${isMe ? 'items-end' : 'items-start'} transition-opacity duration-300">
+          <div class="flex items-center gap-1 px-1 mb-0.5 text-[9px] text-rose-300/60">
+            <span>${senderName} • ${time} ${tickStatus}</span>
+            <div class="flex items-center gap-1 ml-1 opacity-80 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+              ${editBtn}
+              ${deleteBtn}
+            </div>
+          </div>
+          <div class="max-w-[85%] px-3.5 py-2.5 rounded-2xl text-xs leading-relaxed ${isMe ? 'bubble-sent text-white' : 'bubble-received text-rose-100'} shadow-sm">
+            <span id="msg-text-${msgId}">${escapeHtml(text)}</span>
+            <span id="msg-edited-${msgId}" class="text-[9px] text-rose-300/50 italic ml-1 ${isEdited ? '' : 'hidden'}">(edited)</span>
           </div>
         </div>
       `;
       box.insertAdjacentHTML('beforeend', html);
+      lucide.createIcons();
       box.scrollTop = box.scrollHeight;
     }
 
@@ -1786,9 +1828,20 @@
         ? `<span id="status-${msgId}" class="ml-1 text-[10px]">${status === 'seen' ? '<span class="text-sky-400 font-bold">✓✓</span>' : '<span class="text-slate-400 font-bold">✓</span>'}</span>`
         : '';
 
+      const deleteBtn = `
+        <button onclick="deleteSingleChatMessage('${msgId}')" title="Delete voice note" class="hover:text-red-400 text-rose-400/80 p-0.5">
+          <i data-lucide="trash-2" class="w-3 h-3"></i>
+        </button>
+      `;
+
       const html = `
-        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
-          <span class="text-[9px] text-rose-300/60 px-1 mb-0.5 flex items-center">${senderName} • Voice Note • ${time} ${tickStatus}</span>
+        <div id="chat-bubble-${msgId}" class="group flex flex-col ${isMe ? 'items-end' : 'items-start'} transition-opacity duration-300">
+          <div class="flex items-center gap-1 px-1 mb-0.5 text-[9px] text-rose-300/60">
+            <span>${senderName} • Voice Note • ${time} ${tickStatus}</span>
+            <div class="opacity-80 sm:opacity-0 group-hover:opacity-100 transition-opacity ml-1">
+              ${deleteBtn}
+            </div>
+          </div>
           <div class="px-3 py-2 rounded-2xl ${isMe ? 'bubble-sent' : 'bubble-received'} flex items-center gap-2">
             <i data-lucide="mic" class="w-4 h-4 text-rose-200 shrink-0"></i>
             <audio controls src="${src}" class="h-8 w-44"></audio>
@@ -1809,20 +1862,130 @@
         ? `<span id="status-${msgId}" class="ml-1 text-[10px]">${status === 'seen' ? '<span class="text-sky-400 font-bold">✓✓</span>' : '<span class="text-slate-400 font-bold">✓</span>'}</span>`
         : '';
 
+      const deleteBtn = `
+        <button onclick="deleteSingleChatMessage('${msgId}')" title="Delete ${type}" class="hover:text-red-400 text-rose-400/80 p-0.5">
+          <i data-lucide="trash-2" class="w-3 h-3"></i>
+        </button>
+      `;
+
       const content = type === 'video'
         ? `<video controls src="${src}" class="max-w-[210px] rounded-xl shadow-md cursor-pointer" onclick="openMediaViewer('${src}', 'video')"></video>`
         : `<img src="${src}" class="max-w-[210px] rounded-xl shadow-md cursor-pointer hover:opacity-95" onclick="openMediaViewer('${src}', 'image')" />`;
 
       const html = `
-        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
-          <span class="text-[9px] text-rose-300/60 px-1 mb-0.5 flex items-center">${senderName} • ${type} • ${time} ${tickStatus}</span>
+        <div id="chat-bubble-${msgId}" class="group flex flex-col ${isMe ? 'items-end' : 'items-start'} transition-opacity duration-300">
+          <div class="flex items-center gap-1 px-1 mb-0.5 text-[9px] text-rose-300/60">
+            <span>${senderName} • ${type} • ${time} ${tickStatus}</span>
+            <div class="opacity-80 sm:opacity-0 group-hover:opacity-100 transition-opacity ml-1">
+              ${deleteBtn}
+            </div>
+          </div>
           <div class="p-1 rounded-2xl ${isMe ? 'bubble-sent' : 'bubble-received'}">
             ${content}
           </div>
         </div>
       `;
       box.insertAdjacentHTML('beforeend', html);
+      lucide.createIcons();
       box.scrollTop = box.scrollHeight;
+    }
+
+    // -------------------------------------------------------------
+    // CHAT MESSAGE EDIT & DELETE CONTROLS
+    // -------------------------------------------------------------
+    function startEditChatMessage(msgId) {
+      const textEl = document.getElementById(`msg-text-${msgId}`);
+      if (!textEl) return;
+      const currentText = textEl.textContent;
+      const newText = prompt('Edit your message:', currentText);
+      if (newText === null || newText.trim() === '' || newText === currentText) return;
+
+      const trimmed = newText.trim();
+      textEl.textContent = trimmed;
+      const editedBadge = document.getElementById(`msg-edited-${msgId}`);
+      if (editedBadge) editedBadge.classList.remove('hidden');
+
+      // Update in IndexedDB
+      if (chatDb) {
+        try {
+          const tx = chatDb.transaction(['messages'], 'readwrite');
+          const store = tx.objectStore('messages');
+          const req = store.get(msgId);
+          req.onsuccess = () => {
+            if (req.result) {
+              const item = req.result;
+              item.text = trimmed;
+              item.edited = true;
+              store.put(item);
+            }
+          };
+        } catch (e) {
+          console.warn('DB update error:', e);
+        }
+      }
+
+      sendPayload({ type: 'edit_msg', msgId: msgId, newText: trimmed });
+      showTelepathyBanner('✏️ Message edited and synced.');
+    }
+
+    function deleteSingleChatMessage(msgId) {
+      if (!confirm('Delete this message for both of you?')) return;
+      const el = document.getElementById(`chat-bubble-${msgId}`);
+      if (el) {
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 250);
+      }
+
+      if (chatDb) {
+        try {
+          const tx = chatDb.transaction(['messages'], 'readwrite');
+          const store = tx.objectStore('messages');
+          store.delete(msgId);
+        } catch (e) {
+          console.warn('DB delete error:', e);
+        }
+      }
+
+      sendPayload({ type: 'delete_msg', msgId: msgId });
+      showTelepathyBanner('🗑️ Message deleted.');
+    }
+
+    function applyRemoteEditChatMessage(msgId, newText) {
+      const textEl = document.getElementById(`msg-text-${msgId}`);
+      if (textEl) textEl.textContent = newText;
+      const editedBadge = document.getElementById(`msg-edited-${msgId}`);
+      if (editedBadge) editedBadge.classList.remove('hidden');
+
+      if (chatDb) {
+        try {
+          const tx = chatDb.transaction(['messages'], 'readwrite');
+          const store = tx.objectStore('messages');
+          const req = store.get(msgId);
+          req.onsuccess = () => {
+            if (req.result) {
+              const item = req.result;
+              item.text = newText;
+              item.edited = true;
+              store.put(item);
+            }
+          };
+        } catch (e) {}
+      }
+    }
+
+    function applyRemoteDeleteChatMessage(msgId) {
+      const el = document.getElementById(`chat-bubble-${msgId}`);
+      if (el) {
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 250);
+      }
+      if (chatDb) {
+        try {
+          const tx = chatDb.transaction(['messages'], 'readwrite');
+          const store = tx.objectStore('messages');
+          store.delete(msgId);
+        } catch (e) {}
+      }
     }
 
     function escapeHtml(str) {
@@ -1968,12 +2131,10 @@
           frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen>
         </iframe>
       `;
-      // Dynamic TV Glow in 3D Bedroom
-      if (tvScreenMesh) {
-        tvScreenMesh.material.color.setHex(0x38bdf8);
-        tvScreenMesh.material.emissive.setHex(0x0284c7);
-        tvScreenMesh.material.emissiveIntensity = 0.9;
-      }
+      
+      // Render Live Video Thumbnail onto 3D Bedroom TV Mesh
+      renderYtOn3DTV(videoId);
+
       const controllerLabel = document.getElementById('theatre-controller-label');
       if (controllerLabel) {
         controllerLabel.textContent = syncToPartner ? `Controlled by You` : `Controlled by ${myRole === 'husband' ? 'Ayesha' : 'Ali'}`;
@@ -1981,6 +2142,51 @@
       if (syncToPartner) {
         sendPayload({ type: 'youtube_sync', videoId });
       }
+    }
+
+    function renderYtOn3DTV(videoId) {
+      if (!tvScreenMesh) return;
+      const tvCanvas = document.createElement('canvas');
+      tvCanvas.width = 640;
+      tvCanvas.height = 360;
+      const ctx = tvCanvas.getContext('2d');
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, 640, 360);
+        // Vignette & Live Indicator
+        const grad = ctx.createLinearGradient(0, 260, 0, 360);
+        grad.addColorStop(0, 'transparent');
+        grad.addColorStop(1, 'rgba(0,0,0,0.85)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 260, 640, 100);
+
+        ctx.fillStyle = '#f43f5e';
+        ctx.font = 'bold 20px sans-serif';
+        ctx.fillText('▶ NOW PLAYING IN SANCTUARY', 20, 340);
+
+        const tex = new THREE.CanvasTexture(tvCanvas);
+        tvScreenMesh.material.map = tex;
+        tvScreenMesh.material.emissiveMap = tex;
+        tvScreenMesh.material.emissive = new THREE.Color(0xffffff);
+        tvScreenMesh.material.emissiveIntensity = 0.85;
+        tvScreenMesh.material.needsUpdate = true;
+      };
+      img.onerror = () => {
+        // Fallback stylized graphic
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, 640, 360);
+        ctx.fillStyle = '#f43f5e';
+        ctx.font = 'bold 24px sans-serif';
+        ctx.fillText('📺 Sanctuary Cinema Playing', 140, 180);
+        const tex = new THREE.CanvasTexture(tvCanvas);
+        tvScreenMesh.material.map = tex;
+        tvScreenMesh.material.emissive = new THREE.Color(0xf43f5e);
+        tvScreenMesh.material.emissiveIntensity = 0.6;
+        tvScreenMesh.material.needsUpdate = true;
+      };
+      img.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
     }
 
     function syncCurrentTrackToPartner() {
@@ -2009,49 +2215,140 @@
     }
 
     // -------------------------------------------------------------
-    // CHUNK 8: LOVE LETTERS VAULT & ANNIVERSARY COUNTDOWN
+    // CHUNK 8 & 10: LOVE LETTERS & PHOTO MEMORIES VAULT WITH SLIDESHOW
     // -------------------------------------------------------------
     let vaultLetters = JSON.parse(localStorage.getItem('sanctuary_vault_letters') || '[]');
+    let selectedMemoryPhotoBase64 = null;
+
+    function handleMemoryPhotoSelect(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        selectedMemoryPhotoBase64 = e.target.result;
+        const preview = document.getElementById('memory-photo-preview');
+        const wrap = document.getElementById('memory-photo-preview-wrap');
+        const btnText = document.getElementById('memory-photo-btn-text');
+        if (preview && wrap) {
+          preview.src = selectedMemoryPhotoBase64;
+          wrap.classList.remove('hidden');
+          if (btnText) btnText.textContent = 'Change Photo';
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearSelectedMemoryPhoto() {
+      selectedMemoryPhotoBase64 = null;
+      const wrap = document.getElementById('memory-photo-preview-wrap');
+      const btnText = document.getElementById('memory-photo-btn-text');
+      const fileInput = document.getElementById('memory-photo-file');
+      if (wrap) wrap.classList.add('hidden');
+      if (btnText) btnText.textContent = 'Attach Photo';
+      if (fileInput) fileInput.value = '';
+    }
 
     function saveAndSendLoveLetter() {
       const input = document.getElementById('love-letter-input');
       const text = input.value.trim();
-      if (!text) return;
+      const imageSrc = selectedMemoryPhotoBase64;
+
+      if (!text && !imageSrc) {
+        alert('Please write a note or select a photo for the memory.');
+        return;
+      }
       input.value = '';
+      clearSelectedMemoryPhoto();
 
       const timeStr = new Date().toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-      addLoveLetterToMemory(myRole, text, timeStr, true);
-      sendPayload({ type: 'love_letter', sender: myRole, letter: text, time: timeStr });
-      showTelepathyBanner('💌 Sealed in our eternal vault!');
+      const memId = 'mem_' + Date.now();
+      addLoveLetterToMemory(myRole, text, timeStr, true, imageSrc, memId);
+      sendPayload({ type: 'love_letter', sender: myRole, letter: text, time: timeStr, imageSrc, id: memId });
+      showTelepathyBanner('💌 Memory sealed in vault & placed in wall frame!');
     }
 
-    function addLoveLetterToMemory(sender, letter, timeStr, isMe) {
-      const item = { id: 'letter_' + Date.now(), sender, letter, time: timeStr, isMe };
+    function addLoveLetterToMemory(sender, letter, timeStr, isMe, imageSrc = null, id = null) {
+      const item = { id: id || ('mem_' + Date.now()), sender, letter: letter || '', time: timeStr, isMe, imageSrc };
       vaultLetters.unshift(item);
       localStorage.setItem('sanctuary_vault_letters', JSON.stringify(vaultLetters));
       renderVaultLetters();
+      updateWallFrameWithCurrentMemory();
     }
 
     function renderVaultLetters() {
       const container = document.getElementById('vault-letters-list');
       const countEl = document.getElementById('vault-letters-count');
-      if (countEl) countEl.textContent = `${vaultLetters.length} letters`;
+      if (countEl) countEl.textContent = `${vaultLetters.length} memories`;
       if (!container) return;
 
       if (vaultLetters.length === 0) {
-        container.innerHTML = '<div class="text-[11px] text-slate-500 text-center py-3">No letters in vault yet. Write the first note!</div>';
+        container.innerHTML = '<div class="text-[11px] text-slate-500 text-center py-3">No memories in vault yet. Add your first photo or letter!</div>';
         return;
       }
 
       container.innerHTML = vaultLetters.map((l) => `
-        <div class="bg-black/50 border border-rose-500/25 rounded-xl p-3 space-y-1">
+        <div id="memory-card-${l.id}" class="bg-black/50 border border-rose-500/25 rounded-xl p-3 space-y-2 group transition-all">
           <div class="flex items-center justify-between text-[10px]">
             <span class="font-bold ${l.isMe ? 'text-rose-300' : 'text-amber-300'}">${l.isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali')}</span>
-            <span class="text-slate-400 font-mono">${l.time}</span>
+            <div class="flex items-center gap-2">
+              <span class="text-slate-400 font-mono">${l.time}</span>
+              <button onclick="editMemoryItem('${l.id}')" title="Edit note" class="hover:text-rose-200 text-rose-400/80 p-0.5">
+                <i data-lucide="pencil" class="w-3 h-3"></i>
+              </button>
+              <button onclick="deleteMemoryItem('${l.id}')" title="Delete memory" class="hover:text-red-400 text-rose-400/80 p-0.5">
+                <i data-lucide="trash-2" class="w-3 h-3"></i>
+              </button>
+            </div>
           </div>
-          <p class="text-xs text-rose-100/90 leading-relaxed font-sans">${escapeHtml(l.letter)}</p>
+          ${l.imageSrc ? `
+            <div class="mt-1">
+              <img src="${l.imageSrc}" class="max-h-36 rounded-lg object-cover cursor-pointer border border-rose-500/30 hover:opacity-95" onclick="openMediaViewer('${l.imageSrc}', 'image')" />
+            </div>
+          ` : ''}
+          ${l.letter ? `<p id="mem-text-${l.id}" class="text-xs text-rose-100/90 leading-relaxed font-sans">${escapeHtml(l.letter)}</p>` : ''}
         </div>
       `).join('');
+      lucide.createIcons();
+    }
+
+    function editMemoryItem(id) {
+      const item = vaultLetters.find(x => x.id === id);
+      if (!item) return;
+      const newText = prompt('Edit memory note:', item.letter);
+      if (newText === null) return;
+      item.letter = newText.trim();
+      localStorage.setItem('sanctuary_vault_letters', JSON.stringify(vaultLetters));
+      renderVaultLetters();
+      updateWallFrameWithCurrentMemory();
+      sendPayload({ type: 'edit_memory', id, newText: item.letter });
+      showTelepathyBanner('✏️ Memory updated.');
+    }
+
+    function deleteMemoryItem(id) {
+      if (!confirm('Remove this memory from vault & 3D frame?')) return;
+      vaultLetters = vaultLetters.filter(x => x.id !== id);
+      localStorage.setItem('sanctuary_vault_letters', JSON.stringify(vaultLetters));
+      renderVaultLetters();
+      updateWallFrameWithCurrentMemory();
+      sendPayload({ type: 'delete_memory', id });
+      showTelepathyBanner('🗑️ Memory removed.');
+    }
+
+    function applyRemoteEditMemory(id, newText) {
+      const item = vaultLetters.find(x => x.id === id);
+      if (item) {
+        item.letter = newText;
+        localStorage.setItem('sanctuary_vault_letters', JSON.stringify(vaultLetters));
+        renderVaultLetters();
+        updateWallFrameWithCurrentMemory();
+      }
+    }
+
+    function applyRemoteDeleteMemory(id) {
+      vaultLetters = vaultLetters.filter(x => x.id !== id);
+      localStorage.setItem('sanctuary_vault_letters', JSON.stringify(vaultLetters));
+      renderVaultLetters();
+      updateWallFrameWithCurrentMemory();
     }
 
     // Anniversary live ticker (Count up from a special date or count down)
@@ -2148,6 +2445,134 @@
         showTelepathyBanner('🖼️ Placed in our 3D bedroom frame & synced!');
       };
       reader.readAsDataURL(file);
+    }
+
+    function startWallFrameSlideshow() {
+      if (wallSlideshowTimer) clearInterval(wallSlideshowTimer);
+      updateWallFrameWithCurrentMemory();
+      wallSlideshowTimer = setInterval(() => {
+        cycleWallFrameNext();
+      }, 7000); // cycle every 7 seconds
+    }
+
+    function cycleWallFrameNext() {
+      if (!vaultLetters || vaultLetters.length === 0) return;
+      wallPhotoIndex = (wallPhotoIndex + 1) % vaultLetters.length;
+      updateWallFrameWithCurrentMemory();
+    }
+
+    function updateWallFrameWithCurrentMemory() {
+      if (!wallPhotoMesh) return;
+
+      // If user uploaded a static custom portrait wallpaper, honor it first if vault is empty
+      const savedPhoto = localStorage.getItem('sanctuary_wall_photo');
+      if ((!vaultLetters || vaultLetters.length === 0) && savedPhoto) {
+        applyWallpaperTexture(savedPhoto);
+        return;
+      }
+
+      if (!vaultLetters || vaultLetters.length === 0) {
+        // Default velvet rose card
+        wallPhotoMesh.material = new THREE.MeshStandardMaterial({
+          color: 0xbe123c,
+          emissive: 0x881337,
+          emissiveIntensity: 0.5
+        });
+        wallPhotoMesh.material.needsUpdate = true;
+        return;
+      }
+
+      if (wallPhotoIndex >= vaultLetters.length) wallPhotoIndex = 0;
+      const current = vaultLetters[wallPhotoIndex];
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 600;
+      canvas.height = 750;
+      const ctx = canvas.getContext('2d');
+
+      if (current.imageSrc) {
+        const img = new Image();
+        img.onload = () => {
+          // Fill canvas maintaining aspect ratio
+          const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+          const x = (canvas.width / 2) - (img.width / 2) * scale;
+          const y = (canvas.height / 2) - (img.height / 2) * scale;
+          ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+
+          // Elegant vignette
+          const grad = ctx.createLinearGradient(0, canvas.height - 180, 0, canvas.height);
+          grad.addColorStop(0, 'transparent');
+          grad.addColorStop(1, 'rgba(15, 6, 23, 0.9)');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, canvas.height - 180, canvas.width, 180);
+
+          if (current.letter) {
+            ctx.fillStyle = '#ffe4e6';
+            ctx.font = 'italic 24px serif';
+            ctx.fillText(current.letter.slice(0, 40) + (current.letter.length > 40 ? '...' : ''), 30, canvas.height - 70);
+          }
+          ctx.fillStyle = '#fbbf24';
+          ctx.font = 'bold 20px sans-serif';
+          ctx.fillText((current.isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali')) + ' • ' + current.time, 30, canvas.height - 35);
+
+          applyCanvasToWallFrame(canvas);
+        };
+        img.src = current.imageSrc;
+      } else {
+        // Text Love Note Card
+        ctx.fillStyle = '#1e0c24';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Gold border
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 8;
+        ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
+        ctx.fillStyle = '#f43f5e';
+        ctx.font = 'bold 36px serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Sanctuary Memory', canvas.width / 2, 100);
+
+        ctx.fillStyle = '#fff1f2';
+        ctx.font = 'italic 28px serif';
+        
+        // Wrap text
+        const words = (current.letter || '').split(' ');
+        let line = '';
+        let lineY = 220;
+        for (let n = 0; n < words.length; n++) {
+          const testLine = line + words[n] + ' ';
+          const metrics = ctx.measureText(testLine);
+          if (metrics.width > canvas.width - 120 && n > 0) {
+            ctx.fillText(line, canvas.width / 2, lineY);
+            line = words[n] + ' ';
+            lineY += 45;
+            if (lineY > canvas.height - 180) break;
+          } else {
+            line = testLine;
+          }
+        }
+        ctx.fillText(line, canvas.width / 2, lineY);
+
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = 'bold 22px sans-serif';
+        ctx.fillText('— ' + (current.isMe ? 'You' : (myRole === 'husband' ? 'Ayesha' : 'Ali')) + ' (' + current.time + ')', canvas.width / 2, canvas.height - 80);
+
+        applyCanvasToWallFrame(canvas);
+      }
+    }
+
+    function applyCanvasToWallFrame(canvas) {
+      if (!wallPhotoMesh) return;
+      const tex = new THREE.CanvasTexture(canvas);
+      wallPhotoMesh.material = new THREE.MeshStandardMaterial({
+        map: tex,
+        roughness: 0.3,
+        emissiveMap: tex,
+        emissive: new THREE.Color(0x333333),
+        emissiveIntensity: 0.6
+      });
+      wallPhotoMesh.material.needsUpdate = true;
     }
 
     function applyWallpaperTexture(base64) {
@@ -2370,7 +2795,9 @@
     // -------------------------------------------------------------
     // 3D ISOMETRIC SANCTUARY ROOM (THREE.JS)
     // -------------------------------------------------------------
-    let scene, camera, renderer, controls, heartMesh, pointLight1, pointLight2, floatingParticles, tvScreenMesh, threeInitialized = false;
+    let scene, camera, renderer, controls, candleLight, bedGlowLight, pointLight1, pointLight2, tvScreenMesh, threeInitialized = false;
+    let wallPhotoIndex = 0;
+    let wallSlideshowTimer = null;
 
     function initThreeRoom() {
       if (threeInitialized) return;
@@ -2532,34 +2959,30 @@
 
       roomGroup.add(tvGroup);
 
-      // Romantic Floating Center Heart
-      const heartGeom = new THREE.OctahedronGeometry(0.55, 2);
-      const heartMat = new THREE.MeshStandardMaterial({
-        color: 0xfb7185,
-        emissive: 0xe11d48,
-        emissiveIntensity: 0.9,
-        roughness: 0.2,
-        metalness: 0.5
-      });
-      heartMesh = new THREE.Mesh(heartGeom, heartMat);
-      heartMesh.position.set(0.2, 1.6, 0.2);
-      roomGroup.add(heartMesh);
+      // Luxury Bedside Candles & Warm Nightstand Romance (No floating balls)
+      const candleGeom = new THREE.CylinderGeometry(0.045, 0.045, 0.22, 16);
+      const candleMat = new THREE.MeshStandardMaterial({ color: 0xffedd5, roughness: 0.3 });
+      const candle1 = new THREE.Mesh(candleGeom, candleMat);
+      candle1.position.set(-2.55, 0.65, -2.15);
+      roomGroup.add(candle1);
 
-      // Ambient Stardust Particles
-      const particleGeom = new THREE.BufferGeometry();
-      const count = 70;
-      const positions = new Float32Array(count * 3);
-      for (let i = 0; i < count * 3; i += 3) {
-        positions[i] = (Math.random() - 0.5) * 6;
-        positions[i + 1] = Math.random() * 3.5 + 0.2;
-        positions[i + 2] = (Math.random() - 0.5) * 6;
-      }
-      particleGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      const particleMat = new THREE.PointsMaterial({ color: 0xf43f5e, size: 0.06, transparent: true, opacity: 0.7 });
-      floatingParticles = new THREE.Points(particleGeom, particleMat);
-      roomGroup.add(floatingParticles);
+      const candleFlame = new THREE.Mesh(new THREE.ConeGeometry(0.025, 0.08, 8), new THREE.MeshBasicMaterial({ color: 0xfef08a }));
+      candleFlame.position.set(-2.55, 0.79, -2.15);
+      roomGroup.add(candleFlame);
 
-      // Interactive Raycaster for tapping TV Screen in 3D
+      candleLight = new THREE.PointLight(0xfbbf24, 1.4, 5);
+      candleLight.position.set(-2.55, 0.85, -2.15);
+      roomGroup.add(candleLight);
+
+      // Intimate Under-Bed Ambient Glow
+      bedGlowLight = new THREE.PointLight(0xe11d48, 1.6, 6);
+      bedGlowLight.position.set(-1.4, 0.15, -1.3);
+      roomGroup.add(bedGlowLight);
+
+      // Start Wall Frame Memories Slideshow
+      startWallFrameSlideshow();
+
+      // Interactive Raycaster for tapping TV Screen or Bed Frame in 3D
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
 
@@ -2569,14 +2992,14 @@
         mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
         raycaster.setFromCamera(mouse, camera);
 
-        const intersects = raycaster.intersectObjects([tvScreenMesh, heartMesh], false);
+        const intersects = raycaster.intersectObjects([tvScreenMesh, wallPhotoMesh], false);
         if (intersects.length > 0) {
           const hit = intersects[0].object;
           if (hit === tvScreenMesh) {
             openDrawer('music');
             showTelepathyBanner('📺 Opening Synced YouTube Theatre...');
-          } else if (hit === heartMesh) {
-            sendTelepathy('💓 Whispered love across our 3D room...');
+          } else if (hit === wallPhotoMesh) {
+            cycleWallFrameNext();
           }
         }
       });
@@ -2586,13 +3009,16 @@
       (function animate() {
         requestAnimationFrame(animate);
         const t = performance.now() * 0.001;
-        if (heartMesh) {
-          heartMesh.rotation.y = t * 1.1;
-          heartMesh.position.y = 1.6 + Math.sin(t * 2.2) * 0.12;
+        
+        // Realistic dynamic candle flame flicker
+        if (candleLight) {
+          candleLight.intensity = 1.2 + Math.sin(t * 14) * 0.2 + Math.cos(t * 8) * 0.15;
         }
-        if (floatingParticles) {
-          floatingParticles.rotation.y = t * 0.05;
+        // Smooth breathing under-bed glow
+        if (bedGlowLight) {
+          bedGlowLight.intensity = 1.4 + Math.sin(t * 1.8) * 0.45;
         }
+
         controls.update();
         renderer.render(scene, camera);
       })();
