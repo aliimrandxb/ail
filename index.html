@@ -582,85 +582,21 @@
         <div id="yt-playlist" class="flex-1 min-h-[110px] max-h-[150px] overflow-y-auto space-y-2"></div>
       </div>
 
-      <!-- PANEL 3: TELEPATHY EMOTION PINGS & ROMANTIC BEDROOM ACTIVITIES -->
-      <div id="panel-mood" class="hidden flex-1 overflow-y-auto p-4 space-y-3">
-        <div class="text-xs text-rose-200 font-bold mb-1 flex items-center justify-between">
-          <span>Private Bedroom Passions & Desires</span>
-          <span class="text-[9px] text-rose-400 font-mono">Private Bed Passions</span>
+      <!-- PANEL 3: TELEPATHY EMOTION PINGS (Hidden / Redirects to Secret Suite) -->
+      <div id="panel-mood" class="hidden flex-1 overflow-y-auto p-6 flex flex-col items-center justify-center text-center space-y-4">
+        <div class="w-16 h-16 rounded-3xl bg-rose-950/60 border border-rose-500/40 flex items-center justify-center text-3xl shadow-lg animate-pulse">
+          🛏️
         </div>
-        <div class="grid grid-cols-2 gap-2.5">
-          <button onclick="triggerRomanticEffect('kiss')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
-            <div class="text-2xl">💋</div>
-            <div class="text-xs font-bold text-white mt-1.5">Passionate Kiss</div>
-            <div class="text-[10px] text-rose-300 mt-0.5">Deep & breathless intimacy</div>
-          </button>
-          
-          <button onclick="triggerRomanticEffect('touch')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
-            <div class="text-2xl">🔥</div>
-            <div class="text-xs font-bold text-white mt-1.5">Intense Seduction</div>
-            <div class="text-[10px] text-rose-300 mt-0.5">Let clothes fall to the floor</div>
-          </button>
-          
-          <button onclick="triggerRomanticEffect('cuddle')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
-            <div class="text-2xl">🛏️</div>
-            <div class="text-xs font-bold text-white mt-1.5">Skin on Skin Cuddle</div>
-            <div class="text-[10px] text-rose-300 mt-0.5">Wrapped together in bed</div>
-          </button>
-          
-          <button onclick="triggerRomanticEffect('tease')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
-            <div class="text-2xl">🌹</div>
-            <div class="text-xs font-bold text-white mt-1.5">Whispered Fantasies</div>
-            <div class="text-[10px] text-rose-300 mt-0.5">I want you right now</div>
-          </button>
-
-          <button onclick="triggerRomanticEffect('massage')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
-            <div class="text-2xl">💆</div>
-            <div class="text-xs font-bold text-white mt-1.5">Slow Body Massage</div>
-            <div class="text-[10px] text-rose-300 mt-0.5">Warm oil, bare back, slow hands</div>
-          </button>
-
-          <button onclick="triggerRomanticEffect('blindfold')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
-            <div class="text-2xl">🙈</div>
-            <div class="text-xs font-bold text-white mt-1.5">Blindfolded Touch</div>
-            <div class="text-[10px] text-rose-300 mt-0.5">Close your eyes... feel me</div>
-          </button>
-
-          <button onclick="triggerRomanticEffect('undress')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
-            <div class="text-2xl">🔥</div>
-            <div class="text-xs font-bold text-white mt-1.5">Slow Undress</div>
-            <div class="text-[10px] text-rose-300 mt-0.5">One piece at a time...</div>
-          </button>
-
-          <button onclick="triggerRomanticEffect('neck')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
-            <div class="text-2xl">💜</div>
-            <div class="text-xs font-bold text-white mt-1.5">Neck Kisses</div>
-            <div class="text-[10px] text-rose-300 mt-0.5">Lips trailing down your neck</div>
-          </button>
-
-          <button onclick="triggerRomanticEffect('pin')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
-            <div class="text-2xl">🔒</div>
-            <div class="text-xs font-bold text-white mt-1.5">Pinned Down</div>
-            <div class="text-[10px] text-rose-300 mt-0.5">You're not going anywhere...</div>
-          </button>
-
-          <button onclick="triggerRomanticEffect('surrender')" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-left active:scale-95 transition-all">
-            <div class="text-2xl">😈</div>
-            <div class="text-xs font-bold text-white mt-1.5">Full Surrender</div>
-            <div class="text-[10px] text-rose-300 mt-0.5">Take me... I'm all yours</div>
-          </button>
-
-          <button onclick="sendTelepathy('☕ Craving Karak Chai together right now!')" class="p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-rose-500/40 text-left active:scale-95 transition-all">
-            <div class="text-2xl">☕</div>
-            <div class="text-xs font-bold text-white mt-1.5">Karak Chai Craving</div>
-            <div class="text-[10px] text-slate-400 mt-0.5">Let's slip away for chai</div>
-          </button>
-          
-          <button onclick="sendTelepathy('🌙 Late night drive tonight?')" class="p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-rose-500/40 text-left active:scale-95 transition-all">
-            <div class="text-2xl">🌙</div>
-            <div class="text-xs font-bold text-white mt-1.5">Late Night Drive</div>
-            <div class="text-[10px] text-slate-400 mt-0.5">Just the two of us & music</div>
-          </button>
+        <div class="space-y-1.5">
+          <div class="text-sm font-bold text-rose-200">Hidden Secret Bedroom Suite</div>
+          <p class="text-xs text-slate-300 max-w-xs leading-relaxed">
+            All intimate experiences and mini-games have moved into your private 2D/2.5D suite. Tap the <strong>Bed Pillows</strong> or <strong>Bedside Lamp</strong> in the 3D room to enter.
+          </p>
         </div>
+        <button onclick="closeDrawer(); openSecret2DIntimacySuite(true);" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-xs active:scale-95 transition-all shadow-lg flex items-center gap-2">
+          <span>✨</span>
+          <span>Enter Secret 2D Suite</span>
+        </button>
       </div>
 
       <!-- PANEL 4: LOVE LETTERS & ANNIVERSARY VAULT -->
@@ -849,153 +785,22 @@
           </button>
         </div>
 
-        <!-- LAND OF DESIRE: 3D CHARACTER CUSTOMIZER & SYNCHRONIZED BED POSES -->
-        <div class="bg-black/40 border border-rose-500/30 rounded-2xl p-3.5 space-y-3.5 shadow-lg">
-          <div class="font-bold text-rose-200 flex items-center justify-between">
-            <span class="flex items-center gap-2">
-              <i data-lucide="sparkles" class="w-4 h-4 text-rose-400"></i>
-              <span>3D Character Blueprints & Bed Poses</span>
+        <!-- SECRET INTIMACY SUITE SHORTCUT (Discreet) -->
+        <div class="bg-black/40 border border-rose-500/30 rounded-2xl p-3.5 space-y-2.5 shadow-lg">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-rose-200 flex items-center gap-2">
+              <span>🛏️</span>
+              <span>Secret 2D / 2.5D Intimacy Suite</span>
             </span>
-            <span class="text-[9px] text-emerald-400 bg-emerald-950/70 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">Live Sync</span>
+            <span class="text-[9px] text-emerald-400 bg-emerald-950/70 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">Hidden in Room</span>
           </div>
           <p class="text-[11px] text-slate-300 leading-relaxed">
-            Synchronized dual-armature poses & modular 3D character blueprints (Land of Desire formula). Real-time P2P sync without downloads!
+            The intimate game suite is hidden inside the 3D bedroom. Tap the <strong>Bed Pillows</strong> or <strong>Bedside Lamp</strong> in the room to slip into your private 2D/2.5D intimacy suite anytime.
           </p>
-
-          <!-- 1. Room Roaming & Locations -->
-          <div class="space-y-1.5">
-            <div class="text-[10px] text-rose-300/80 font-bold uppercase tracking-wider flex items-center justify-between">
-              <span class="flex items-center gap-1">
-                <i data-lucide="compass" class="w-3 h-3 text-rose-400"></i>
-                <span>Room Roaming & Movement:</span>
-              </span>
-              <span class="text-[9px] text-emerald-400 font-mono">Live Walk</span>
-            </div>
-            <div class="grid grid-cols-4 gap-1.5">
-              <button onclick="moveCoupleToSpot('bed')" class="py-2 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-sm">🛏️</span>
-                <span>Bed</span>
-              </button>
-              <button onclick="moveCoupleToSpot('cinema')" class="py-2 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-sm">📺</span>
-                <span>Cinema</span>
-              </button>
-              <button onclick="moveCoupleToSpot('rug')" class="py-2 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-sm">💃</span>
-                <span>Dance Rug</span>
-              </button>
-              <button onclick="moveCoupleToSpot('candle')" class="py-2 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-sm">☕</span>
-                <span>Candle Tea</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- 2. Animated Desire Activities -->
-          <div class="space-y-1.5 pt-2 border-t border-rose-500/20">
-            <div class="text-[10px] text-rose-300/80 font-bold uppercase tracking-wider flex items-center justify-between">
-              <span class="flex items-center gap-1">
-                <i data-lucide="heart" class="w-3 h-3 text-rose-400"></i>
-                <span>Animated Desire Activities:</span>
-              </span>
-              <span class="text-[9px] text-rose-400 font-mono">Land of Desire</span>
-            </div>
-            <div class="grid grid-cols-4 gap-1.5">
-              <button onclick="applySynchronizedPose('cuddle')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-xs">🛏️</span>
-                <span>Cuddle</span>
-              </button>
-              <button onclick="applySynchronizedPose('kiss')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-xs">💋</span>
-                <span>Kiss</span>
-              </button>
-              <button onclick="applySynchronizedPose('slow_dance')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-xs">💃</span>
-                <span>Slow Dance</span>
-              </button>
-              <button onclick="applySynchronizedPose('caress')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-xs">💆</span>
-                <span>Caress</span>
-              </button>
-              <button onclick="applySynchronizedPose('whisper')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-xs">🤫</span>
-                <span>Whisper</span>
-              </button>
-              <button onclick="applySynchronizedPose('neck')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-xs">💜</span>
-                <span>Neck</span>
-              </button>
-              <button onclick="applySynchronizedPose('pin')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-xs">🔒</span>
-                <span>Bed Pin</span>
-              </button>
-              <button onclick="applySynchronizedPose('surrender')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-xs">🔥</span>
-                <span>Surrender</span>
-              </button>
-            </div>
-            <div class="pt-1 flex justify-end">
-              <button onclick="resetCharacterBlueprints()" class="py-1 px-3 rounded-lg bg-white/5 border border-white/10 hover:border-white/20 text-slate-400 text-[9px] active:scale-95 transition-all flex items-center gap-1">
-                <span>🔄 Reset Blueprints</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- 2. Character Customizer (Land of Desire JSON Blueprints) -->
-          <div class="space-y-2 pt-2 border-t border-rose-500/20">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] text-rose-300/80 font-bold uppercase tracking-wider">Customize Character:</span>
-              <div class="flex gap-1 bg-black/40 p-0.5 rounded-lg border border-white/10">
-                <button id="btn-tab-char-i" onclick="switchBlueprintEditorTab('I')" class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-rose-600 text-white transition-all">Partner I</button>
-                <button id="btn-tab-char-a" onclick="switchBlueprintEditorTab('A')" class="px-2.5 py-1 rounded-md text-[10px] font-bold text-slate-400 hover:text-white transition-all">Partner A</button>
-              </div>
-            </div>
-
-            <!-- Dynamic Blueprint Editor Content (Populated by JS) -->
-            <div id="blueprint-editor-container" class="space-y-2.5 bg-black/30 border border-white/5 rounded-xl p-2.5">
-              <!-- Populated dynamically via renderBlueprintEditorUI() -->
-            </div>
-          </div>
-        </div>
-
-        <!-- REAL 3D CHARACTER AVATAR (.GLB) & REPO INTEGRATION -->
-        <div class="bg-black/40 border border-rose-500/30 rounded-2xl p-3.5 space-y-3">
-          <div class="font-bold text-rose-200 flex items-center justify-between">
-            <span class="flex items-center gap-1.5">
-              <i data-lucide="user-check" class="w-4 h-4 text-rose-400"></i>
-              Real 3D Characters (.GLB / Ready Player Me)
-            </span>
-            <span class="text-[9px] text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">GLTF Enabled</span>
-          </div>
-          <p class="text-[11px] text-slate-300 leading-relaxed">
-            Load full 3D human character models (<span class="text-rose-300 font-mono">.glb</span>) from <strong>Ready Player Me</strong>, <strong>Make-A-Character</strong> exports, or <strong>Mixamo</strong> right onto the 3D Master Bed.
-          </p>
-          
-          <div class="space-y-2">
-            <div class="flex gap-2">
-              <input id="rpm-avatar-url" type="url" placeholder="Paste .glb URL (e.g. from Ready Player Me)..." class="flex-1 px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-rose-400" />
-              <button onclick="loadReadyPlayerMeUrl()" class="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs active:scale-95 transition-all">
-                Load 3D
-              </button>
-            </div>
-            
-            <div class="flex items-center gap-2">
-              <label class="flex-1 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-rose-500/40 text-rose-200 font-semibold text-xs active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
-                <i data-lucide="file-up" class="w-3.5 h-3.5 text-rose-400"></i>
-                <span>Upload Local .glb File</span>
-                <input type="file" accept=".glb,.gltf" class="hidden" onchange="handleGLBFileUpload(this)" />
-              </label>
-              <button onclick="restoreBillboardAvatar()" title="Switch back to 360 image cutout" class="px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-slate-400 text-xs active:scale-95 transition-all">
-                Switch Mode
-              </button>
-            </div>
-            
-            <div class="p-2.5 rounded-xl bg-rose-950/30 border border-rose-500/20 text-[10px] text-rose-200/90 leading-relaxed space-y-1">
-              <div>💡 <strong>How to get free 3D characters:</strong></div>
-              <div>• <strong>Ready Player Me:</strong> Open <a href="https://readyplayer.me" target="_blank" class="text-amber-300 underline font-semibold">readyplayer.me</a>, take a selfie or customize a 3D avatar, copy the <span class="font-mono">.glb</span> link and paste above.</div>
-              <div>• <strong>Make-A-Character:</strong> Generate on their <a href="https://huggingface.co/spaces/Human3DAIGC/Make-A-Character" target="_blank" class="text-amber-300 underline font-semibold">HuggingFace Space</a> and download the <span class="font-mono">.glb</span> file to upload here.</div>
-            </div>
-          </div>
+          <button onclick="closeDrawer(); openSecret2DIntimacySuite(true);" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-rose-700/80 to-pink-700/80 hover:from-rose-600 hover:to-pink-600 border border-rose-400/30 text-white font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg">
+            <span>✨</span>
+            <span>Enter Secret 2D Suite Now</span>
+          </button>
         </div>
       </div>
 
@@ -1034,15 +839,12 @@
     </div>
 
     <!-- Sanctuary Bottom Dock -->
-    <nav class="relative z-40 h-14 bg-[#0c1317]/95 backdrop-blur-xl border-t border-slate-800 grid grid-cols-5 px-1 shrink-0">
+    <nav class="relative z-40 h-14 bg-[#0c1317]/95 backdrop-blur-xl border-t border-slate-800 grid grid-cols-4 px-1 shrink-0">
       <button onclick="openDrawer('chat')" id="snav-chat" class="flex flex-col items-center justify-center text-emerald-400 transition-colors">
         <i data-lucide="message-square" class="w-5 h-5"></i><span class="text-[9px] mt-0.5 font-semibold">Chats</span>
       </button>
       <button onclick="openDrawer('music')" id="snav-music" class="flex flex-col items-center justify-center text-slate-400 transition-colors">
         <i data-lucide="tv" class="w-5 h-5"></i><span class="text-[9px] mt-0.5 font-semibold">Cinema</span>
-      </button>
-      <button onclick="openDrawer('mood')" id="snav-mood" class="flex flex-col items-center justify-center text-slate-400 transition-colors">
-        <i data-lucide="flame" class="w-5 h-5"></i><span class="text-[9px] mt-0.5 font-semibold">Desires</span>
       </button>
       <button onclick="openDrawer('letters')" id="snav-letters" class="flex flex-col items-center justify-center text-slate-400 transition-colors">
         <i data-lucide="book-open" class="w-5 h-5"></i><span class="text-[9px] mt-0.5 font-semibold">Memories</span>
@@ -1051,6 +853,94 @@
         <i data-lucide="sliders-horizontal" class="w-5 h-5"></i><span class="text-[9px] mt-0.5 font-semibold">Settings</span>
       </button>
     </nav>
+  </div>
+
+  <!-- SECRET 2D / 2.5D INTIMATE GAME SUITE (Hidden Bedroom Scene) -->
+  <div id="secret-intimacy-suite" class="hidden fixed inset-0 z-50 bg-[#07020d] flex flex-col items-center justify-between overflow-hidden select-none animate-fade-in">
+    <!-- Ambient glowing backdrop lighting -->
+    <div class="absolute inset-0 pointer-events-none bg-gradient-to-b from-rose-950/40 via-purple-950/20 to-[#07020d]"></div>
+    
+    <!-- Top Suite Bar -->
+    <div class="relative z-20 w-full max-w-lg px-4 pt-3 pb-2 flex items-center justify-between border-b border-rose-500/20 bg-black/70 backdrop-blur-xl">
+      <button onclick="closeSecret2DIntimacySuite(true)" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400/50 text-rose-200 text-xs font-semibold active:scale-95 transition-all">
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+        <span>3D Room</span>
+      </button>
+
+      <div class="flex items-center gap-2">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+        </span>
+        <span class="text-xs font-bold text-rose-200 tracking-wider">A & I • SECRET SUITE</span>
+        <span id="suite-bpm-indicator" class="text-[10px] text-rose-300 font-mono bg-rose-950/80 px-2 py-0.5 rounded-full border border-rose-500/40">❤️ 72 BPM</span>
+      </div>
+
+      <!-- Secret Angle Selector -->
+      <div class="flex gap-1 bg-black/60 p-1 rounded-xl border border-white/10">
+        <button id="btn-angle-pillow" onclick="switchSuiteAngle('pillow', true)" title="Pillows Top View" class="px-2 py-1 rounded-lg text-xs bg-rose-600 text-white font-semibold transition-all">🛏️</button>
+        <button id="btn-angle-gaze" onclick="switchSuiteAngle('gaze', true)" title="Eye-to-Eye Gaze" class="px-2 py-1 rounded-lg text-xs text-slate-400 hover:text-white transition-all">💋</button>
+        <button id="btn-angle-candle" onclick="switchSuiteAngle('candle', true)" title="Candlelight Silhouette" class="px-2 py-1 rounded-lg text-xs text-slate-400 hover:text-white transition-all">🕯️</button>
+      </div>
+    </div>
+
+    <!-- 2D / 2.5D Living Intimacy Canvas Stage -->
+    <div class="relative z-10 flex-1 w-full max-w-lg flex items-center justify-center overflow-hidden p-2">
+      <canvas id="intimacy-suite-canvas" class="w-full h-full max-h-[500px] rounded-3xl border border-rose-500/30 shadow-[0_0_50px_rgba(225,29,72,0.25)] touch-none cursor-pointer"></canvas>
+      
+      <!-- Live Floating Touch Particles & Whispers Overlay -->
+      <div id="suite-touch-feedback" class="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <!-- Floating romantic status text -->
+        <div id="suite-status-toast" class="opacity-0 transition-opacity duration-300 text-xs font-bold text-rose-200 bg-black/80 px-4 py-2 rounded-full border border-rose-500/50 backdrop-blur-md shadow-2xl"></div>
+      </div>
+    </div>
+
+    <!-- Bottom Interactive Game Controls & Caress Zones -->
+    <div class="relative z-20 w-full max-w-lg px-4 pb-4 pt-1 flex flex-col gap-2.5 bg-gradient-to-t from-black via-black/90 to-transparent">
+      
+      <!-- Touch & Caress Zones -->
+      <div class="grid grid-cols-4 gap-2">
+        <button onclick="triggerSuiteTouchZone('lips', true)" class="py-2 rounded-xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-rose-100 text-[11px] font-bold active:scale-95 transition-all flex flex-col items-center gap-0.5">
+          <span class="text-base">💋</span>
+          <span>Lips</span>
+        </button>
+        <button onclick="triggerSuiteTouchZone('cheek', true)" class="py-2 rounded-xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-rose-100 text-[11px] font-bold active:scale-95 transition-all flex flex-col items-center gap-0.5">
+          <span class="text-base">🥰</span>
+          <span>Cheek</span>
+        </button>
+        <button onclick="triggerSuiteTouchZone('neck', true)" class="py-2 rounded-xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-rose-100 text-[11px] font-bold active:scale-95 transition-all flex flex-col items-center gap-0.5">
+          <span class="text-base">🌸</span>
+          <span>Neck</span>
+        </button>
+        <button onclick="triggerSuiteTouchZone('waist', true)" class="py-2 rounded-xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-rose-100 text-[11px] font-bold active:scale-95 transition-all flex flex-col items-center gap-0.5">
+          <span class="text-base">💫</span>
+          <span>Waist</span>
+        </button>
+      </div>
+
+      <!-- Passion Hold-to-Kiss Meter (Mini-Game Mechanic) -->
+      <div class="relative flex items-center justify-center py-1">
+        <div class="w-full bg-white/10 h-3.5 rounded-full overflow-hidden border border-rose-500/30 p-0.5 relative">
+          <div id="suite-kiss-bar" class="h-full bg-gradient-to-r from-rose-600 via-pink-500 to-amber-400 rounded-full w-0 transition-[width] duration-75"></div>
+          <div class="absolute inset-0 flex items-center justify-center text-[9px] font-extrabold text-white tracking-widest drop-shadow uppercase pointer-events-none">
+            <span id="suite-kiss-label">Press & Hold for Deep Kiss</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hold-to-Kiss Trigger Button & Quick Whispers -->
+      <div class="flex items-center gap-2">
+        <button id="btn-suite-kiss" class="flex-1 py-3 px-4 rounded-2xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-xs tracking-wider shadow-[0_0_25px_rgba(225,29,72,0.5)] active:scale-95 transition-all flex items-center justify-center gap-2 select-none">
+          <span class="text-base animate-pulse">❤️</span>
+          <span>HOLD TO KISS</span>
+        </button>
+        
+        <button onclick="sendSuiteWhisperRandom(true)" title="Send Secret Whisper" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-rose-300 font-bold active:scale-95 transition-all flex items-center justify-center">
+          <i data-lucide="message-circle-heart" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+    </div>
   </div>
 
   <!-- P2P Room & Diagnostics Modal -->
@@ -1443,6 +1333,20 @@
           setCustomCoupleAvatar(d.dataUrl, false);
         } else if (d.type === 'couple_glb_sync') {
           loadCustomCoupleGLB(d.glbUrl, false);
+        } else if (d.type === 'intimacy_suite_open') {
+          openSecret2DIntimacySuite(false);
+          showTelepathyBanner('💋 Partner entered our Secret Intimacy Suite...');
+        } else if (d.type === 'intimacy_suite_close') {
+          closeSecret2DIntimacySuite(false);
+          showTelepathyBanner('✨ Returned to 3D Bedroom');
+        } else if (d.type === 'intimacy_suite_angle') {
+          switchSuiteAngle(d.angle, false);
+        } else if (d.type === 'intimacy_suite_touch') {
+          handleIncomingSuiteTouch(d.zone, d.sender);
+        } else if (d.type === 'intimacy_suite_kiss_progress') {
+          handleIncomingSuiteKiss(d.progress, d.isHolding);
+        } else if (d.type === 'intimacy_suite_whisper') {
+          handleIncomingSuiteWhisper(d.text);
         }
       });
 
@@ -5508,7 +5412,7 @@
       });
       coupleBillboardMesh = new THREE.Mesh(billboardGeo, billboardMat);
       coupleBillboardMesh.position.y = 0.68;
-      coupleBillboardMesh.visible = true; // Active 2.5D Living Layered Couple
+      coupleBillboardMesh.visible = false; // Pristine Clean Master Bedroom
       coupleGroup.add(coupleBillboardMesh);
 
       // 2.5D Living Layered Animated Couple (A & I) is Active
@@ -5516,7 +5420,8 @@
         coupleGroup.remove(livingCoupleMeshGroup);
         livingCoupleMeshGroup = null;
       }
-      if (coupleBillboardMesh) coupleBillboardMesh.visible = true;
+      if (coupleBillboardMesh) coupleBillboardMesh.visible = false;
+      if (coupleGroup) coupleGroup.visible = false;
       roomGroup.add(coupleGroup);
 
       // Auto-load custom GLB model if previously saved
@@ -5637,7 +5542,7 @@
         mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
         raycaster.setFromCamera(mouse, camera);
 
-        const clickable = [tvScreenMesh, wallPhotoMesh, ...bedInteractiveMeshes, livingCoupleMeshGroup, coupleBillboardMesh, coupleGroup];
+        const clickable = [tvScreenMesh, wallPhotoMesh, ...bedInteractiveMeshes, lampBase, lampShade, lampWarmLight];
         const intersects = raycaster.intersectObjects(clickable, true);
         if (intersects.length > 0) {
           const hit = intersects[0].object;
@@ -5646,20 +5551,9 @@
             showTelepathyBanner('📺 Opening Synced YouTube Theatre...');
           } else if (hit === wallPhotoMesh) {
             cycleWallFrameNext();
-          } else {
-            // Traverse up parent chain to see if hit is part of couple avatars or bed
-            let isCoupleOrBed = false;
-            let curr = hit;
-            while (curr && curr !== scene) {
-              if (curr === livingCoupleMeshGroup || curr === coupleBillboardMesh || curr === coupleGroup || curr === coupleGLTFModel || bedInteractiveMeshes.includes(curr)) {
-                isCoupleOrBed = true;
-                break;
-              }
-              curr = curr.parent;
-            }
-            if (isCoupleOrBed || bedInteractiveMeshes.includes(hit)) {
-              handleBedInteraction();
-            }
+          } else if (hit === pillow1 || hit === pillow2 || hit === lampBase || hit === lampShade || hit === lampWarmLight || bedInteractiveMeshes.includes(hit)) {
+            // Secret Intimacy Suite Trigger: Bed Pillows or Bedside Lamp
+            openSecret2DIntimacySuite(true);
           }
         }
       });
@@ -5912,6 +5806,714 @@
     // P2P connection is started lazily when the user unlocks the sanctuary.
     document.getElementById('role-husband').className = `px-2.5 py-1 rounded-lg ${myRole === 'husband' ? 'bg-rose-600 text-white shadow-sm' : 'text-rose-200/70 hover:text-white'}`;
     document.getElementById('role-wife').className = `px-2.5 py-1 rounded-lg ${myRole === 'wife' ? 'bg-rose-600 text-white shadow-sm' : 'text-rose-200/70 hover:text-white'}`;
+  
+    // =========================================================================
+    // SECRET 2D / 2.5D INTIMATE GAME SUITE (HIDDEN IN BEDROOM PILLOWS & LAMP)
+    // =========================================================================
+    let isSuiteOpen = false;
+    let currentSuiteAngle = 'pillow'; // 'pillow' | 'gaze' | 'candle'
+    let suiteCanvas = null;
+    let suiteCtx = null;
+    let suiteAnimId = null;
+    let kissMeter = 0; // 0 to 100
+    let isKissHolding = false;
+    let isPartnerKissHolding = false;
+    let partnerKissMeter = 0;
+    let kissHoldInterval = null;
+    let suiteParticles = [];
+    let suiteBlushIntensity = 0.25;
+    let suiteBpm = 72;
+    let suiteAudioCtx = null;
+    let suiteOsc = null;
+    let suiteGain = null;
+
+    const SUITE_WHISPERS = [
+      "I love resting in your arms... ❤️",
+      "Your touch gives me goosebumps every single time.",
+      "Look into my eyes... you are my entire world.",
+      "Just hold me tight and never let go.",
+      "I love the gentle sound of your breathing beside me.",
+      "No matter where we are, with you is home.",
+      "Bare skin, whispered secrets, and your lips on mine... 🔥",
+      "You make my heart race and feel safe all at once."
+    ];
+
+    function initSuiteAudio() {
+      try {
+        if (!suiteAudioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) suiteAudioCtx = new AudioContextClass();
+        }
+        if (suiteAudioCtx && suiteAudioCtx.state === 'suspended') {
+          suiteAudioCtx.resume();
+        }
+      } catch (e) {}
+    }
+
+    function openSecret2DIntimacySuite(broadcast = true) {
+      isSuiteOpen = true;
+      const modal = document.getElementById('secret-intimacy-suite');
+      if (modal) {
+        modal.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+      }
+
+      // Sensual bed glow surge in 3D bedroom behind
+      if (typeof bedGlowLight !== 'undefined' && bedGlowLight) {
+        bedGlowLight.intensity = 0.95;
+        bedGlowLight.color.setHex(0xe11d48);
+      }
+      playBeepAlert(880, 0.2);
+      if (navigator.vibrate) navigator.vibrate([70, 60, 110]);
+
+      // Initialize canvas and 60 FPS animation loop
+      setupSuiteCanvas();
+      initSuiteAudio();
+      setupKissButtonEvents();
+
+      showSuiteToast('✨ Entered Private 2D Suite');
+
+      if (broadcast && dataConn && dataConn.open) {
+        sendPayload({ type: 'intimacy_suite_open', sender: myRole });
+      }
+    }
+
+    function closeSecret2DIntimacySuite(broadcast = true) {
+      isSuiteOpen = false;
+      const modal = document.getElementById('secret-intimacy-suite');
+      if (modal) modal.classList.add('hidden');
+
+      if (suiteAnimId) {
+        cancelAnimationFrame(suiteAnimId);
+        suiteAnimId = null;
+      }
+      stopKissHold();
+
+      if (typeof bedGlowLight !== 'undefined' && bedGlowLight) {
+        bedGlowLight.intensity = 0.45;
+      }
+
+      if (broadcast && dataConn && dataConn.open) {
+        sendPayload({ type: 'intimacy_suite_close', sender: myRole });
+      }
+    }
+
+    function switchSuiteAngle(angleKey, broadcast = true) {
+      if (!['pillow', 'gaze', 'candle'].includes(angleKey)) return;
+      currentSuiteAngle = angleKey;
+
+      ['pillow', 'gaze', 'candle'].forEach(a => {
+        const btn = document.getElementById('btn-angle-' + a);
+        if (btn) {
+          if (a === angleKey) {
+            btn.className = 'px-2 py-1 rounded-lg text-xs bg-rose-600 text-white font-semibold transition-all shadow-md';
+          } else {
+            btn.className = 'px-2 py-1 rounded-lg text-xs text-slate-400 hover:text-white transition-all';
+          }
+        }
+      });
+
+      // Quick burst of ambient particles on angle shift
+      spawnSuiteParticles(15, '#f43f5e');
+      if (navigator.vibrate) navigator.vibrate(40);
+
+      const angleNames = { pillow: '🛌 Pillow Top View', gaze: '💋 Eye-to-Eye Gaze', candle: '🕯️ Candlelight Silhouette' };
+      showSuiteToast(angleNames[angleKey] || 'Angle Changed');
+
+      if (broadcast && dataConn && dataConn.open) {
+        sendPayload({ type: 'intimacy_suite_angle', angle: angleKey, sender: myRole });
+      }
+    }
+
+    function triggerSuiteTouchZone(zoneKey, broadcast = true, sender = myRole) {
+      suiteBlushIntensity = Math.min(1.0, suiteBlushIntensity + 0.25);
+      suiteBpm = Math.min(115, suiteBpm + 4);
+      updateSuiteBpmUI();
+
+      const zoneNames = {
+        lips: { name: 'Lips', emoji: '💋', freq: 660, vib: [80, 50, 100] },
+        cheek: { name: 'Cheek', emoji: '🥰', freq: 520, vib: [50, 40, 60] },
+        neck: { name: 'Neck', emoji: '🌸', freq: 740, vib: [40, 30, 80, 40, 100] },
+        waist: { name: 'Waist', emoji: '💫', freq: 440, vib: [90, 60, 120] }
+      };
+
+      const info = zoneNames[zoneKey] || { name: 'Touch', emoji: '✨', freq: 580, vib: 60 };
+      playBeepAlert(info.freq, 0.18);
+      if (navigator.vibrate) navigator.vibrate(info.vib);
+
+      spawnSuiteParticles(25, '#fb7185');
+
+      const isMe = (sender === myRole);
+      const partnerLabel = myRole === 'husband' ? 'A' : 'I';
+      showSuiteToast(isMe ? `You caressed ${partnerLabel}'s ${info.name} ${info.emoji}` : `${partnerLabel} is caressing your ${info.name} ${info.emoji}`);
+
+      if (broadcast && dataConn && dataConn.open) {
+        sendPayload({ type: 'intimacy_suite_touch', zone: zoneKey, sender: myRole });
+      }
+    }
+
+    function handleIncomingSuiteTouch(zoneKey, sender) {
+      triggerSuiteTouchZone(zoneKey, false, sender);
+    }
+
+    function handleIncomingSuiteKiss(progress, isHolding) {
+      partnerKissMeter = progress;
+      isPartnerKissHolding = isHolding;
+      updateKissBarUI();
+    }
+
+    function handleIncomingSuiteWhisper(text) {
+      spawnSuiteParticles(30, '#ec4899');
+      playBeepAlert(920, 0.2);
+      if (navigator.vibrate) navigator.vibrate([60, 40, 80]);
+      showSuiteToast(`💬 "${text}"`);
+    }
+
+    function sendSuiteWhisperRandom(broadcast = true) {
+      const quote = SUITE_WHISPERS[Math.floor(Math.random() * SUITE_WHISPERS.length)];
+      showSuiteToast(`💬 "${quote}"`);
+      spawnSuiteParticles(20, '#f43f5e');
+      playBeepAlert(880, 0.15);
+
+      if (broadcast && dataConn && dataConn.open) {
+        sendPayload({ type: 'intimacy_suite_whisper', text: quote, sender: myRole });
+      }
+    }
+
+    function showSuiteToast(text) {
+      const toast = document.getElementById('suite-status-toast');
+      if (!toast) return;
+      toast.textContent = text;
+      toast.classList.remove('opacity-0');
+      toast.classList.add('opacity-100');
+      clearTimeout(window._suiteToastTimer);
+      window._suiteToastTimer = setTimeout(() => {
+        if (toast) {
+          toast.classList.remove('opacity-100');
+          toast.classList.add('opacity-0');
+        }
+      }, 2600);
+    }
+
+    function updateSuiteBpmUI() {
+      const el = document.getElementById('suite-bpm-indicator');
+      if (el) el.textContent = `❤️ ${Math.round(suiteBpm)} BPM`;
+    }
+
+    // -------------------------------------------------------------
+    // HOLD-TO-KISS PASSION METER MECHANIC (CHROME/NOKIA MINI-GAME STYLE)
+    // -------------------------------------------------------------
+    function setupKissButtonEvents() {
+      const btn = document.getElementById('btn-suite-kiss');
+      if (!btn || btn._hasKissEvents) return;
+      btn._hasKissEvents = true;
+
+      const startHold = (e) => {
+        e.preventDefault();
+        startKissHold();
+      };
+      const endHold = (e) => {
+        e.preventDefault();
+        stopKissHold();
+      };
+
+      btn.addEventListener('pointerdown', startHold);
+      window.addEventListener('pointerup', endHold);
+      window.addEventListener('pointercancel', endHold);
+      btn.addEventListener('contextmenu', (e) => e.preventDefault());
+    }
+
+    function startKissHold() {
+      if (isKissHolding) return;
+      isKissHolding = true;
+      initSuiteAudio();
+
+      // Start dynamic oscillator hum that rises with kiss meter
+      try {
+        if (suiteAudioCtx) {
+          suiteOsc = suiteAudioCtx.createOscillator();
+          suiteGain = suiteAudioCtx.createGain();
+          suiteOsc.type = 'sine';
+          suiteOsc.frequency.setValueAtTime(320, suiteAudioCtx.currentTime);
+          suiteGain.gain.setValueAtTime(0.06, suiteAudioCtx.currentTime);
+          suiteOsc.connect(suiteGain);
+          suiteGain.connect(suiteAudioCtx.destination);
+          suiteOsc.start();
+        }
+      } catch (e) {}
+
+      clearInterval(kissHoldInterval);
+      kissHoldInterval = setInterval(() => {
+        // Double charging rate if both partners are holding together!
+        const rate = isPartnerKissHolding ? 2.8 : 1.6;
+        kissMeter = Math.min(100, kissMeter + rate);
+        suiteBlushIntensity = Math.min(1.0, 0.25 + (kissMeter / 100) * 0.7);
+        suiteBpm = Math.min(128, 72 + (kissMeter / 100) * 45);
+        updateSuiteBpmUI();
+
+        // Dynamically ramp up frequency and haptic feedback
+        if (suiteOsc && suiteAudioCtx) {
+          const targetFreq = 320 + (kissMeter / 100) * 440;
+          suiteOsc.frequency.setTargetAtTime(targetFreq, suiteAudioCtx.currentTime, 0.05);
+        }
+
+        if (navigator.vibrate && Math.random() < 0.35) {
+          navigator.vibrate(25);
+        }
+
+        updateKissBarUI();
+
+        // Broadcast progress to partner
+        if (dataConn && dataConn.open) {
+          sendPayload({ type: 'intimacy_suite_kiss_progress', progress: kissMeter, isHolding: true });
+        }
+
+        // 100% SWEET SPOT REACHED!
+        if (kissMeter >= 100) {
+          triggerPassionateKissSweetSpot();
+        }
+      }, 35);
+    }
+
+    function stopKissHold() {
+      if (!isKissHolding && !isPartnerKissHolding) return;
+      isKissHolding = false;
+      clearInterval(kissHoldInterval);
+
+      // Stop audio oscillator
+      try {
+        if (suiteGain && suiteAudioCtx) {
+          suiteGain.gain.setTargetAtTime(0, suiteAudioCtx.currentTime, 0.05);
+          setTimeout(() => {
+            if (suiteOsc) { suiteOsc.stop(); suiteOsc.disconnect(); suiteOsc = null; }
+          }, 80);
+        }
+      } catch (e) {}
+
+      // Smooth decay of kiss meter if not at sweet spot
+      const decay = setInterval(() => {
+        if (isKissHolding) {
+          clearInterval(decay);
+          return;
+        }
+        kissMeter = Math.max(0, kissMeter - 3.5);
+        updateKissBarUI();
+        if (kissMeter <= 0) {
+          clearInterval(decay);
+          suiteBpm = Math.max(72, suiteBpm - 8);
+          updateSuiteBpmUI();
+        }
+      }, 30);
+
+      if (dataConn && dataConn.open) {
+        sendPayload({ type: 'intimacy_suite_kiss_progress', progress: kissMeter, isHolding: false });
+      }
+    }
+
+    function triggerPassionateKissSweetSpot() {
+      stopKissHold();
+      kissMeter = 100;
+      updateKissBarUI();
+
+      // Big celebratory fireworks and hearts!
+      spawnSuiteParticles(70, '#f43f5e');
+      playBeepAlert(880, 0.35);
+      if (navigator.vibrate) navigator.vibrate([100, 60, 160, 60, 220]);
+
+      showSuiteToast(isPartnerKissHolding ? '🔥 DUAL SYNCHRONIZED KISS ECSTASY! ❤️' : '💋 PASSIONATE KISS LOCKED! ❤️');
+
+      setTimeout(() => {
+        kissMeter = 0;
+        updateKissBarUI();
+      }, 2200);
+    }
+
+    function updateKissBarUI() {
+      const bar = document.getElementById('suite-kiss-bar');
+      const label = document.getElementById('suite-kiss-label');
+      if (!bar) return;
+
+      const effective = Math.max(kissMeter, partnerKissMeter);
+      bar.style.width = effective + '%';
+
+      if (label) {
+        if (effective >= 100) {
+          label.textContent = '✨ ECSTASY LOCKED! ✨';
+        } else if (isKissHolding && isPartnerKissHolding) {
+          label.textContent = '🔥 DUAL SYNC KISSING... ' + Math.round(effective) + '%';
+        } else if (isKissHolding) {
+          label.textContent = 'LEANING IN... ' + Math.round(effective) + '%';
+        } else if (isPartnerKissHolding) {
+          label.textContent = 'PARTNER IS LEANING IN... ' + Math.round(effective) + '%';
+        } else {
+          label.textContent = 'PRESS & HOLD FOR DEEP KISS';
+        }
+      }
+    }
+
+    // -------------------------------------------------------------
+    // PROCEDURAL 2.5D LIVING CANVAS ENGINE (SILKY 60 FPS INTIMACY)
+    // -------------------------------------------------------------
+    function setupSuiteCanvas() {
+      suiteCanvas = document.getElementById('intimacy-suite-canvas');
+      if (!suiteCanvas) return;
+      suiteCtx = suiteCanvas.getContext('2d');
+
+      const resize = () => {
+        if (!suiteCanvas || !suiteCanvas.parentElement) return;
+        const rect = suiteCanvas.parentElement.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        const w = Math.min(rect.width, 520);
+        const h = Math.min(rect.height, 500);
+        suiteCanvas.width = w * dpr;
+        suiteCanvas.height = h * dpr;
+        suiteCanvas.style.width = w + 'px';
+        suiteCanvas.style.height = h + 'px';
+        if (suiteCtx) suiteCtx.scale(dpr, dpr);
+      };
+
+      resize();
+      window.addEventListener('resize', resize);
+
+      // Direct canvas tap detection for caresses!
+      suiteCanvas.addEventListener('pointerdown', (e) => {
+        const rect = suiteCanvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+
+        // Detect touch zone by coordinates
+        if (y < 0.45) {
+          triggerSuiteTouchZone('cheek', true);
+        } else if (y < 0.65) {
+          triggerSuiteTouchZone(x < 0.5 ? 'lips' : 'neck', true);
+        } else {
+          triggerSuiteTouchZone('waist', true);
+        }
+      });
+
+      // Start 60 FPS animation render loop
+      if (suiteAnimId) cancelAnimationFrame(suiteAnimId);
+      function loop() {
+        if (isSuiteOpen) {
+          renderSuiteFrame();
+          suiteAnimId = requestAnimationFrame(loop);
+        }
+      }
+      suiteAnimId = requestAnimationFrame(loop);
+    }
+
+    function spawnSuiteParticles(count, color = '#fb7185') {
+      if (!suiteCanvas) return;
+      const rect = suiteCanvas.getBoundingClientRect();
+      const w = rect.width || 360;
+      const h = rect.height || 420;
+
+      for (let i = 0; i < count; i++) {
+        suiteParticles.push({
+          x: w * 0.5 + (Math.random() - 0.5) * (w * 0.6),
+          y: h * 0.6 + (Math.random() - 0.5) * (h * 0.4),
+          vx: (Math.random() - 0.5) * 2.2,
+          vy: -1.2 - Math.random() * 2.5,
+          size: 3 + Math.random() * 6,
+          alpha: 1.0,
+          decay: 0.012 + Math.random() * 0.02,
+          color: color,
+          isHeart: Math.random() > 0.4
+        });
+      }
+    }
+
+    function renderSuiteFrame() {
+      if (!suiteCanvas || !suiteCtx) return;
+      const rect = suiteCanvas.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      const t = performance.now() * 0.001;
+
+      suiteCtx.clearRect(0, 0, w, h);
+
+      // 1. Rich Atmospheric Bedroom Gradient
+      const bgGrad = suiteCtx.createRadialGradient(w * 0.5, h * 0.45, 20, w * 0.5, h * 0.5, w * 0.85);
+      if (currentSuiteAngle === 'candle') {
+        bgGrad.addColorStop(0, '#3f180d');
+        bgGrad.addColorStop(0.5, '#20081c');
+        bgGrad.addColorStop(1, '#09020e');
+      } else {
+        bgGrad.addColorStop(0, '#2b0c20');
+        bgGrad.addColorStop(0.6, '#18061e');
+        bgGrad.addColorStop(1, '#07020d');
+      }
+      suiteCtx.fillStyle = bgGrad;
+      suiteCtx.fillRect(0, 0, w, h);
+
+      // 2. Dynamic Candle Flickering Light Cast
+      const candleFlicker = Math.sin(t * 12) * 0.06 + Math.cos(t * 7) * 0.04;
+      const lightGrad = suiteCtx.createRadialGradient(w * 0.15, h * 0.25, 10, w * 0.15, h * 0.25, w * 0.7);
+      lightGrad.addColorStop(0, `rgba(251, 191, 36, ${0.22 + candleFlicker})`);
+      lightGrad.addColorStop(0.6, 'rgba(244, 63, 94, 0.08)');
+      lightGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      suiteCtx.fillStyle = lightGrad;
+      suiteCtx.fillRect(0, 0, w, h);
+
+      // 3. Gentle Breathing Motion & Dynamic Lean-in
+      const breath = Math.sin(t * 2.2) * 5;
+      const kissOffset = (Math.max(kissMeter, partnerKissMeter) / 100) * 36; // Heads lean towards each other!
+
+      // 4. Render Scene according to chosen Angle
+      if (currentSuiteAngle === 'pillow') {
+        renderPillowAngle(w, h, t, breath, kissOffset);
+      } else if (currentSuiteAngle === 'gaze') {
+        renderGazeAngle(w, h, t, breath, kissOffset);
+      } else {
+        renderCandleAngle(w, h, t, breath, kissOffset);
+      }
+
+      // 5. Update and Render Floating Sparkle & Heart Particles
+      for (let i = suiteParticles.length - 1; i >= 0; i--) {
+        const p = suiteParticles[i];
+        p.x += p.vx + Math.sin(t * 3 + p.y * 0.05) * 0.6;
+        p.y += p.vy;
+        p.alpha -= p.decay;
+
+        if (p.alpha <= 0) {
+          suiteParticles.splice(i, 1);
+          continue;
+        }
+
+        suiteCtx.save();
+        suiteCtx.globalAlpha = p.alpha;
+        suiteCtx.fillStyle = p.color;
+        if (p.isHeart) {
+          drawMiniHeart(suiteCtx, p.x, p.y, p.size);
+        } else {
+          suiteCtx.beginPath();
+          suiteCtx.arc(p.x, p.y, p.size * 0.5, 0, Math.PI * 2);
+          suiteCtx.fill();
+        }
+        suiteCtx.restore();
+      }
+    }
+
+    function renderPillowAngle(w, h, t, breath, kissOffset) {
+      const ctx = suiteCtx;
+
+      // Soft Silk Pillows under heads
+      const pillowGrad = ctx.createLinearGradient(0, h * 0.15, 0, h * 0.55);
+      pillowGrad.addColorStop(0, '#fdf2f8');
+      pillowGrad.addColorStop(0.6, '#fbcfe8');
+      pillowGrad.addColorStop(1, '#db2777');
+
+      // Left Pillow (Partner I)
+      ctx.fillStyle = pillowGrad;
+      ctx.beginPath();
+      ctx.roundRect(w * 0.08, h * 0.18, w * 0.40, h * 0.32, 28);
+      ctx.fill();
+
+      // Right Pillow (Partner A)
+      ctx.beginPath();
+      ctx.roundRect(w * 0.52, h * 0.18, w * 0.40, h * 0.32, 28);
+      ctx.fill();
+
+      // Soft Velvet Quilt Sheet covering from chest down
+      const quiltGrad = ctx.createLinearGradient(0, h * 0.55, 0, h);
+      quiltGrad.addColorStop(0, '#be185d');
+      quiltGrad.addColorStop(0.5, '#831843');
+      quiltGrad.addColorStop(1, '#4c0519');
+      ctx.fillStyle = quiltGrad;
+      ctx.beginPath();
+      ctx.moveTo(0, h * 0.62 + breath);
+      ctx.bezierCurveTo(w * 0.3, h * 0.58 + breath, w * 0.7, h * 0.58 + breath, w, h * 0.62 + breath);
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.closePath();
+      ctx.fill();
+
+      // Partner I Head & Shoulders (Left leaning in)
+      const xI = w * 0.32 + kissOffset;
+      const yI = h * 0.38 + breath;
+
+      // Neck & Shoulder
+      ctx.fillStyle = '#fce7f3';
+      ctx.beginPath();
+      ctx.ellipse(xI, yI + 35, 42, 55, 0.15, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Face
+      ctx.fillStyle = '#fdf2f8';
+      ctx.beginPath();
+      ctx.ellipse(xI, yI, 36, 46, 0.12, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Cheeks Blush (Partner I)
+      ctx.fillStyle = `rgba(244, 63, 94, ${suiteBlushIntensity})`;
+      ctx.beginPath();
+      ctx.ellipse(xI - 12, yI + 8, 12, 7, 0, 0, Math.PI * 2);
+      ctx.ellipse(xI + 12, yI + 8, 12, 7, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Partner I Hair (Soft Flowing Dark Locks)
+      ctx.fillStyle = '#1c1917';
+      ctx.beginPath();
+      ctx.arc(xI - 5, yI - 12, 42, Math.PI * 0.85, Math.PI * 2.15);
+      ctx.bezierCurveTo(xI + 44, yI + 40, xI - 45, yI + 60, xI - 38, yI + 20);
+      ctx.closePath();
+      ctx.fill();
+
+      // Partner A Head & Shoulders (Right leaning in)
+      const xA = w * 0.68 - kissOffset;
+      const yA = h * 0.38 + breath * 0.8;
+
+      ctx.fillStyle = '#fce7f3';
+      ctx.beginPath();
+      ctx.ellipse(xA, yA + 35, 46, 58, -0.15, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Face
+      ctx.fillStyle = '#fbe8dc';
+      ctx.beginPath();
+      ctx.ellipse(xA, yA, 38, 48, -0.12, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Cheeks Blush (Partner A)
+      ctx.fillStyle = `rgba(244, 63, 94, ${suiteBlushIntensity * 0.85})`;
+      ctx.beginPath();
+      ctx.ellipse(xA - 12, yA + 8, 12, 7, 0, 0, Math.PI * 2);
+      ctx.ellipse(xA + 12, yA + 8, 12, 7, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Partner A Hair
+      ctx.fillStyle = '#292524';
+      ctx.beginPath();
+      ctx.arc(xA, yA - 15, 43, Math.PI * 0.85, Math.PI * 2.15);
+      ctx.fill();
+
+      // Gentle Loving Eyes (Closed or soft gaze)
+      const isBlink = (t % 3.8) < 0.18 || kissOffset > 15;
+      ctx.strokeStyle = '#3f3f46';
+      ctx.lineWidth = 2.2;
+      ctx.lineCap = 'round';
+
+      // Left Eyes (I)
+      ctx.beginPath();
+      if (isBlink) {
+        ctx.arc(xI - 12, yI - 2, 7, 0.1, Math.PI - 0.1);
+        ctx.arc(xI + 12, yI - 2, 7, 0.1, Math.PI - 0.1);
+      } else {
+        ctx.arc(xI - 12, yI - 4, 7, Math.PI + 0.1, Math.PI * 2 - 0.1);
+        ctx.arc(xI + 12, yI - 4, 7, Math.PI + 0.1, Math.PI * 2 - 0.1);
+      }
+      ctx.stroke();
+
+      // Right Eyes (A)
+      ctx.beginPath();
+      if (isBlink) {
+        ctx.arc(xA - 12, yA - 2, 7, 0.1, Math.PI - 0.1);
+        ctx.arc(xA + 12, yA - 2, 7, 0.1, Math.PI - 0.1);
+      } else {
+        ctx.arc(xA - 12, yA - 4, 7, Math.PI + 0.1, Math.PI * 2 - 0.1);
+        ctx.arc(xA + 12, yA - 4, 7, Math.PI + 0.1, Math.PI * 2 - 0.1);
+      }
+      ctx.stroke();
+
+      // Smiling Lips / Kissing Lips
+      ctx.fillStyle = '#f43f5e';
+      ctx.beginPath();
+      ctx.ellipse(xI + 5, yI + 22, 9, kissOffset > 15 ? 6 : 4, 0, 0, Math.PI * 2);
+      ctx.ellipse(xA - 5, yA + 22, 9, kissOffset > 15 ? 6 : 4, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function renderGazeAngle(w, h, t, breath, kissOffset) {
+      const ctx = suiteCtx;
+      // Close-up cinematic eye-to-eye gaze
+      const xCenter = w * 0.5;
+      const yCenter = h * 0.48 + breath;
+
+      // Romantic atmospheric backdrop glow
+      const radial = ctx.createRadialGradient(xCenter, yCenter, 20, xCenter, yCenter, w * 0.6);
+      radial.addColorStop(0, 'rgba(244, 63, 94, 0.35)');
+      radial.addColorStop(0.7, 'rgba(131, 24, 67, 0.15)');
+      radial.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = radial;
+      ctx.fillRect(0, 0, w, h);
+
+      // Facing profiles approaching each other
+      const pI_x = w * 0.28 + kissOffset * 1.2;
+      const pA_x = w * 0.72 - kissOffset * 1.2;
+
+      // Partner I Profile
+      ctx.fillStyle = '#fdf2f8';
+      ctx.beginPath();
+      ctx.ellipse(pI_x, yCenter, 58, 72, 0.18, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Partner A Profile
+      ctx.fillStyle = '#fbe8dc';
+      ctx.beginPath();
+      ctx.ellipse(pA_x, yCenter, 62, 75, -0.18, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Deep glowing cheek blush
+      ctx.fillStyle = `rgba(225, 29, 72, ${suiteBlushIntensity})`;
+      ctx.beginPath();
+      ctx.ellipse(pI_x + 18, yCenter + 12, 22, 14, 0.2, 0, Math.PI * 2);
+      ctx.ellipse(pA_x - 18, yCenter + 12, 22, 14, -0.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Lips approaching
+      ctx.fillStyle = '#e11d48';
+      ctx.beginPath();
+      ctx.ellipse(pI_x + 36, yCenter + 28, 12, 8, 0.2, 0, Math.PI * 2);
+      ctx.ellipse(pA_x - 36, yCenter + 28, 12, 8, -0.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function renderCandleAngle(w, h, t, breath, kissOffset) {
+      const ctx = suiteCtx;
+      // Warm candlelight silhouette with glowing amber rim
+      const xC = w * 0.5;
+      const yC = h * 0.45 + breath;
+
+      // Candle flame in bottom corner
+      const flameX = w * 0.18;
+      const flameY = h * 0.78;
+      const fGlow = ctx.createRadialGradient(flameX, flameY, 5, flameX, flameY, 90);
+      fGlow.addColorStop(0, 'rgba(251, 191, 36, 0.8)');
+      fGlow.addColorStop(0.4, 'rgba(244, 63, 94, 0.3)');
+      fGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = fGlow;
+      ctx.fillRect(0, 0, w, h);
+
+      // Warm candle flame
+      ctx.fillStyle = '#fef08a';
+      ctx.beginPath();
+      ctx.ellipse(flameX, flameY, 6, 12 + Math.sin(t * 15) * 2, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Couple Silhouette in warm romantic amber embrace
+      ctx.fillStyle = '#17061d';
+      ctx.beginPath();
+      // Embraced heads & bodies
+      ctx.ellipse(xC - 25 + kissOffset * 0.5, yC, 48, 65, 0.2, 0, Math.PI * 2);
+      ctx.ellipse(xC + 25 - kissOffset * 0.5, yC, 52, 68, -0.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Golden Rim Light along the edges
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.55)';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+
+    function drawMiniHeart(ctx, x, y, size) {
+      ctx.beginPath();
+      ctx.moveTo(x, y + size * 0.3);
+      ctx.bezierCurveTo(x, y, x - size * 0.6, y, x - size * 0.6, y + size * 0.35);
+      ctx.bezierCurveTo(x - size * 0.6, y + size * 0.65, x, y + size * 0.85, x, y + size);
+      ctx.bezierCurveTo(x, y + size * 0.85, x + size * 0.6, y + size * 0.65, x + size * 0.6, y + size * 0.35);
+      ctx.bezierCurveTo(x + size * 0.6, y, x, y, x, y + size * 0.3);
+      ctx.fill();
+    }
+
   </script>
 </body>
 </html>
