@@ -1994,13 +1994,15 @@
     function appendChatBubble(sender, text, isMe, timeStr, msgId = '', status = 'sent', isEdited = false) {
       const box = document.getElementById('chat-messages');
       const time = timeStr || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const senderName = isMe ? 'You' : (myRole === 'husband' ? 'A' : 'I');
+      const isCallLog = (sender === 'system') || (msgId && msgId.startsWith('call_'));
+      const senderName = isCallLog ? '📞 System' : (isMe ? 'You' : (myRole === 'husband' ? 'A' : 'I'));
 
-      const tickStatus = isMe 
+      const tickStatus = (isMe && !isCallLog)
         ? `<span id="status-${msgId}" class="ml-1 text-[10px]">${status === 'seen' ? '<span class="text-sky-400 font-bold">✓✓</span>' : '<span class="text-slate-400 font-bold">✓</span>'}</span>`
         : '';
 
-      const editBtn = isMe ? `
+      // Call logs and system events can NEVER be edited
+      const editBtn = (isMe && !isCallLog) ? `
         <button onclick="startEditChatMessage('${msgId}')" title="Edit message" class="hover:text-rose-200 text-rose-400/80 p-0.5 transition-colors">
           <i data-lucide="pencil" class="w-3 h-3"></i>
         </button>
@@ -2107,6 +2109,10 @@
     // CHAT MESSAGE EDIT & DELETE CONTROLS
     // -------------------------------------------------------------
     function startEditChatMessage(msgId) {
+      if (msgId && msgId.startsWith('call_')) {
+        showTelepathyBanner('⚠️ System call logs cannot be edited.');
+        return;
+      }
       const textEl = document.getElementById(`msg-text-${msgId}`);
       if (!textEl) return;
       const currentText = textEl.textContent;
@@ -3221,8 +3227,14 @@
         }
       }
 
+      // Explicitly unhide living 3D couple and clear any obsolete billboard state
+      customCoupleAvatarDataUrl = null;
+      localStorage.removeItem('sanctuary_couple_custom_avatar');
+      if (coupleBillboardMesh) coupleBillboardMesh.visible = false;
+
       if (coupleGroup) {
         buildLivingCouple3D(coupleGroup);
+        if (livingCoupleMeshGroup) livingCoupleMeshGroup.visible = true;
         if (currentSynchronizedPose) {
           applySynchronizedPose(currentSynchronizedPose, false);
         }
@@ -3258,8 +3270,12 @@
       blueprintA = { ...DEFAULT_BLUEPRINT_A };
       localStorage.removeItem('sanctuary_blueprint_I');
       localStorage.removeItem('sanctuary_blueprint_A');
+      localStorage.removeItem('sanctuary_couple_custom_avatar');
+      customCoupleAvatarDataUrl = null;
+      if (coupleBillboardMesh) coupleBillboardMesh.visible = false;
       if (coupleGroup) {
         buildLivingCouple3D(coupleGroup);
+        if (livingCoupleMeshGroup) livingCoupleMeshGroup.visible = true;
         applySynchronizedPose('cuddle', true);
       }
       renderBlueprintEditorUI();
