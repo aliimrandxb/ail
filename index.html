@@ -22,6 +22,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS3DRenderer.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 
   <style>
@@ -842,7 +843,7 @@
               <i data-lucide="image" class="w-4 h-4 text-rose-400"></i>
               3D Bed Characters (360° Living Image)
             </span>
-            <span class="text-[9px] text-amber-300 font-mono">Living Cutout</span>
+            <span class="text-[9px] text-amber-300 font-mono">Photo Cutout</span>
           </div>
           <p class="text-[11px] text-slate-400 leading-relaxed">
             Upload your own romantic couple photo / cutout to appear directly in the 3D Master Bed. It tracks the 360° camera smoothly without any boxy polygons!
@@ -856,6 +857,46 @@
             <button onclick="resetCoupleAvatarToDefault()" title="Reset to romantic art" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 text-xs active:scale-95 transition-all">
               Reset Art
             </button>
+          </div>
+        </div>
+
+        <!-- REAL 3D CHARACTER AVATAR (.GLB) & REPO INTEGRATION -->
+        <div class="bg-black/40 border border-rose-500/30 rounded-2xl p-3.5 space-y-3">
+          <div class="font-bold text-rose-200 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="user-check" class="w-4 h-4 text-rose-400"></i>
+              Real 3D Characters (.GLB / Ready Player Me)
+            </span>
+            <span class="text-[9px] text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">GLTF Enabled</span>
+          </div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Load full 3D human character models (<span class="text-rose-300 font-mono">.glb</span>) from <strong>Ready Player Me</strong>, <strong>Make-A-Character</strong> exports, or <strong>Mixamo</strong> right onto the 3D Master Bed.
+          </p>
+          
+          <div class="space-y-2">
+            <div class="flex gap-2">
+              <input id="rpm-avatar-url" type="url" placeholder="Paste .glb URL (e.g. from Ready Player Me)..." class="flex-1 px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-rose-400" />
+              <button onclick="loadReadyPlayerMeUrl()" class="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs active:scale-95 transition-all">
+                Load 3D
+              </button>
+            </div>
+            
+            <div class="flex items-center gap-2">
+              <label class="flex-1 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-rose-500/40 text-rose-200 font-semibold text-xs active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                <i data-lucide="file-up" class="w-3.5 h-3.5 text-rose-400"></i>
+                <span>Upload Local .glb File</span>
+                <input type="file" accept=".glb,.gltf" class="hidden" onchange="handleGLBFileUpload(this)" />
+              </label>
+              <button onclick="restoreBillboardAvatar()" title="Switch back to 360 image cutout" class="px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-slate-400 text-xs active:scale-95 transition-all">
+                Switch Mode
+              </button>
+            </div>
+            
+            <div class="p-2.5 rounded-xl bg-rose-950/30 border border-rose-500/20 text-[10px] text-rose-200/90 leading-relaxed space-y-1">
+              <div>💡 <strong>How to get free 3D characters:</strong></div>
+              <div>• <strong>Ready Player Me:</strong> Open <a href="https://readyplayer.me" target="_blank" class="text-amber-300 underline font-semibold">readyplayer.me</a>, take a selfie or customize a 3D avatar, copy the <span class="font-mono">.glb</span> link and paste above.</div>
+              <div>• <strong>Make-A-Character:</strong> Generate on their <a href="https://huggingface.co/spaces/Human3DAIGC/Make-A-Character" target="_blank" class="text-amber-300 underline font-semibold">HuggingFace Space</a> and download the <span class="font-mono">.glb</span> file to upload here.</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1296,6 +1337,8 @@
           applyWallpaperTexture(d.imageSrc);
         } else if (d.type === 'couple_avatar_sync') {
           setCustomCoupleAvatar(d.dataUrl, false);
+        } else if (d.type === 'couple_glb_sync') {
+          loadCustomCoupleGLB(d.glbUrl, false);
         }
       });
 
@@ -2809,6 +2852,94 @@
       setCustomCoupleAvatar(null, true);
     }
 
+    // -------------------------------------------------------------
+    // REAL 3D CHARACTER (.GLB) LOADER (Ready Player Me / Make-A-Character / Mixamo)
+    // -------------------------------------------------------------
+    let coupleGLTFModel = null;
+    let gltfLoader = null;
+
+    function loadCustomCoupleGLB(sourceUrl, broadcast = true) {
+      if (typeof THREE === 'undefined' || !THREE.GLTFLoader) {
+        showTelepathyBanner('⚠️ 3D GLTF Loader not ready');
+        return;
+      }
+      if (!gltfLoader) gltfLoader = new THREE.GLTFLoader();
+      showTelepathyBanner('⏳ Loading real 3D character model...');
+
+      gltfLoader.load(sourceUrl, (gltf) => {
+        if (!coupleGroup) return;
+        // Hide 2D billboard cutout
+        if (coupleBillboardMesh) coupleBillboardMesh.visible = false;
+        if (coupleGLTFModel) coupleGroup.remove(coupleGLTFModel);
+
+        coupleGLTFModel = gltf.scene;
+
+        // Auto-normalize scale and center on the bed
+        const box = new THREE.Box3().setFromObject(coupleGLTFModel);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        
+        if (maxDim > 0) {
+          const targetH = 1.35;
+          const s = targetH / maxDim;
+          coupleGLTFModel.scale.set(s, s, s);
+          coupleGLTFModel.position.set(-center.x * s, -box.min.y * s, -center.z * s);
+        }
+
+        coupleGLTFModel.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            if (child.material) {
+              child.material.roughness = 0.5;
+            }
+          }
+        });
+
+        coupleGroup.add(coupleGLTFModel);
+        if (!sourceUrl.startsWith('blob:') && !sourceUrl.startsWith('data:')) {
+          localStorage.setItem('sanctuary_custom_glb_url', sourceUrl);
+        }
+        showTelepathyBanner('✨ Real 3D Character Model placed on Bed!');
+
+        if (broadcast && !sourceUrl.startsWith('blob:') && !sourceUrl.startsWith('data:')) {
+          sendPayload({ type: 'couple_glb_sync', glbUrl: sourceUrl });
+        }
+      }, undefined, (err) => {
+        console.error('GLTF loading error:', err);
+        showTelepathyBanner('❌ Failed to load 3D GLB file');
+      });
+    }
+
+    function handleGLBFileUpload(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const blobUrl = URL.createObjectURL(file);
+      loadCustomCoupleGLB(blobUrl, false);
+    }
+
+    function loadReadyPlayerMeUrl() {
+      const url = document.getElementById('rpm-avatar-url')?.value?.trim();
+      if (!url) {
+        showTelepathyBanner('⚠️ Please enter a valid .glb URL');
+        return;
+      }
+      loadCustomCoupleGLB(url, true);
+    }
+
+    function restoreBillboardAvatar() {
+      if (coupleGLTFModel && coupleGroup) {
+        coupleGroup.remove(coupleGLTFModel);
+        coupleGLTFModel = null;
+      }
+      if (coupleBillboardMesh) {
+        coupleBillboardMesh.visible = true;
+      }
+      localStorage.removeItem('sanctuary_custom_glb_url');
+      showTelepathyBanner('🔄 Switched to 360° Image Cutout');
+    }
+
     function renderAestheticCoupleArt(ctx, w, h, poseKey) {
       ctx.save();
       ctx.clearRect(0, 0, w, h);
@@ -3891,6 +4022,12 @@
       coupleGroup.add(coupleBillboardMesh);
       roomGroup.add(coupleGroup);
 
+      // Auto-load custom GLB model if previously saved
+      const savedCustomGLB = localStorage.getItem('sanctuary_custom_glb_url');
+      if (savedCustomGLB) {
+        loadCustomCoupleGLB(savedCustomGLB, false);
+      }
+
       // Romantic Passion Aura Swirl around Couple
       const passionGeom = new THREE.BufferGeometry();
       const pCount = 35;
@@ -4014,7 +4151,7 @@
             let isCoupleOrBed = false;
             let curr = hit;
             while (curr && curr !== scene) {
-              if (curr === coupleBillboardMesh || curr === coupleGroup || bedInteractiveMeshes.includes(curr)) {
+              if (curr === coupleBillboardMesh || curr === coupleGroup || curr === coupleGLTFModel || bedInteractiveMeshes.includes(curr)) {
                 isCoupleOrBed = true;
                 break;
               }
