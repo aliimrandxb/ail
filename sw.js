@@ -1,11 +1,21 @@
 // Service Worker for DailySync / Sanctuary PWA
-const CACHE_NAME = 'dailysync-sanctuary-v2';
+const CACHE_NAME = 'dailysync-sanctuary-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './assets/activities/kiss.gif',
+  './assets/activities/cuddle.gif',
+  './assets/activities/spooning.gif',
+  './assets/activities/massage.gif',
+  './assets/activities/neck.gif',
+  './assets/activities/undress.gif',
+  './assets/activities/missionary.gif',
+  './assets/activities/cowgirl.gif',
+  './assets/activities/pinned.gif',
+  './assets/activities/surrender.gif'
 ];
 
 // 1. Install Event: Cache app shell
