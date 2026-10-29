@@ -3622,18 +3622,32 @@
       ctx.fillStyle = shadowGrad;
       ctx.fillRect(0, 0, w, h);
 
-      // 2. LAYER 2: Luxury Bed Backdrop & Satin Pillows
+      // 2. LAYER 2: Cozy Bed Pillows (Takiye Focused)
       ctx.save();
-      const pillowGrad = ctx.createLinearGradient(w * 0.2, h * 0.35, w * 0.8, h * 0.5);
-      pillowGrad.addColorStop(0, '#2e1065');
-      pillowGrad.addColorStop(0.5, '#3b0764');
-      pillowGrad.addColorStop(1, '#1e1b4b');
-      ctx.fillStyle = pillowGrad;
+      // Pillow Left (Partner I)
+      const pillowGradI = ctx.createLinearGradient(w * 0.16, h * 0.28, w * 0.48, h * 0.56);
+      pillowGradI.addColorStop(0, '#ffffff');
+      pillowGradI.addColorStop(0.6, '#fce7f3');
+      pillowGradI.addColorStop(1, '#fbcfe8');
+      ctx.fillStyle = pillowGradI;
       ctx.beginPath();
-      ctx.roundRect(w * 0.16, h * 0.32, w * 0.68, h * 0.28, [36, 36, 24, 24]);
+      ctx.roundRect(w * 0.16, h * 0.28, w * 0.34, h * 0.30, [28, 28, 22, 22]);
       ctx.fill();
-      ctx.strokeStyle = 'rgba(251, 113, 133, 0.2)';
-      ctx.lineWidth = 3;
+      ctx.strokeStyle = 'rgba(244, 63, 94, 0.18)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Pillow Right (Partner A)
+      const pillowGradA = ctx.createLinearGradient(w * 0.50, h * 0.28, w * 0.84, h * 0.56);
+      pillowGradA.addColorStop(0, '#ffffff');
+      pillowGradA.addColorStop(0.6, '#fce7f3');
+      pillowGradA.addColorStop(1, '#fbcfe8');
+      ctx.fillStyle = pillowGradA;
+      ctx.beginPath();
+      ctx.roundRect(w * 0.50, h * 0.28, w * 0.34, h * 0.30, [28, 28, 22, 22]);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(244, 63, 94, 0.18)';
+      ctx.lineWidth = 2;
       ctx.stroke();
       ctx.restore();
 
@@ -3948,55 +3962,8 @@
 
       ctx.restore();
 
-      // 5. LAYER 5: Luxury Velvet Bed Duvet / Lap Drape
-      ctx.save();
-      const duvetGrad = ctx.createLinearGradient(0, h * 0.65, 0, h);
-      duvetGrad.addColorStop(0, '#831843');
-      duvetGrad.addColorStop(0.3, '#9f1239');
-      duvetGrad.addColorStop(1, '#4c0519');
-      ctx.fillStyle = duvetGrad;
-      ctx.beginPath();
-      ctx.moveTo(w * 0.12, h * 0.70);
-      ctx.bezierCurveTo(w * 0.35, h * 0.63, w * 0.65, h * 0.63, w * 0.88, h * 0.70);
-      ctx.bezierCurveTo(w * 0.95, h * 0.80, w * 0.95, h * 0.96, w * 0.88, h * 0.96);
-      ctx.lineTo(w * 0.12, h * 0.96);
-      ctx.bezierCurveTo(w * 0.05, h * 0.96, w * 0.05, h * 0.80, w * 0.12, h * 0.70);
-      ctx.fill();
-
-      ctx.strokeStyle = 'rgba(251, 191, 36, 0.45)';
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      ctx.moveTo(w * 0.14, h * 0.71);
-      ctx.bezierCurveTo(w * 0.35, h * 0.64, w * 0.65, h * 0.64, w * 0.86, h * 0.71);
-      ctx.stroke();
-      ctx.restore();
-
-      // 6. LAYER 6: Romantic Floating Emojis / Sparkles
-      ctx.save();
-      ctx.font = '26px sans-serif';
-      ctx.textAlign = 'center';
-      if (isKiss) {
-        ctx.fillText('💋', w * 0.5, h * 0.26);
-        ctx.fillText('💕', w * 0.36, h * 0.32);
-        ctx.fillText('✨', w * 0.64, h * 0.30);
-      } else if (isSlowDance) {
-        ctx.fillText('💃', w * 0.5, h * 0.26);
-        ctx.fillText('🎶', w * 0.36, h * 0.32);
-        ctx.fillText('✨', w * 0.64, h * 0.30);
-      } else if (isNeck) {
-        ctx.fillText('💜', w * 0.5, h * 0.26);
-        ctx.fillText('💋', w * 0.38, h * 0.32);
-      } else if (isPin) {
-        ctx.fillText('🔒', w * 0.5, h * 0.26);
-        ctx.fillText('🔥', w * 0.62, h * 0.30);
-      } else if (isSurrender) {
-        ctx.fillText('🔥', w * 0.5, h * 0.26);
-        ctx.fillText('✨', w * 0.35, h * 0.32);
-      } else {
-        ctx.fillText('✨', w * 0.32, h * 0.32);
-        ctx.fillText('💖', w * 0.68, h * 0.32);
-      }
-      ctx.restore();
+      // Pure focus on pillows & characters - no extra clutter or emojis
+      ctx.restore(); // matches main ctx.save()
 
       ctx.restore();
     }
@@ -5344,10 +5311,10 @@
 
       // 2. Intense sensual under-bed neon glow surge
       if (bedGlowLight) {
-        bedGlowLight.intensity = 3.6;
+        bedGlowLight.intensity = 0.85;
         bedGlowLight.color.setHex(0xe11d48);
         setTimeout(() => {
-          if (bedGlowLight) bedGlowLight.intensity = 1.6;
+          if (bedGlowLight) bedGlowLight.intensity = 0.45;
         }, 3000);
       }
       if (candleLight) {
@@ -5653,7 +5620,7 @@
       roomGroup.add(candleLight);
 
       // Intimate Under-Bed Ambient Glow
-      bedGlowLight = new THREE.PointLight(0xe11d48, 1.6, 6);
+      bedGlowLight = new THREE.PointLight(0xe11d48, 0.45, 5);
       bedGlowLight.position.set(-1.4, 0.15, -1.3);
       roomGroup.add(bedGlowLight);
 
@@ -5709,7 +5676,7 @@
         }
         // Smooth breathing under-bed glow
         if (bedGlowLight) {
-          bedGlowLight.intensity = 1.4 + Math.sin(t * 1.8) * 0.45;
+          bedGlowLight.intensity = 0.45 + Math.sin(t * 1.5) * 0.12;
         }
 
         // Living breathing and gentle sway for 3D couple (A & I)
