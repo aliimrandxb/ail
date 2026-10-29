@@ -2956,8 +2956,8 @@
         if (coupleBillboardMesh) coupleBillboardMesh.visible = true;
       } else {
         localStorage.removeItem('sanctuary_couple_custom_avatar');
-        if (livingCoupleMeshGroup) livingCoupleMeshGroup.visible = true;
-        if (coupleBillboardMesh) coupleBillboardMesh.visible = false;
+        if (livingCoupleMeshGroup) livingCoupleMeshGroup.visible = false;
+        if (coupleBillboardMesh) coupleBillboardMesh.visible = true;
       }
       updateCoupleBillboardTexture(currentCouplePose || 'cuddle');
       if (broadcast && dataUrl) {
@@ -2984,8 +2984,8 @@
         coupleGroup.remove(coupleGLTFModel);
         coupleGLTFModel = null;
       }
-      if (livingCoupleMeshGroup) livingCoupleMeshGroup.visible = true;
-      if (coupleBillboardMesh) coupleBillboardMesh.visible = false;
+      if (livingCoupleMeshGroup) livingCoupleMeshGroup.visible = false;
+      if (coupleBillboardMesh) coupleBillboardMesh.visible = true;
       showTelepathyBanner('✨ Reset to Living 3D Couple (A & I)');
     }
 
@@ -3588,7 +3588,7 @@
     // =============================================================
     // 2.5D LIVING LAYERED ANIMATION ENGINE (NOKIA / GAMELOFT STYLE)
     // =============================================================
-    function renderLiving2DLayeredCouple(ctx, w, h, poseKey, isBlinking = false) {
+    function renderLiving2DLayeredCouple(ctx, w, h, poseKey, isBlinking = false, animTime = 0) {
       ctx.save();
       ctx.clearRect(0, 0, w, h);
 
@@ -3637,38 +3637,48 @@
       ctx.stroke();
       ctx.restore();
 
-      // Dynamic offsets based on intimate pose
-      let headIx = w * 0.38, headIy = h * 0.38;
-      let headAx = w * 0.62, headAy = h * 0.42;
-      let leanI = 0.08, leanA = -0.12;
+      // CONTINUOUS LIVING ANIMATION CLOCK (Chest Breathing, Hair Sway, Hand Caress)
+      const tSec = animTime || (performance.now() * 0.001);
+      const breathI = Math.sin(tSec * 2.4) * 4.5;
+      const breathA = Math.sin(tSec * 2.4 - 0.3) * 5.5;
+      const hairWave = Math.sin(tSec * 3.0) * 3.0;
+      const caressStroke = Math.sin(tSec * 2.0) * 7.0;
+      const headNod = Math.sin(tSec * 1.8) * 0.025;
+
+      // Base coordinates
+      let headIx = w * 0.38, headIy = (h * 0.38) + breathI;
+      let headAx = w * 0.62, headAy = (h * 0.42) + breathA;
+      let leanI = 0.08 + headNod, leanA = -0.12 - headNod;
 
       if (isKiss) {
-        headIx = w * 0.44; headIy = h * 0.39;
-        headAx = w * 0.56; headAy = h * 0.40;
-        leanI = 0.18; leanA = -0.22;
+        const kissPulse = Math.sin(tSec * 3.2) * 2.5;
+        headIx = w * 0.44 + kissPulse; headIy = (h * 0.39) + breathI;
+        headAx = w * 0.56 - kissPulse; headAy = (h * 0.40) + breathA;
+        leanI = 0.18 + headNod; leanA = -0.22 - headNod;
       } else if (isCaress) {
-        headIx = w * 0.40; headIy = h * 0.37;
-        headAx = w * 0.60; headAy = h * 0.41;
-        leanI = 0.12; leanA = -0.15;
+        headIx = w * 0.40; headIy = (h * 0.37) + breathI;
+        headAx = w * 0.60; headAy = (h * 0.41) + breathA;
+        leanI = 0.12 + headNod; leanA = -0.15 - headNod;
       } else if (isWhisper) {
-        headIx = w * 0.48; headIy = h * 0.36;
-        headAx = w * 0.58; headAy = h * 0.42;
+        headIx = w * 0.48; headIy = (h * 0.36) + breathI;
+        headAx = w * 0.58; headAy = (h * 0.42) + breathA;
         leanI = 0.22; leanA = -0.08;
       } else if (isSurrender) {
-        headIx = w * 0.42; headIy = h * 0.35;
-        headAx = w * 0.60; headAy = h * 0.46;
+        headIx = w * 0.42; headIy = (h * 0.35) + breathI;
+        headAx = w * 0.60; headAy = (h * 0.46) + breathA;
         leanI = 0.14; leanA = -0.25;
       } else if (isSlowDance) {
-        headIx = w * 0.42; headIy = h * 0.36;
-        headAx = w * 0.58; headAy = h * 0.38;
-        leanI = 0.05; leanA = -0.05;
+        const danceSway = Math.sin(tSec * 1.6) * 12.0;
+        headIx = (w * 0.42) + danceSway; headIy = (h * 0.36) + breathI;
+        headAx = (w * 0.58) + danceSway; headAy = (h * 0.38) + breathA;
+        leanI = 0.05 + (danceSway * 0.003); leanA = -0.05 + (danceSway * 0.003);
       } else if (isNeck) {
-        headIx = w * 0.46; headIy = h * 0.42;
-        headAx = w * 0.55; headAy = h * 0.36;
-        leanI = 0.16; leanA = -0.10;
+        headIx = w * 0.46; headIy = (h * 0.42) + breathI;
+        headAx = w * 0.55; headAy = (h * 0.36) + breathA;
+        leanI = 0.16 + headNod; leanA = -0.10 - headNod;
       } else if (isPin) {
-        headIx = w * 0.44; headIy = h * 0.34;
-        headAx = w * 0.58; headAy = h * 0.48;
+        headIx = w * 0.44; headIy = (h * 0.34) + breathI;
+        headAx = w * 0.58; headAy = (h * 0.48) + breathA;
         leanI = 0.18; leanA = -0.28;
       }
 
@@ -3786,7 +3796,7 @@
       ctx.fill();
       ctx.fillStyle = skinI;
       ctx.beginPath();
-      ctx.ellipse(145, 215, 18, 14, Math.PI * 0.25, 0, Math.PI * 2);
+      ctx.ellipse(145 + caressStroke, 215, 18, 14, Math.PI * 0.25, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.restore();
@@ -3933,7 +3943,7 @@
       // Delicate Hand on Chest
       ctx.fillStyle = skinA;
       ctx.beginPath();
-      ctx.ellipse(-75, 130, 14, 10, -Math.PI * 0.25, 0, Math.PI * 2);
+      ctx.ellipse(-75, 130 + caressStroke * 0.6, 14, 10, -Math.PI * 0.25, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.restore();
@@ -3992,7 +4002,7 @@
     }
 
     let last2DBlinkState = false;
-    function updateCoupleBillboardTexture(poseKey, isBlinking = false) {
+    function updateCoupleBillboardTexture(poseKey, isBlinking = false, animTime = 0) {
       if (!coupleCanvas || !coupleCtx) return;
       const w = coupleCanvas.width;
       const h = coupleCanvas.height;
@@ -4033,7 +4043,7 @@
       }
 
       // Render 2.5D Living Layered Couple on Bed
-      renderLiving2DLayeredCouple(coupleCtx, w, h, poseKey || currentCouplePose || 'cuddle', isBlinking);
+      renderLiving2DLayeredCouple(coupleCtx, w, h, poseKey || currentCouplePose || 'cuddle', isBlinking, animTime);
       if (coupleTexture) coupleTexture.needsUpdate = true;
     }
 
@@ -4651,13 +4661,7 @@
 
       livingCoupleMeshGroup.add(charA);
 
-      // ==========================================
-      // 3. COZY SILK DUVET / BLANKET FOLD ON LAPS
-      // ==========================================
-      const blanketFold = new THREE.Mesh(new THREE.CylinderGeometry(0.44, 0.48, 0.22, 20), blanketMat);
-      blanketFold.scale.set(1.4, 0.65, 0.9);
-      blanketFold.position.set(0.0, -0.02, 0.18);
-      livingCoupleMeshGroup.add(blanketFold);
+      // Blanket fold cylinder removed - bed duvet mesh handles natural bedding
 
       parentGroup.add(livingCoupleMeshGroup);
       return livingCoupleMeshGroup;
@@ -5540,9 +5544,11 @@
       coupleBillboardMesh.visible = true; // Active 2.5D Living Layered Couple
       coupleGroup.add(coupleBillboardMesh);
 
-      // Build Living 3D Stylized Couple (A & I) on Bed
-      buildLivingCouple3D(coupleGroup);
-      if (livingCoupleMeshGroup) livingCoupleMeshGroup.visible = false;
+      // 2.5D Living Layered Animated Couple (A & I) is Active
+      if (livingCoupleMeshGroup && coupleGroup) {
+        coupleGroup.remove(livingCoupleMeshGroup);
+        livingCoupleMeshGroup = null;
+      }
       if (coupleBillboardMesh) coupleBillboardMesh.visible = true;
       roomGroup.add(coupleGroup);
 
@@ -5715,13 +5721,13 @@
           if (charA.chestMesh) charA.chestMesh.scale.x = 1.0 + Math.sin(t * 2.0 - 0.25) * 0.015;
         }
 
-        // Natural eye blinking loop (every 3.6s, blinks for 130ms)
+        // 30 FPS Continuous Living Animation Engine (Breathing, Hair Sway, Hand Caress, Blinking)
         const blinkPhase = t % 3.6;
-        const isBlink = blinkPhase < 0.13;
-        if (isBlink !== last2DBlinkState) {
-          last2DBlinkState = isBlink;
-          if (coupleBillboardMesh && coupleBillboardMesh.visible && !customCoupleAvatarDataUrl) {
-            updateCoupleBillboardTexture(currentCouplePose, isBlink);
+        const isBlink = blinkPhase < 0.14;
+        if (coupleBillboardMesh && coupleBillboardMesh.visible && !customCoupleAvatarDataUrl) {
+          if (!window._lastCoupleAnimTime || (t - window._lastCoupleAnimTime >= 0.033)) {
+            window._lastCoupleAnimTime = t;
+            updateCoupleBillboardTexture(currentCouplePose, isBlink, t);
           }
         }
         if (charI && charI.faceMesh && faceTexI_open && faceTexI_closed) {
