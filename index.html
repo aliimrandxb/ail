@@ -862,36 +862,81 @@
             Synchronized dual-armature poses & modular 3D character blueprints (Land of Desire formula). Real-time P2P sync without downloads!
           </p>
 
-          <!-- 1. Synchronized Bed Poses -->
+          <!-- 1. Room Roaming & Locations -->
           <div class="space-y-1.5">
-            <div class="text-[10px] text-rose-300/80 font-bold uppercase tracking-wider flex items-center gap-1">
-              <i data-lucide="heart" class="w-3 h-3 text-rose-400"></i>
-              <span>Synchronized Bed Poses:</span>
+            <div class="text-[10px] text-rose-300/80 font-bold uppercase tracking-wider flex items-center justify-between">
+              <span class="flex items-center gap-1">
+                <i data-lucide="compass" class="w-3 h-3 text-rose-400"></i>
+                <span>Room Roaming & Movement:</span>
+              </span>
+              <span class="text-[9px] text-emerald-400 font-mono">Live Walk</span>
             </div>
-            <div class="grid grid-cols-3 gap-1.5">
-              <button onclick="applySynchronizedPose('cuddle')" class="py-2 px-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+            <div class="grid grid-cols-4 gap-1.5">
+              <button onclick="moveCoupleToSpot('bed')" class="py-2 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
                 <span class="text-sm">🛏️</span>
+                <span>Bed</span>
+              </button>
+              <button onclick="moveCoupleToSpot('cinema')" class="py-2 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-sm">📺</span>
+                <span>Cinema</span>
+              </button>
+              <button onclick="moveCoupleToSpot('rug')" class="py-2 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-sm">💃</span>
+                <span>Dance Rug</span>
+              </button>
+              <button onclick="moveCoupleToSpot('candle')" class="py-2 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-sm">☕</span>
+                <span>Candle Tea</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Animated Desire Activities -->
+          <div class="space-y-1.5 pt-2 border-t border-rose-500/20">
+            <div class="text-[10px] text-rose-300/80 font-bold uppercase tracking-wider flex items-center justify-between">
+              <span class="flex items-center gap-1">
+                <i data-lucide="heart" class="w-3 h-3 text-rose-400"></i>
+                <span>Animated Desire Activities:</span>
+              </span>
+              <span class="text-[9px] text-rose-400 font-mono">Land of Desire</span>
+            </div>
+            <div class="grid grid-cols-4 gap-1.5">
+              <button onclick="applySynchronizedPose('cuddle')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-xs">🛏️</span>
                 <span>Cuddle</span>
               </button>
-              <button onclick="applySynchronizedPose('kiss')" class="py-2 px-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-sm">💋</span>
+              <button onclick="applySynchronizedPose('kiss')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-xs">💋</span>
                 <span>Kiss</span>
               </button>
-              <button onclick="applySynchronizedPose('caress')" class="py-2 px-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-sm">💆</span>
+              <button onclick="applySynchronizedPose('slow_dance')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-xs">💃</span>
+                <span>Slow Dance</span>
+              </button>
+              <button onclick="applySynchronizedPose('caress')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-xs">💆</span>
                 <span>Caress</span>
               </button>
-              <button onclick="applySynchronizedPose('whisper')" class="py-2 px-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-sm">🤫</span>
+              <button onclick="applySynchronizedPose('whisper')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-xs">🤫</span>
                 <span>Whisper</span>
               </button>
-              <button onclick="applySynchronizedPose('surrender')" class="py-2 px-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-sm">🔥</span>
+              <button onclick="applySynchronizedPose('neck')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-xs">💜</span>
+                <span>Neck</span>
+              </button>
+              <button onclick="applySynchronizedPose('pin')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-xs">🔒</span>
+                <span>Bed Pin</span>
+              </button>
+              <button onclick="applySynchronizedPose('surrender')" class="py-1.5 px-1 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[9px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-xs">🔥</span>
                 <span>Surrender</span>
               </button>
-              <button onclick="resetCharacterBlueprints()" class="py-2 px-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 text-slate-400 text-[10px] active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
-                <span class="text-sm">🔄</span>
-                <span>Reset</span>
+            </div>
+            <div class="pt-1 flex justify-end">
+              <button onclick="resetCharacterBlueprints()" class="py-1 px-3 rounded-lg bg-white/5 border border-white/10 hover:border-white/20 text-slate-400 text-[9px] active:scale-95 transition-all flex items-center gap-1">
+                <span>🔄 Reset Blueprints</span>
               </button>
             </div>
           </div>
@@ -1390,6 +1435,8 @@
           applyWallpaperTexture(d.imageSrc);
         } else if (d.type === 'blueprint_sync') {
           applyReceivedBlueprint(d.target, d.blueprint);
+        } else if (d.type === 'room_move') {
+          moveCoupleToSpot(d.spotKey, d.activityKey, false);
         } else if (d.type === 'pose_sync') {
           applySynchronizedPose(d.poseKey, false);
         } else if (d.type === 'couple_avatar_sync') {
@@ -3087,6 +3134,105 @@
     let activePoseAnimationId = null;
 
     // Dual-Armature Synchronized Bed Poses (Land of Desire poses_controller.py formula)
+    // =============================================================
+    // ROOM ROAMING WAYPOINTS & DESIRE ACTIVITIES (LAND OF DESIRE)
+    // =============================================================
+    const ROOM_ACTIVITY_SPOTS = {
+      bed: {
+        name: 'Master Bed',
+        emoji: '🛏️',
+        pos: { x: -1.4, y: 0.70, z: -1.55 },
+        defaultPose: 'cuddle',
+        desc: 'Comfortable under the warm luxury duvet'
+      },
+      cinema: {
+        name: 'Cinema TV Lounge',
+        emoji: '📺',
+        pos: { x: 1.4, y: 0.42, z: -1.8 },
+        defaultPose: 'whisper',
+        desc: 'Watching cinema screen together, resting close'
+      },
+      rug: {
+        name: 'Velvet Rug Lounge',
+        emoji: '💃',
+        pos: { x: 0.2, y: 0.38, z: 0.2 },
+        defaultPose: 'slow_dance',
+        desc: 'Romantic slow dance & embrace on the carpet'
+      },
+      candle: {
+        name: 'Bedside Candle Table',
+        emoji: '☕',
+        pos: { x: -2.3, y: 0.40, z: -1.8 },
+        defaultPose: 'caress',
+        desc: 'Candlelight romance & sharing Karak Chai'
+      }
+    };
+
+    let currentRoomSpot = 'bed';
+    let isRoamingWalking = false;
+
+    function moveCoupleToSpot(spotKey, activityKey = null, broadcast = true) {
+      const spot = ROOM_ACTIVITY_SPOTS[spotKey] || ROOM_ACTIVITY_SPOTS.bed;
+      currentRoomSpot = spotKey;
+      const targetPose = activityKey || spot.defaultPose;
+
+      if (broadcast && dataConn && dataConn.open) {
+        try {
+          dataConn.send({ type: 'room_move', spotKey, activityKey: targetPose });
+        } catch (e) {
+          console.warn('Room move sync error:', e);
+        }
+      }
+
+      showTelepathyBanner(`🚶 Moving to ${spot.emoji} ${spot.name}...`);
+
+      if (!coupleGroup) {
+        applySynchronizedPose(targetPose, false);
+        return;
+      }
+
+      const startPos = {
+        x: coupleGroup.position.x,
+        y: coupleGroup.position.y,
+        z: coupleGroup.position.z
+      };
+      const endPos = spot.pos;
+
+      const animStart = performance.now();
+      const moveDuration = 1800; // smooth natural walking glide
+      isRoamingWalking = true;
+
+      function stepWalk() {
+        const elapsed = performance.now() - animStart;
+        const p = Math.min(elapsed / moveDuration, 1.0);
+        const ease = p * p * (3 - 2 * p); // smoothstep
+
+        // Horizontal glide
+        coupleGroup.position.x = startPos.x + (endPos.x - startPos.x) * ease;
+        coupleGroup.position.z = startPos.z + (endPos.z - startPos.z) * ease;
+
+        // Walking rhythmic footsteps bounce
+        const walkBounce = Math.sin(p * Math.PI * 8) * 0.045 * (1.0 - ease * 0.4);
+        coupleGroup.position.y = (startPos.y + (endPos.y - startPos.y) * ease) + walkBounce;
+
+        // Gentle walking tilt
+        if (coupleBillboardMesh) {
+          coupleBillboardMesh.rotation.z = Math.sin(p * Math.PI * 8) * 0.04;
+        }
+
+        if (p < 1.0) {
+          requestAnimationFrame(stepWalk);
+        } else {
+          isRoamingWalking = false;
+          coupleGroup.position.set(endPos.x, endPos.y, endPos.z);
+          if (coupleBillboardMesh) coupleBillboardMesh.rotation.z = 0;
+          applySynchronizedPose(targetPose, false);
+          showTelepathyBanner(`✨ Arrived at ${spot.emoji} ${spot.name} • ${spot.desc}`);
+        }
+      }
+      stepWalk();
+    }
+
     const SYNCHRONIZED_POSES = {
       cuddle: {
         name: 'Tender Cuddle',
@@ -3096,11 +3242,18 @@
         blink: false
       },
       kiss: {
-        name: 'Sweet Kiss',
+        name: 'Passionate Kiss',
         emoji: '💋',
         charI: { posX: -0.13, posY: 0.02, posZ: 0.05, rotX: -0.06, rotY: 0.48, rotZ: 0.06, headRotX: 0.04, headRotY: 0.24, headRotZ: 0.08 },
         charA: { posX: 0.11, posY: 0.0, posZ: 0.07, rotX: -0.04, rotY: -0.52, rotZ: -0.12, headRotX: 0.06, headRotY: -0.22, headRotZ: -0.08 },
         blink: true
+      },
+      slow_dance: {
+        name: 'Romantic Slow Dance',
+        emoji: '💃',
+        charI: { posX: -0.16, posY: 0.06, posZ: 0.04, rotX: -0.04, rotY: 0.35, rotZ: 0.02, headRotX: 0.08, headRotY: 0.15, headRotZ: 0.02 },
+        charA: { posX: 0.16, posY: 0.02, posZ: 0.06, rotX: -0.04, rotY: -0.35, rotZ: -0.04, headRotX: 0.08, headRotY: -0.18, headRotZ: -0.06 },
+        blink: false
       },
       caress: {
         name: 'Gentle Caress',
@@ -3116,6 +3269,20 @@
         charA: { posX: 0.12, posY: -0.01, posZ: 0.05, rotX: -0.06, rotY: -0.42, rotZ: -0.08, headRotX: 0.04, headRotY: -0.18, headRotZ: -0.06 },
         blink: false
       },
+      neck: {
+        name: 'Neck Kisses',
+        emoji: '💜',
+        charI: { posX: -0.08, posY: 0.04, posZ: 0.08, rotX: -0.08, rotY: 0.55, rotZ: 0.06, headRotX: 0.15, headRotY: 0.28, headRotZ: 0.08 },
+        charA: { posX: 0.12, posY: -0.02, posZ: 0.05, rotX: -0.02, rotY: -0.45, rotZ: -0.14, headRotX: 0.14, headRotY: -0.22, headRotZ: -0.18 },
+        blink: true
+      },
+      pin: {
+        name: 'Playful Bed Pin',
+        emoji: '🔒',
+        charI: { posX: -0.10, posY: 0.09, posZ: 0.09, rotX: -0.16, rotY: 0.50, rotZ: 0.12, headRotX: 0.18, headRotY: 0.22, headRotZ: 0.04 },
+        charA: { posX: 0.12, posY: -0.08, posZ: 0.02, rotX: 0.05, rotY: -0.30, rotZ: -0.22, headRotX: -0.08, headRotY: -0.10, headRotZ: -0.12 },
+        blink: true
+      },
       surrender: {
         name: 'Passionate Surrender',
         emoji: '🔥',
@@ -3124,6 +3291,7 @@
         blink: true
       }
     };
+
 
     function applySynchronizedPose(poseKey, broadcast = true) {
       const poseData = SYNCHRONIZED_POSES[poseKey] || SYNCHRONIZED_POSES.cuddle;
@@ -3441,7 +3609,10 @@
       const isWhisper = (poseKey === 'whisper');
       const isCaress = (poseKey === 'caress');
       const isSurrender = (poseKey === 'surrender');
-      const eyesClosed = isKiss || isSurrender || isBlinking;
+      const isSlowDance = (poseKey === 'slow_dance');
+      const isNeck = (poseKey === 'neck');
+      const isPin = (poseKey === 'pin');
+      const eyesClosed = isKiss || isSurrender || isNeck || isPin || isBlinking;
 
       // 1. LAYER 1: Ambient Drop Shadow on Bed Duvet
       const shadowGrad = ctx.createRadialGradient(w * 0.5, h * 0.82, 40, w * 0.5, h * 0.82, w * 0.45);
@@ -3487,6 +3658,18 @@
         headIx = w * 0.42; headIy = h * 0.35;
         headAx = w * 0.60; headAy = h * 0.46;
         leanI = 0.14; leanA = -0.25;
+      } else if (isSlowDance) {
+        headIx = w * 0.42; headIy = h * 0.36;
+        headAx = w * 0.58; headAy = h * 0.38;
+        leanI = 0.05; leanA = -0.05;
+      } else if (isNeck) {
+        headIx = w * 0.46; headIy = h * 0.42;
+        headAx = w * 0.55; headAy = h * 0.36;
+        leanI = 0.16; leanA = -0.10;
+      } else if (isPin) {
+        headIx = w * 0.44; headIy = h * 0.34;
+        headAx = w * 0.58; headAy = h * 0.48;
+        leanI = 0.18; leanA = -0.28;
       }
 
       // 3. LAYER 3: PARTNER I (Guy - Broad Masculine Silhouette, Back/Torso)
@@ -3786,6 +3969,16 @@
         ctx.fillText('💋', w * 0.5, h * 0.26);
         ctx.fillText('💕', w * 0.36, h * 0.32);
         ctx.fillText('✨', w * 0.64, h * 0.30);
+      } else if (isSlowDance) {
+        ctx.fillText('💃', w * 0.5, h * 0.26);
+        ctx.fillText('🎶', w * 0.36, h * 0.32);
+        ctx.fillText('✨', w * 0.64, h * 0.30);
+      } else if (isNeck) {
+        ctx.fillText('💜', w * 0.5, h * 0.26);
+        ctx.fillText('💋', w * 0.38, h * 0.32);
+      } else if (isPin) {
+        ctx.fillText('🔒', w * 0.5, h * 0.26);
+        ctx.fillText('🔥', w * 0.62, h * 0.30);
       } else if (isSurrender) {
         ctx.fillText('🔥', w * 0.5, h * 0.26);
         ctx.fillText('✨', w * 0.35, h * 0.32);
