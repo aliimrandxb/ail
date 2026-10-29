@@ -428,8 +428,21 @@
       </div>
     </div>
 
+    <!-- Floating In-Room Quick Chat Bar (Directly accessible while enjoying the 3D bedroom!) -->
+    <div id="room-quick-chat-bar" class="absolute bottom-16 inset-x-3 max-w-md mx-auto z-20 flex items-center gap-2 p-1.5 bg-[#0c0717]/95 border border-rose-500/40 rounded-2xl shadow-2xl backdrop-blur-xl transition-all duration-300">
+      <button onclick="openDrawer('chat')" title="Open Full Chat History & Media" class="p-2 rounded-xl bg-white/10 hover:bg-white/15 text-rose-300 active:scale-95 transition-all shrink-0">
+        <i data-lucide="message-square" class="w-4 h-4"></i>
+      </button>
+      <input id="room-quick-chat-input" type="text" placeholder="Type a message to partner in room..."
+        onkeydown="if(event.key==='Enter') sendChatMessage()"
+        class="flex-1 bg-black/60 border border-rose-500/30 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-rose-400 transition-colors" />
+      <button onclick="sendChatMessage()" title="Send Message" class="bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 active:scale-95 text-white px-3.5 py-2 rounded-xl flex items-center justify-center shadow-lg transition-all shrink-0">
+        <i data-lucide="send" class="w-4 h-4"></i>
+      </button>
+    </div>
+
     <!-- SLIDING DRAWERS / PANELS (GLASSMORPHISM) -->
-    <div id="sanctuary-drawer" class="drawer-sheet fixed inset-x-0 bottom-14 z-30 glass-panel rounded-t-3xl max-h-[82dvh] flex flex-col shadow-2xl transition-all duration-300">
+    <div id="sanctuary-drawer" class="drawer-sheet fixed inset-x-0 bottom-14 z-30 glass-panel rounded-t-3xl h-[82dvh] max-h-[82dvh] flex flex-col overflow-hidden shadow-2xl transition-all duration-300">
       
       <!-- Drawer Header Bar -->
       <div class="px-4 pt-3 pb-2.5 border-b border-rose-500/20 flex items-center justify-between shrink-0">
@@ -453,10 +466,10 @@
       </div>
 
       <!-- PANEL 1: REAL P2P CHAT + VOICE NOTE + VOICE CALL + VIDEO CALL -->
-      <div id="panel-chat" class="flex-1 overflow-y-auto p-3.5 space-y-3 flex flex-col">
+      <div id="panel-chat" class="flex-1 min-h-0 p-3.5 flex flex-col overflow-hidden">
         
         <!-- Action Quick-Bar: Voice Call, Video Call, Voice Drop -->
-        <div class="grid grid-cols-3 gap-2 shrink-0">
+        <div class="grid grid-cols-3 gap-2 shrink-0 mb-2.5">
           <button id="btn-live-call" onclick="toggleLiveCall('audio')" class="relative flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-emerald-600/90 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs shadow-md transition-all">
             <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
             <span id="live-call-label">Voice Call</span>
@@ -477,7 +490,7 @@
         <audio id="remote-audio" autoplay playsinline class="hidden"></audio>
 
         <!-- Message Stream Area -->
-        <div id="chat-messages" class="flex-1 min-h-[200px] overflow-y-auto bg-black/40 border border-white/10 rounded-2xl p-3 space-y-2.5 scroll-smooth">
+        <div id="chat-messages" class="flex-1 min-h-0 overflow-y-auto bg-black/40 border border-white/10 rounded-2xl p-3 space-y-2.5 scroll-smooth mb-2.5">
           <div class="text-center py-2">
             <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-rose-950/60 border border-rose-500/20 text-[10px] text-rose-300 font-mono-code">
               <i data-lucide="shield-check" class="w-3 h-3 text-emerald-400"></i>
@@ -489,17 +502,17 @@
         <!-- Hidden inputs for media -->
         <input type="file" id="media-file-input" accept="image/*,video/*" class="hidden" onchange="handleMediaUpload(this)" />
 
-        <!-- Input Bar -->
-        <div class="flex gap-2 shrink-0 pt-1 items-center">
+        <!-- Input Bar (Rock-solid Pinned at Bottom of Drawer) -->
+        <div class="flex gap-2 shrink-0 pt-2 border-t border-rose-500/25 bg-[#0c0717]/95 rounded-2xl p-2 items-center shadow-lg">
           <button onclick="document.getElementById('media-file-input').click()" title="Send Photo/Video" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-rose-200 active:scale-95 transition-all">
             <i data-lucide="paperclip" class="w-4 h-4"></i>
           </button>
           
           <input id="chat-input" type="text" placeholder="Type a private message..." 
             onkeydown="if(event.key==='Enter') sendChatMessage()"
-            class="flex-1 bg-black/60 border border-rose-500/30 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-rose-400 transition-colors" />
+            class="flex-1 bg-black/80 border border-rose-500/40 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-400/50 transition-colors" />
           
-          <button onclick="sendChatMessage()" class="bg-rose-600 hover:bg-rose-500 active:scale-95 text-white px-4 py-2.5 rounded-xl flex items-center justify-center shadow-lg transition-all">
+          <button onclick="sendChatMessage()" class="bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 active:scale-95 text-white px-4 py-2.5 rounded-xl flex items-center justify-center shadow-lg transition-all">
             <i data-lucide="send" class="w-4 h-4"></i>
           </button>
         </div>
@@ -1899,12 +1912,12 @@
       isChatFullscreen = !isChatFullscreen;
 
       if (isChatFullscreen) {
-        drawer.classList.remove('max-h-[82dvh]', 'rounded-t-3xl', 'bottom-14');
+        drawer.classList.remove('h-[82dvh]', 'max-h-[82dvh]', 'rounded-t-3xl', 'bottom-14');
         drawer.classList.add('h-full', 'inset-0', 'rounded-none', 'z-50', 'bottom-0');
         if (expandIcon) expandIcon.setAttribute('data-lucide', 'minimize-2');
       } else {
         drawer.classList.remove('h-full', 'inset-0', 'rounded-none', 'z-50', 'bottom-0');
-        drawer.classList.add('max-h-[82dvh]', 'rounded-t-3xl', 'bottom-14');
+        drawer.classList.add('h-[82dvh]', 'max-h-[82dvh]', 'rounded-t-3xl', 'bottom-14');
         if (expandIcon) expandIcon.setAttribute('data-lucide', 'maximize-2');
       }
       lucide.createIcons();
@@ -1913,11 +1926,21 @@
     // -------------------------------------------------------------
     // CHAT & MEDIA TRANSMISSION
     // -------------------------------------------------------------
-    function sendChatMessage() {
+    function sendChatMessage(explicitText = null) {
       const input = document.getElementById('chat-input');
-      const text = input.value.trim();
+      const roomInput = document.getElementById('room-quick-chat-input');
+      let text = '';
+      if (explicitText && typeof explicitText === 'string') {
+        text = explicitText.trim();
+      } else if (roomInput && roomInput.value && roomInput.value.trim()) {
+        text = roomInput.value.trim();
+        roomInput.value = '';
+      } else if (input && input.value && input.value.trim()) {
+        text = input.value.trim();
+        input.value = '';
+      }
       if (!text) return;
-      input.value = '';
+
       const msgId = 'msg_' + Date.now();
       const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -4602,6 +4625,14 @@
       // Update In-App Floating PiP state
       updateFloatingPiPState(panel);
 
+      // Hide floating room quick chat bar while full drawer is open
+      const rqb = document.getElementById('room-quick-chat-bar');
+      if (rqb) rqb.classList.add('hidden');
+
+      if (panel === 'chat') {
+        setTimeout(() => { document.getElementById('chat-input')?.focus(); }, 120);
+      }
+
       if (panel === 'settings') updateSettingsPanelUI();
     }
 
@@ -4615,6 +4646,9 @@
       });
       // Show floating PiP mini-player when drawer is closed if a song is playing!
       updateFloatingPiPState(null);
+      // Restore floating in-room quick chat bar
+      const rqb = document.getElementById('room-quick-chat-bar');
+      if (rqb) rqb.classList.remove('hidden');
     }
 
     function updateFloatingPiPState(activePanel) {
@@ -4640,14 +4674,10 @@
           pip.className = 'absolute top-14 right-3 z-50 bg-[#0f081d]/95 border border-rose-500/40 rounded-full px-3 py-1.5 shadow-2xl backdrop-blur-md flex items-center gap-2 max-w-[240px] transition-all';
         }
       } else {
-        // Drawer is closed (viewing 3D room): show full sleek mini-player above dock
+        // Drawer is closed (viewing 3D room): show sleek mini-player comfortably above room quick chat bar
         pip.classList.remove('hidden');
-        pip.className = 'absolute bottom-16 right-3 z-50 bg-[#0f081d]/95 border border-rose-500/40 rounded-2xl p-2.5 shadow-2xl backdrop-blur-md flex items-center gap-3 max-w-[310px] transition-all duration-300 animate-fade-in';
+        pip.className = 'absolute bottom-28 right-3 z-50 bg-[#0f081d]/95 border border-rose-500/40 rounded-2xl p-2.5 shadow-2xl backdrop-blur-md flex items-center gap-3 max-w-[310px] transition-all duration-300 animate-fade-in';
       }
-    }
-
-    function closeDrawer() {
-      document.getElementById('sanctuary-drawer').classList.remove('open');
     }
 
     // -------------------------------------------------------------
