@@ -836,27 +836,62 @@
           </button>
         </div>
 
-        <!-- 3D Bed Couple Avatar (360° Image / Photo Cutout) -->
-        <div class="bg-black/40 border border-rose-500/30 rounded-2xl p-3.5 space-y-2.5">
-          <div class="font-bold text-rose-200 flex items-center justify-between">
-            <span class="flex items-center gap-1.5">
-              <i data-lucide="image" class="w-4 h-4 text-rose-400"></i>
-              3D Bed Characters (360° Living Image)
+        <!-- SNAPCHAT 3D BITMOJI COUPLE AVATAR SYSTEM -->
+        <div class="bg-black/40 border border-yellow-500/40 rounded-2xl p-3.5 space-y-3 shadow-lg">
+          <div class="font-bold text-yellow-300 flex items-center justify-between">
+            <span class="flex items-center gap-2">
+              <span class="text-base">👻</span>
+              <span>Snapchat 3D Bitmoji Characters</span>
             </span>
-            <span class="text-[9px] text-amber-300 font-mono">Photo Cutout</span>
+            <span class="text-[9px] text-yellow-400 bg-yellow-950/70 border border-yellow-500/30 px-2 py-0.5 rounded-full font-mono">Snap Style</span>
           </div>
-          <p class="text-[11px] text-slate-400 leading-relaxed">
-            Upload your own romantic couple photo / cutout to appear directly in the 3D Master Bed. It tracks the 360° camera smoothly without any boxy polygons!
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Cute, expressive 3D Bitmoji couple in bed! Upload any Friendmoji sticker from your Snapchat or tap a quick scene preset.
           </p>
-          <div class="flex items-center gap-2 pt-1">
-            <label class="flex-1 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 text-white font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer">
-              <i data-lucide="upload" class="w-4 h-4"></i>
-              <span>Upload Couple Photo</span>
+          
+          <!-- Quick Pose Presets -->
+          <div class="space-y-1.5">
+            <div class="text-[10px] text-slate-400 font-semibold">Snapchat Bitmoji Scenes:</div>
+            <div class="grid grid-cols-3 gap-1.5">
+              <button onclick="setBitmojiScenePreset('cuddle')" class="py-1.5 px-2 rounded-lg bg-white/5 border border-white/10 hover:border-yellow-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center">
+                🛏️ Cuddle
+              </button>
+              <button onclick="setBitmojiScenePreset('kiss')" class="py-1.5 px-2 rounded-lg bg-white/5 border border-white/10 hover:border-yellow-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center">
+                💋 Kiss
+              </button>
+              <button onclick="setBitmojiScenePreset('hug')" class="py-1.5 px-2 rounded-lg bg-white/5 border border-white/10 hover:border-yellow-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center">
+                🤗 Tight Hug
+              </button>
+              <button onclick="setBitmojiScenePreset('sleep')" class="py-1.5 px-2 rounded-lg bg-white/5 border border-white/10 hover:border-yellow-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center">
+                💤 Sleeping
+              </button>
+              <button onclick="setBitmojiScenePreset('tease')" class="py-1.5 px-2 rounded-lg bg-white/5 border border-white/10 hover:border-yellow-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center">
+                🔥 In Love
+              </button>
+              <button onclick="resetCoupleAvatarToDefault()" class="py-1.5 px-2 rounded-lg bg-white/5 border border-white/10 hover:border-white/20 text-slate-400 text-[10px] active:scale-95 transition-all text-center">
+                🔄 Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Snapchat Sticker / Photo Upload -->
+          <div class="space-y-2 pt-1 border-t border-yellow-500/20">
+            <label class="w-full py-2.5 rounded-xl bg-gradient-to-r from-yellow-500 via-amber-500 to-rose-600 hover:opacity-90 text-slate-950 font-extrabold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <i data-lucide="image" class="w-4 h-4 text-slate-950"></i>
+              <span>Upload Your Real Snapchat Bitmoji</span>
               <input type="file" accept="image/*" class="hidden" onchange="handleCoupleAvatarUpload(this)" />
             </label>
-            <button onclick="resetCoupleAvatarToDefault()" title="Reset to romantic art" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 text-xs active:scale-95 transition-all">
-              Reset Art
-            </button>
+
+            <!-- Snapchat Guide -->
+            <div class="p-2.5 rounded-xl bg-yellow-950/30 border border-yellow-500/20 text-[10px] text-yellow-200/90 leading-relaxed space-y-1">
+              <div class="font-bold flex items-center gap-1 text-yellow-300">
+                <span>👻 How to get your real Snapchat Bitmojis here:</span>
+              </div>
+              <div>1. Open <strong>Snapchat</strong> on your phone → Open Chat with partner.</div>
+              <div>2. Tap the <strong>Stickers icon</strong> (square smiley) → Tap your <strong>Friendmoji (Couple Bitmoji)</strong>.</div>
+              <div>3. Tap <strong>Share → Save Image</strong> (saves transparent sticker to Photos).</div>
+              <div>4. Tap <strong>"Upload Your Real Snapchat Bitmoji"</strong> above — done! Your real Bitmojis sit directly on the bed!</div>
+            </div>
           </div>
         </div>
 
@@ -2940,198 +2975,390 @@
       showTelepathyBanner('🔄 Switched to 360° Image Cutout');
     }
 
-    function renderAestheticCoupleArt(ctx, w, h, poseKey) {
+    function setBitmojiScenePreset(sceneKey) {
+      currentCouplePose = sceneKey;
+      customCoupleAvatarDataUrl = null;
+      localStorage.removeItem('sanctuary_couple_custom_avatar');
+      restoreBillboardAvatar();
+      updateCoupleBillboardTexture(sceneKey);
+      showTelepathyBanner(`👻 Snapchat Bitmoji scene set to ${sceneKey}!`);
+    }
+
+    function renderSnapchatBitmojiCouple(ctx, w, h, poseKey) {
       ctx.save();
       ctx.clearRect(0, 0, w, h);
 
-      // 1. Soft romantic ambient glow behind couple
-      const glow = ctx.createRadialGradient(w * 0.5, h * 0.55, 30, w * 0.5, h * 0.55, w * 0.45);
-      glow.addColorStop(0, 'rgba(244, 63, 94, 0.45)');
-      glow.addColorStop(0.5, 'rgba(190, 24, 93, 0.2)');
-      glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = glow;
+      // 1. Soft Snapchat-style ambient shadow on bed
+      const baseShadow = ctx.createRadialGradient(w * 0.5, h * 0.88, 20, w * 0.5, h * 0.88, w * 0.45);
+      baseShadow.addColorStop(0, 'rgba(0, 0, 0, 0.45)');
+      baseShadow.addColorStop(0.5, 'rgba(255, 220, 0, 0.12)');
+      baseShadow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = baseShadow;
       ctx.fillRect(0, 0, w, h);
 
-      // Pose offsets
-      let headShiftI = 0, headShiftA = 0;
-      let blush = 'rgba(244, 63, 94, 0.35)';
+      // Pose offsets for Snapchat Bitmoji style
+      let leanI = 0, leanA = 0;
+      let eyeType = 'happy'; // 'happy', 'wink', 'kiss', 'sleep'
+      let emojiReaction = '💕';
+
       if (poseKey === 'kiss') {
-        headShiftI = 35; headShiftA = -35;
-        blush = 'rgba(225, 29, 72, 0.55)';
-      } else if (poseKey === 'neck' || poseKey === 'touch') {
-        headShiftI = 25; headShiftA = -15;
-        blush = 'rgba(217, 70, 239, 0.45)';
-      } else if (poseKey === 'massage') {
-        headShiftI = 0; headShiftA = 10;
+        leanI = 42; leanA = -42;
+        eyeType = 'kiss';
+        emojiReaction = '💋';
+      } else if (poseKey === 'hug' || poseKey === 'neck') {
+        leanI = 30; leanA = -25;
+        eyeType = 'happy';
+        emojiReaction = '🤗';
+      } else if (poseKey === 'sleep') {
+        leanI = 15; leanA = -15;
+        eyeType = 'sleep';
+        emojiReaction = '💤';
+      } else if (poseKey === 'tease' || poseKey === 'touch') {
+        leanI = 20; leanA = -18;
+        eyeType = 'wink';
+        emojiReaction = '🔥';
       }
 
-      // --- Partner I (Husband - Left/Center) ---
-      // Torso / Loungewear
+      // --- Fluffy Bed Pillows in Background ---
+      ctx.save();
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = 'rgba(0,0,0,0.12)';
+      ctx.shadowBlur = 18;
+      // Left Pillow
       ctx.beginPath();
-      ctx.fillStyle = '#1e293b';
-      ctx.moveTo(w * 0.22, h * 0.95);
-      ctx.quadraticCurveTo(w * 0.26, h * 0.55, w * 0.38 + headShiftI * 0.3, h * 0.52);
-      ctx.quadraticCurveTo(w * 0.50, h * 0.52, w * 0.58, h * 0.65);
-      ctx.quadraticCurveTo(w * 0.62, h * 0.85, w * 0.60, h * 0.95);
+      if (ctx.roundRect) ctx.roundRect(w * 0.12, h * 0.38, w * 0.38, h * 0.28, [30]);
+      else ctx.rect(w * 0.12, h * 0.38, w * 0.38, h * 0.28);
+      ctx.fill();
+      // Right Pillow
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(w * 0.50, h * 0.38, w * 0.38, h * 0.28, [30]);
+      else ctx.rect(w * 0.50, h * 0.38, w * 0.38, h * 0.28);
+      ctx.fill();
+      ctx.restore();
+
+      // ==========================================
+      // PARTNER I (Guy Bitmoji - Left)
+      // ==========================================
+      const xI = w * 0.34 + leanI;
+      const yI = h * 0.44;
+
+      // Body (3D Shaded Hoodie / Loungewear)
+      ctx.save();
+      const bodyGradI = ctx.createLinearGradient(xI - 70, yI, xI + 70, yI + 220);
+      bodyGradI.addColorStop(0, '#334155');
+      bodyGradI.addColorStop(0.5, '#1e293b');
+      bodyGradI.addColorStop(1, '#0f172a');
+      ctx.fillStyle = bodyGradI;
+      ctx.beginPath();
+      ctx.moveTo(xI - 85, yI + 220);
+      ctx.quadraticCurveTo(xI - 80, yI + 80, xI - 40, yI + 75);
+      ctx.lineTo(xI + 40, yI + 75);
+      ctx.quadraticCurveTo(xI + 80, yI + 80, xI + 85, yI + 220);
       ctx.closePath();
       ctx.fill();
-
-      // Partner I - Neck & Jaw
+      // Hoodie strings
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 3.5;
       ctx.beginPath();
-      const skinGradI = ctx.createLinearGradient(w * 0.35, h * 0.35, w * 0.48, h * 0.52);
-      skinGradI.addColorStop(0, '#eac0a2');
-      skinGradI.addColorStop(1, '#c99675');
-      ctx.fillStyle = skinGradI;
-      ctx.moveTo(w * 0.38 + headShiftI, h * 0.40);
-      ctx.quadraticCurveTo(w * 0.45 + headShiftI, h * 0.48, w * 0.43 + headShiftI * 0.5, h * 0.52);
-      ctx.lineTo(w * 0.35 + headShiftI * 0.5, h * 0.52);
+      ctx.moveTo(xI - 12, yI + 85); ctx.lineTo(xI - 10, yI + 115);
+      ctx.moveTo(xI + 12, yI + 85); ctx.lineTo(xI + 14, yI + 115);
+      ctx.stroke();
+      ctx.restore();
+
+      // Neck I
+      ctx.fillStyle = '#e2aa85';
+      ctx.fillRect(xI - 16, yI + 52, 32, 28);
+
+      // Head I (Cute 3D Bitmoji Round Face)
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,0.18)';
+      ctx.shadowBlur = 12;
+      const faceGradI = ctx.createRadialGradient(xI - 12, yI - 12, 10, xI, yI, 72);
+      faceGradI.addColorStop(0, '#fde6d2');
+      faceGradI.addColorStop(0.7, '#f7c39f');
+      faceGradI.addColorStop(1, '#e2aa85');
+      ctx.fillStyle = faceGradI;
+      ctx.beginPath();
+      ctx.arc(xI, yI, 68, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Ears I
+      ctx.fillStyle = '#e2aa85';
+      ctx.beginPath();
+      ctx.arc(xI - 68, yI + 4, 14, 0, Math.PI * 2);
+      ctx.arc(xI + 68, yI + 4, 14, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Hair I (3D Volumetric Fade & Top volume)
+      ctx.save();
+      const hairGradI = ctx.createLinearGradient(xI - 70, yI - 75, xI + 70, yI);
+      hairGradI.addColorStop(0, '#1e293b');
+      hairGradI.addColorStop(0.5, '#0f172a');
+      hairGradI.addColorStop(1, '#020617');
+      ctx.fillStyle = hairGradI;
+      ctx.beginPath();
+      ctx.arc(xI, yI - 18, 72, Math.PI * 0.78, Math.PI * 2.22);
+      ctx.quadraticCurveTo(xI + 30, yI - 55, xI - 20, yI - 50);
       ctx.closePath();
       ctx.fill();
-
-      // Partner I - Head
+      // Stylish top puff
       ctx.beginPath();
-      ctx.arc(w * 0.38 + headShiftI, h * 0.35, 65, 0, Math.PI * 2);
+      ctx.arc(xI - 10, yI - 65, 34, 0, Math.PI * 2);
+      ctx.arc(xI + 22, yI - 60, 30, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Blushing Cheeks I
+      ctx.fillStyle = 'rgba(244, 63, 94, 0.35)';
+      ctx.beginPath();
+      ctx.arc(xI - 36, yI + 20, 16, 0, Math.PI * 2);
+      ctx.arc(xI + 36, yI + 20, 16, 0, Math.PI * 2);
       ctx.fill();
 
-      // Partner I - Hair (Dark, stylized)
-      ctx.beginPath();
-      ctx.fillStyle = '#0f172a';
-      ctx.arc(w * 0.37 + headShiftI, h * 0.33, 70, Math.PI * 0.8, Math.PI * 2.2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(w * 0.32 + headShiftI, h * 0.30);
-      ctx.quadraticCurveTo(w * 0.42 + headShiftI, h * 0.25, w * 0.45 + headShiftI, h * 0.32);
-      ctx.quadraticCurveTo(w * 0.40 + headShiftI, h * 0.32, w * 0.32 + headShiftI, h * 0.30);
-      ctx.fill();
-
-      // Partner I - Left Arm Embracing A
-      ctx.beginPath();
-      ctx.lineWidth = 36;
-      ctx.strokeStyle = '#1e293b';
+      // Eyes I
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 4.5;
       ctx.lineCap = 'round';
-      ctx.moveTo(w * 0.28, h * 0.58);
-      ctx.quadraticCurveTo(w * 0.45, h * 0.72, w * 0.62, h * 0.68);
-      ctx.stroke();
-
-      // Partner I - Hand
-      ctx.beginPath();
-      ctx.fillStyle = skinGradI;
-      ctx.arc(w * 0.62, h * 0.68, 22, 0, Math.PI * 2);
-      ctx.fill();
-
-      // --- Partner A (Wife - Right/Center, nestled close) ---
-      // Flowing dark hair back layer
-      ctx.beginPath();
-      ctx.fillStyle = '#18181b';
-      ctx.moveTo(w * 0.48 + headShiftA, h * 0.40);
-      ctx.quadraticCurveTo(w * 0.72 + headShiftA, h * 0.55, w * 0.68, h * 0.95);
-      ctx.lineTo(w * 0.42, h * 0.95);
-      ctx.closePath();
-      ctx.fill();
-
-      // Partner A - Silk Velvet Dress/Nightwear
-      ctx.beginPath();
-      const silkGrad = ctx.createLinearGradient(w * 0.45, h * 0.55, w * 0.70, h * 0.95);
-      silkGrad.addColorStop(0, '#be123c');
-      silkGrad.addColorStop(0.5, '#881337');
-      silkGrad.addColorStop(1, '#4c0519');
-      ctx.fillStyle = silkGrad;
-      ctx.moveTo(w * 0.46 + headShiftA * 0.3, h * 0.58);
-      ctx.quadraticCurveTo(w * 0.58, h * 0.52, w * 0.68 + headShiftA * 0.2, h * 0.65);
-      ctx.quadraticCurveTo(w * 0.74, h * 0.82, w * 0.72, h * 0.95);
-      ctx.lineTo(w * 0.44, h * 0.95);
-      ctx.closePath();
-      ctx.fill();
-
-      // Silk strap & sheen
-      ctx.beginPath();
-      ctx.strokeStyle = 'rgba(255, 228, 230, 0.6)';
-      ctx.lineWidth = 3;
-      ctx.moveTo(w * 0.52 + headShiftA * 0.3, h * 0.52);
-      ctx.lineTo(w * 0.50 + headShiftA * 0.3, h * 0.58);
-      ctx.stroke();
-
-      // Partner A - Neck & Collarbone
-      ctx.beginPath();
-      const skinGradA = ctx.createLinearGradient(w * 0.45, h * 0.38, w * 0.60, h * 0.54);
-      skinGradA.addColorStop(0, '#f8dcd0');
-      skinGradA.addColorStop(1, '#dfaf9b');
-      ctx.fillStyle = skinGradA;
-      ctx.moveTo(w * 0.50 + headShiftA, h * 0.42);
-      ctx.quadraticCurveTo(w * 0.55 + headShiftA, h * 0.50, w * 0.58 + headShiftA * 0.5, h * 0.54);
-      ctx.lineTo(w * 0.47 + headShiftA * 0.5, h * 0.54);
-      ctx.closePath();
-      ctx.fill();
-
-      // Partner A - Head
-      ctx.beginPath();
-      ctx.arc(w * 0.52 + headShiftA, h * 0.38, 58, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Partner A - Soft Rosy Cheek Blush
-      ctx.beginPath();
-      ctx.fillStyle = blush;
-      ctx.arc(w * 0.49 + headShiftA, h * 0.40, 18, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Partner A - Hair Front Waves
-      ctx.beginPath();
-      ctx.fillStyle = '#18181b';
-      ctx.arc(w * 0.53 + headShiftA, h * 0.36, 62, Math.PI * 1.1, Math.PI * 2.3);
-      ctx.fill();
-
-      // Flowing hair strands cascading down front
-      ctx.beginPath();
-      ctx.fillStyle = '#18181b';
-      ctx.moveTo(w * 0.46 + headShiftA, h * 0.38);
-      ctx.quadraticCurveTo(w * 0.43 + headShiftA, h * 0.50, w * 0.47, h * 0.68);
-      ctx.quadraticCurveTo(w * 0.51, h * 0.55, w * 0.49 + headShiftA, h * 0.42);
-      ctx.closePath();
-      ctx.fill();
-
-      // Partner A - Arm reaching around I
-      ctx.beginPath();
-      ctx.lineWidth = 26;
-      ctx.strokeStyle = skinGradA;
-      ctx.lineCap = 'round';
-      ctx.moveTo(w * 0.66 + headShiftA * 0.2, h * 0.64);
-      ctx.quadraticCurveTo(w * 0.55, h * 0.60, w * 0.38, h * 0.56);
-      ctx.stroke();
-
-      // Intimate Duvet White Silk Swathe at bottom
-      ctx.beginPath();
-      const duvetGrad = ctx.createLinearGradient(0, h * 0.85, 0, h);
-      duvetGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
-      duvetGrad.addColorStop(0.3, 'rgba(248, 250, 252, 0.85)');
-      duvetGrad.addColorStop(1, 'rgba(241, 245, 249, 0.98)');
-      ctx.fillStyle = duvetGrad;
-      ctx.moveTo(w * 0.15, h);
-      ctx.quadraticCurveTo(w * 0.40, h * 0.84, w * 0.85, h);
-      ctx.closePath();
-      ctx.fill();
-
-      // Sparkling romantic motes
-      const sparks = [
-        { x: w * 0.25, y: h * 0.30, r: 3 },
-        { x: w * 0.72, y: h * 0.35, r: 4 },
-        { x: w * 0.50, y: h * 0.22, r: 3 },
-        { x: w * 0.32, y: h * 0.75, r: 2.5 },
-        { x: w * 0.68, y: h * 0.72, r: 3 }
-      ];
-      ctx.fillStyle = 'rgba(254, 205, 211, 0.8)';
-      sparks.forEach(s => {
+      if (eyeType === 'kiss' || eyeType === 'happy' || eyeType === 'sleep') {
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.arc(xI - 25, yI + 2, 14, Math.PI * 1.15, Math.PI * 1.85);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(xI + 25, yI + 2, 14, Math.PI * 1.15, Math.PI * 1.85);
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(xI - 25, yI + 2, 9, 0, Math.PI * 2);
+        ctx.arc(xI + 25, yI + 2, 9, 0, Math.PI * 2);
         ctx.fill();
-      });
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(xI - 27, yI, 3.5, 0, Math.PI * 2);
+        ctx.arc(xI + 23, yI, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
-      // Initials badge
-      ctx.font = 'bold 22px sans-serif';
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+      // Eyebrows I
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.arc(xI - 26, yI - 16, 18, Math.PI * 1.2, Math.PI * 1.75);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(xI + 26, yI - 16, 18, Math.PI * 1.25, Math.PI * 1.8);
+      ctx.stroke();
+
+      // Cute Smile I
+      ctx.strokeStyle = '#881337';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.arc(xI, yI + 28, 16, 0.15, Math.PI - 0.15);
+      ctx.stroke();
+
+      // ==========================================
+      // PARTNER A (Girl Bitmoji - Right)
+      // ==========================================
+      const xA = w * 0.64 + leanA;
+      const yA = h * 0.45;
+
+      // Flowing Hair Behind Body A
+      ctx.save();
+      const hairBackGrad = ctx.createLinearGradient(xA - 70, yA - 40, xA + 70, yA + 200);
+      hairBackGrad.addColorStop(0, '#271b12');
+      hairBackGrad.addColorStop(0.5, '#18110b');
+      hairBackGrad.addColorStop(1, '#0c0704');
+      ctx.fillStyle = hairBackGrad;
+      ctx.beginPath();
+      ctx.moveTo(xA - 75, yA - 10);
+      ctx.quadraticCurveTo(xA - 95, yA + 120, xA - 70, yA + 230);
+      ctx.lineTo(xA + 70, yA + 230);
+      ctx.quadraticCurveTo(xA + 95, yA + 120, xA + 75, yA - 10);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      // Body A (Silk Camisole / Nightwear)
+      ctx.save();
+      const bodyGradA = ctx.createLinearGradient(xA - 60, yA + 70, xA + 60, yA + 220);
+      bodyGradA.addColorStop(0, '#f43f5e');
+      bodyGradA.addColorStop(0.6, '#be123c');
+      bodyGradA.addColorStop(1, '#881337');
+      ctx.fillStyle = bodyGradA;
+      ctx.beginPath();
+      ctx.moveTo(xA - 70, yA + 220);
+      ctx.quadraticCurveTo(xA - 65, yA + 90, xA - 32, yA + 78);
+      ctx.lineTo(xA + 32, yA + 78);
+      ctx.quadraticCurveTo(xA + 65, yA + 90, xA + 70, yA + 220);
+      ctx.closePath();
+      ctx.fill();
+      // Silk straps
+      ctx.strokeStyle = '#ffe4e6';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(xA - 26, yA + 55); ctx.lineTo(xA - 24, yA + 80);
+      ctx.moveTo(xA + 26, yA + 55); ctx.lineTo(xA + 24, yA + 80);
+      ctx.stroke();
+      ctx.restore();
+
+      // Neck & Collarbone A
+      ctx.fillStyle = '#f6c9af';
+      ctx.fillRect(xA - 14, yA + 50, 28, 26);
+
+      // Head A (Cute 3D Round Face)
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,0.18)';
+      ctx.shadowBlur = 12;
+      const faceGradA = ctx.createRadialGradient(xA - 10, yA - 10, 10, xA, yA, 66);
+      faceGradA.addColorStop(0, '#fff1e6');
+      faceGradA.addColorStop(0.7, '#fcd9c4');
+      faceGradA.addColorStop(1, '#f6c9af');
+      ctx.fillStyle = faceGradA;
+      ctx.beginPath();
+      ctx.arc(xA, yA, 64, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Front Hair Waves A (Framing face)
+      ctx.save();
+      ctx.fillStyle = '#18110b';
+      ctx.beginPath();
+      ctx.moveTo(xA - 45, yA - 50);
+      ctx.quadraticCurveTo(xA - 75, yA + 20, xA - 52, yA + 120);
+      ctx.quadraticCurveTo(xA - 35, yA + 60, xA - 40, yA - 10);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(xA + 45, yA - 50);
+      ctx.quadraticCurveTo(xA + 75, yA + 20, xA + 52, yA + 120);
+      ctx.quadraticCurveTo(xA + 35, yA + 60, xA + 40, yA - 10);
+      ctx.closePath();
+      ctx.fill();
+      // Top bangs
+      ctx.beginPath();
+      ctx.arc(xA, yA - 16, 68, Math.PI * 0.82, Math.PI * 2.18);
+      ctx.quadraticCurveTo(xA + 20, yA - 42, xA - 20, yA - 44);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      // Blushing Cheeks A
+      ctx.fillStyle = 'rgba(244, 63, 94, 0.45)';
+      ctx.beginPath();
+      ctx.arc(xA - 32, yA + 18, 17, 0, Math.PI * 2);
+      ctx.arc(xA + 32, yA + 18, 17, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Eyes A
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 4.5;
+      ctx.lineCap = 'round';
+      if (eyeType === 'kiss' || eyeType === 'happy' || eyeType === 'sleep') {
+        ctx.beginPath();
+        ctx.arc(xA - 22, yA + 2, 13, Math.PI * 1.15, Math.PI * 1.85);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(xA - 34, yA - 2); ctx.lineTo(xA - 40, yA - 6);
+        ctx.moveTo(xA - 10, yA - 2); ctx.lineTo(xA - 6, yA - 6);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(xA + 22, yA + 2, 13, Math.PI * 1.15, Math.PI * 1.85);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(xA + 34, yA - 2); ctx.lineTo(xA + 40, yA - 6);
+        ctx.moveTo(xA + 10, yA - 2); ctx.lineTo(xA + 6, yA - 6);
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(xA - 22, yA + 2, 8.5, 0, Math.PI * 2);
+        ctx.arc(xA + 22, yA + 2, 8.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(xA - 24, yA, 3.5, 0, Math.PI * 2);
+        ctx.arc(xA + 20, yA, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Eyebrows A
+      ctx.strokeStyle = '#18110b';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.arc(xA - 23, yA - 15, 16, Math.PI * 1.25, Math.PI * 1.8);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(xA + 23, yA - 15, 16, Math.PI * 1.2, Math.PI * 1.75);
+      ctx.stroke();
+
+      // Sweet Smile A
+      ctx.strokeStyle = '#e11d48';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.arc(xA, yA + 26, 14, 0.15, Math.PI - 0.15);
+      ctx.stroke();
+
+      // ==========================================
+      // COZY 3D DUVET BLANKET (Tucked into Bed)
+      // ==========================================
+      ctx.save();
+      const duvetGrad = ctx.createLinearGradient(0, h * 0.72, 0, h);
+      duvetGrad.addColorStop(0, '#ffffff');
+      duvetGrad.addColorStop(0.3, '#f8fafc');
+      duvetGrad.addColorStop(1, '#e2e8f0');
+      ctx.fillStyle = duvetGrad;
+      ctx.shadowColor = 'rgba(0,0,0,0.12)';
+      ctx.shadowBlur = 18;
+
+      ctx.beginPath();
+      ctx.moveTo(w * 0.08, h);
+      ctx.quadraticCurveTo(w * 0.25, h * 0.70, w * 0.50, h * 0.73);
+      ctx.quadraticCurveTo(w * 0.75, h * 0.70, w * 0.92, h);
+      ctx.closePath();
+      ctx.fill();
+
+      // Duvet Fold Trim
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.15, h * 0.82);
+      ctx.quadraticCurveTo(w * 0.50, h * 0.74, w * 0.85, h * 0.82);
+      ctx.stroke();
+      ctx.restore();
+
+      // ==========================================
+      // SNAPCHAT 3D FLOATING EMOJIS & SPARKLES
+      // ==========================================
+      ctx.save();
+      ctx.font = '54px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
       ctx.textAlign = 'center';
-      ctx.shadowColor = 'rgba(0,0,0,0.8)';
-      ctx.shadowBlur = 8;
-      ctx.fillText('A & I ❤️', w * 0.5, h - 25);
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
+      ctx.shadowBlur = 12;
+
+      // Top floating emoji bubble
+      ctx.fillText(emojiReaction, w * 0.5, h * 0.26);
+
+      // Additional floating sparkles and hearts
+      ctx.font = '28px sans-serif';
+      ctx.fillText('✨', w * 0.22, h * 0.32);
+      ctx.fillText('💖', w * 0.78, h * 0.30);
+      if (poseKey === 'kiss') {
+        ctx.fillText('💋', w * 0.35, h * 0.24);
+        ctx.fillText('💕', w * 0.65, h * 0.24);
+      }
+      ctx.restore();
+
+      // Snapchat Style Badge
+      ctx.save();
+      ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
+      ctx.shadowBlur = 10;
+      ctx.fillText('👻 A & I • Sanctuary', w * 0.5, h - 30);
+      ctx.restore();
 
       ctx.restore();
     }
@@ -3146,52 +3373,32 @@
         img.onload = () => {
           coupleCtx.clearRect(0, 0, w, h);
           coupleCtx.save();
-          // Soft ambient glow
-          const radGrad = coupleCtx.createRadialGradient(w/2, h/2, w*0.25, w/2, h/2, w*0.48);
-          radGrad.addColorStop(0, 'rgba(244, 63, 94, 0.4)');
-          radGrad.addColorStop(0.7, 'rgba(225, 29, 72, 0.15)');
+          // Soft ambient drop shadow underneath
+          const radGrad = coupleCtx.createRadialGradient(w / 2, h * 0.82, 30, w / 2, h * 0.82, w * 0.45);
+          radGrad.addColorStop(0, 'rgba(0, 0, 0, 0.5)');
           radGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
           coupleCtx.fillStyle = radGrad;
           coupleCtx.fillRect(0, 0, w, h);
 
-          // Arched romantic portrait cutout
-          coupleCtx.beginPath();
-          const r = 40;
-          const pad = 30;
-          if (coupleCtx.roundRect) {
-            coupleCtx.roundRect(pad, pad, w - pad*2, h - pad*2, [r, r, r, r]);
-          } else {
-            coupleCtx.rect(pad, pad, w - pad*2, h - pad*2);
-          }
-          coupleCtx.clip();
-
-          // Cover-fit image
+          // Draw image preserving original alpha transparency (Snapchat sticker format!)
           const aspect = img.width / img.height;
-          let dw = w, dh = h, dx = 0, dy = 0;
+          let dw = w * 0.9, dh = h * 0.9;
           if (aspect > 1) {
-            dw = h * aspect;
-            dx = (w - dw) / 2;
+            dh = dw / aspect;
           } else {
-            dh = w / aspect;
-            dy = (h - dh) / 2;
+            dw = dh * aspect;
           }
+          const dx = (w - dw) / 2;
+          const dy = (h - dh) / 2 + 15;
           coupleCtx.drawImage(img, dx, dy, dw, dh);
 
-          // Warm romantic vignette overlay
-          const warmGrad = coupleCtx.createLinearGradient(0, h * 0.4, 0, h);
-          warmGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
-          warmGrad.addColorStop(0.7, 'rgba(136, 19, 55, 0.25)');
-          warmGrad.addColorStop(1, 'rgba(9, 5, 20, 0.7)');
-          coupleCtx.fillStyle = warmGrad;
-          coupleCtx.fillRect(0, 0, w, h);
-
-          // "A & I" badge
-          coupleCtx.font = 'bold 32px sans-serif';
-          coupleCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+          // Subtle Snapchat style watermark at bottom
+          coupleCtx.font = 'bold 22px sans-serif';
+          coupleCtx.fillStyle = '#ffffff';
           coupleCtx.textAlign = 'center';
-          coupleCtx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-          coupleCtx.shadowBlur = 10;
-          coupleCtx.fillText('A & I ❤️', w / 2, h - 55);
+          coupleCtx.shadowColor = 'rgba(0, 0, 0, 0.85)';
+          coupleCtx.shadowBlur = 8;
+          coupleCtx.fillText('👻 A & I ❤️', w / 2, h - 25);
 
           coupleCtx.restore();
           if (coupleTexture) coupleTexture.needsUpdate = true;
@@ -3200,8 +3407,8 @@
         return;
       }
 
-      // Default high-aesthetic artistic couple illustration
-      renderAestheticCoupleArt(coupleCtx, w, h, poseKey);
+      // Default Snapchat 3D Bitmoji couple scene
+      renderSnapchatBitmojiCouple(coupleCtx, w, h, poseKey);
       if (coupleTexture) coupleTexture.needsUpdate = true;
     }
 
