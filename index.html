@@ -855,13 +855,13 @@
     </nav>
   </div>
 
-  <!-- SECRET 2D / 2.5D INTIMATE GAME SUITE (Hidden Bedroom Scene) -->
-  <div id="secret-intimacy-suite" class="hidden fixed inset-0 z-50 bg-[#07020d] flex flex-col items-center justify-between overflow-hidden select-none animate-fade-in">
+  <!-- SECRET BEDROOM ACTIVITIES SIMULATION SUITE (GIFs, Videos & Interactive Controls) -->
+  <div id="secret-intimacy-suite" class="hidden fixed inset-0 z-50 bg-[#06020c] flex flex-col items-center justify-between overflow-hidden select-none animate-fade-in">
     <!-- Ambient glowing backdrop lighting -->
-    <div class="absolute inset-0 pointer-events-none bg-gradient-to-b from-rose-950/40 via-purple-950/20 to-[#07020d]"></div>
+    <div class="absolute inset-0 pointer-events-none bg-gradient-to-b from-rose-950/40 via-purple-950/20 to-[#06020c]"></div>
     
-    <!-- Top Suite Bar -->
-    <div class="relative z-20 w-full max-w-lg px-4 pt-3 pb-2 flex items-center justify-between border-b border-rose-500/20 bg-black/70 backdrop-blur-xl">
+    <!-- 1. Top Simulation Header Bar -->
+    <div class="relative z-20 w-full max-w-lg px-3.5 pt-3 pb-2 flex items-center justify-between border-b border-rose-500/20 bg-black/75 backdrop-blur-xl">
       <button onclick="closeSecret2DIntimacySuite(true)" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400/50 text-rose-200 text-xs font-semibold active:scale-95 transition-all">
         <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
         <span>3D Room</span>
@@ -872,74 +872,147 @@
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
         </span>
-        <span class="text-xs font-bold text-rose-200 tracking-wider">A & I • SECRET SUITE</span>
-        <span id="suite-bpm-indicator" class="text-[10px] text-rose-300 font-mono bg-rose-950/80 px-2 py-0.5 rounded-full border border-rose-500/40">❤️ 72 BPM</span>
+        <span class="text-xs font-bold text-rose-200 tracking-wider">A & I • ACTIVITIES SIMULATOR</span>
       </div>
 
-      <!-- Secret Angle Selector -->
-      <div class="flex gap-1 bg-black/60 p-1 rounded-xl border border-white/10">
-        <button id="btn-angle-pillow" onclick="switchSuiteAngle('pillow', true)" title="Pillows Top View" class="px-2 py-1 rounded-lg text-xs bg-rose-600 text-white font-semibold transition-all">🛏️</button>
-        <button id="btn-angle-gaze" onclick="switchSuiteAngle('gaze', true)" title="Eye-to-Eye Gaze" class="px-2 py-1 rounded-lg text-xs text-slate-400 hover:text-white transition-all">💋</button>
-        <button id="btn-angle-candle" onclick="switchSuiteAngle('candle', true)" title="Candlelight Silhouette" class="px-2 py-1 rounded-lg text-xs text-slate-400 hover:text-white transition-all">🕯️</button>
+      <!-- Custom Clip / GIF Uploader Button -->
+      <button onclick="openCustomMediaModal()" title="Upload Private GIF / Video" class="px-2.5 py-1.5 rounded-xl bg-rose-600/30 border border-rose-500/40 text-rose-200 text-xs font-semibold hover:bg-rose-600/50 active:scale-95 transition-all flex items-center gap-1.5">
+        <i data-lucide="film" class="w-3.5 h-3.5 text-rose-400"></i>
+        <span>Clips</span>
+      </button>
+    </div>
+
+    <!-- 2. Central Simulation Stage (Video / GIF / Dynamic Canvas) -->
+    <div class="relative z-10 flex-1 w-full max-w-lg flex flex-col items-center justify-center overflow-hidden p-2">
+      <div id="sim-stage-container" class="relative w-full h-full max-h-[460px] rounded-3xl overflow-hidden border border-rose-500/30 shadow-[0_0_50px_rgba(225,29,72,0.3)] bg-black/80 flex items-center justify-center">
+        
+        <!-- Live Looping Video Clip Player (For MP4/WebM) -->
+        <video id="sim-video-player" class="hidden w-full h-full object-cover" loop muted playsinline autoplay></video>
+        
+        <!-- Live Animated GIF Player -->
+        <img id="sim-gif-player" class="hidden w-full h-full object-cover" alt="Activity Simulation" />
+
+        <!-- Procedural 2.5D Canvas Motion Engine (Fallback & Touch Effects) -->
+        <canvas id="intimacy-suite-canvas" class="w-full h-full object-cover touch-none cursor-pointer absolute inset-0"></canvas>
+
+        <!-- Floating Activity HUD Overlay -->
+        <div class="pointer-events-none absolute top-3 left-3 right-3 flex items-center justify-between">
+          <div class="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 shadow-lg">
+            <span id="sim-active-icon" class="text-sm">💋</span>
+            <span id="sim-active-title" class="text-xs font-bold text-rose-200">Passionate Kiss</span>
+          </div>
+
+          <div class="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-rose-500/30 shadow-lg">
+            <span id="sim-bpm-badge" class="text-[10px] font-mono font-bold text-rose-400">❤️ 80 BPM</span>
+            <span id="sim-speed-badge" class="text-[10px] font-mono text-amber-300">1.0x</span>
+          </div>
+        </div>
+
+        <!-- Touch Feedback Ripple & Status Toast -->
+        <div id="suite-touch-feedback" class="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div id="suite-status-toast" class="opacity-0 transition-opacity duration-300 text-xs font-bold text-rose-200 bg-black/85 px-4 py-2 rounded-full border border-rose-500/50 backdrop-blur-md shadow-2xl text-center"></div>
+        </div>
       </div>
     </div>
 
-    <!-- 2D / 2.5D Living Intimacy Canvas Stage -->
-    <div class="relative z-10 flex-1 w-full max-w-lg flex items-center justify-center overflow-hidden p-2">
-      <canvas id="intimacy-suite-canvas" class="w-full h-full max-h-[500px] rounded-3xl border border-rose-500/30 shadow-[0_0_50px_rgba(225,29,72,0.25)] touch-none cursor-pointer"></canvas>
+    <!-- 3. Bottom Simulation Controls & Dual Pleasure Bars -->
+    <div class="relative z-20 w-full max-w-lg px-3.5 pb-3 pt-1 flex flex-col gap-2.5 bg-gradient-to-t from-black via-black/95 to-transparent">
       
-      <!-- Live Floating Touch Particles & Whispers Overlay -->
-      <div id="suite-touch-feedback" class="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <!-- Floating romantic status text -->
-        <div id="suite-status-toast" class="opacity-0 transition-opacity duration-300 text-xs font-bold text-rose-200 bg-black/80 px-4 py-2 rounded-full border border-rose-500/50 backdrop-blur-md shadow-2xl"></div>
-      </div>
-    </div>
-
-    <!-- Bottom Interactive Game Controls & Caress Zones -->
-    <div class="relative z-20 w-full max-w-lg px-4 pb-4 pt-1 flex flex-col gap-2.5 bg-gradient-to-t from-black via-black/90 to-transparent">
-      
-      <!-- Touch & Caress Zones -->
-      <div class="grid grid-cols-4 gap-2">
-        <button onclick="triggerSuiteTouchZone('lips', true)" class="py-2 rounded-xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-rose-100 text-[11px] font-bold active:scale-95 transition-all flex flex-col items-center gap-0.5">
-          <span class="text-base">💋</span>
-          <span>Lips</span>
-        </button>
-        <button onclick="triggerSuiteTouchZone('cheek', true)" class="py-2 rounded-xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-rose-100 text-[11px] font-bold active:scale-95 transition-all flex flex-col items-center gap-0.5">
-          <span class="text-base">🥰</span>
-          <span>Cheek</span>
-        </button>
-        <button onclick="triggerSuiteTouchZone('neck', true)" class="py-2 rounded-xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-rose-100 text-[11px] font-bold active:scale-95 transition-all flex flex-col items-center gap-0.5">
-          <span class="text-base">🌸</span>
-          <span>Neck</span>
-        </button>
-        <button onclick="triggerSuiteTouchZone('waist', true)" class="py-2 rounded-xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-rose-100 text-[11px] font-bold active:scale-95 transition-all flex flex-col items-center gap-0.5">
-          <span class="text-base">💫</span>
-          <span>Waist</span>
-        </button>
-      </div>
-
-      <!-- Passion Hold-to-Kiss Meter (Mini-Game Mechanic) -->
-      <div class="relative flex items-center justify-center py-1">
-        <div class="w-full bg-white/10 h-3.5 rounded-full overflow-hidden border border-rose-500/30 p-0.5 relative">
-          <div id="suite-kiss-bar" class="h-full bg-gradient-to-r from-rose-600 via-pink-500 to-amber-400 rounded-full w-0 transition-[width] duration-75"></div>
-          <div class="absolute inset-0 flex items-center justify-center text-[9px] font-extrabold text-white tracking-widest drop-shadow uppercase pointer-events-none">
-            <span id="suite-kiss-label">Press & Hold for Deep Kiss</span>
+      <!-- Dual Pleasure Simulation Meters -->
+      <div class="bg-black/60 border border-white/10 rounded-2xl p-2.5 space-y-1.5 shadow-lg">
+        <div class="flex items-center justify-between text-[10px] font-bold">
+          <span class="text-rose-300 flex items-center gap-1">
+            <span>Partner I Pleasure:</span>
+            <span id="label-pleasure-i" class="text-emerald-400 font-mono">45%</span>
+          </span>
+          <span class="text-rose-300 flex items-center gap-1">
+            <span>Partner A Pleasure:</span>
+            <span id="label-pleasure-a" class="text-emerald-400 font-mono">45%</span>
+          </span>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-2">
+          <!-- Partner I Bar -->
+          <div class="h-2.5 bg-white/10 rounded-full overflow-hidden border border-rose-500/20 p-0.5">
+            <div id="bar-pleasure-i" class="h-full bg-gradient-to-r from-rose-600 via-pink-500 to-amber-300 rounded-full w-[45%] transition-all duration-300"></div>
+          </div>
+          <!-- Partner A Bar -->
+          <div class="h-2.5 bg-white/10 rounded-full overflow-hidden border border-rose-500/20 p-0.5">
+            <div id="bar-pleasure-a" class="h-full bg-gradient-to-r from-rose-600 via-pink-500 to-amber-300 rounded-full w-[45%] transition-all duration-300"></div>
           </div>
         </div>
       </div>
 
-      <!-- Hold-to-Kiss Trigger Button & Quick Whispers -->
-      <div class="flex items-center gap-2">
-        <button id="btn-suite-kiss" class="flex-1 py-3 px-4 rounded-2xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-xs tracking-wider shadow-[0_0_25px_rgba(225,29,72,0.5)] active:scale-95 transition-all flex items-center justify-center gap-2 select-none">
-          <span class="text-base animate-pulse">❤️</span>
-          <span>HOLD TO KISS</span>
-        </button>
+      <!-- Rhythm & Speed Slider Controller (Simulation Pace) -->
+      <div class="flex items-center gap-2.5 bg-white/5 border border-white/10 rounded-2xl px-3 py-2 shadow-md">
+        <span class="text-xs text-rose-300 font-semibold shrink-0 flex items-center gap-1">
+          <span>⚡ Pace:</span>
+        </span>
+        <input id="sim-speed-slider" type="range" min="0.5" max="2.0" step="0.1" value="1.0" oninput="handleSimSpeedChange(this.value, true)" class="flex-1 accent-rose-500 cursor-pointer h-1.5 rounded-lg bg-white/10" />
+        <span id="sim-speed-label" class="text-xs font-mono font-bold text-amber-300 shrink-0 w-10 text-right">1.0x</span>
         
-        <button onclick="sendSuiteWhisperRandom(true)" title="Send Secret Whisper" class="p-3 rounded-2xl bg-white/5 border border-rose-500/30 hover:border-rose-400 text-rose-300 font-bold active:scale-95 transition-all flex items-center justify-center">
-          <i data-lucide="message-circle-heart" class="w-5 h-5"></i>
+        <!-- Pleasure Boost Button -->
+        <button onclick="surgeSimPleasure(true)" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 text-white font-bold text-xs active:scale-95 transition-all shadow-md flex items-center gap-1 shrink-0">
+          <span>✨</span>
+          <span>Surge</span>
         </button>
       </div>
 
+      <!-- Activities Carousel / Quick Roster -->
+      <div class="space-y-1">
+        <div class="flex items-center justify-between text-[10px] text-slate-400 font-semibold px-1">
+          <span>Choose Intimate Activity:</span>
+          <span class="text-rose-400 text-[9px] font-mono">10 Simulated Modes</span>
+        </div>
+        <div id="sim-activities-list" class="flex gap-2 overflow-x-auto pb-1 pt-0.5 scrollbar-thin scrollbar-thumb-rose-500/30">
+          <!-- Populated dynamically with full roster -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CUSTOM CLIP & GIF MODAL (Upload or Link Private Intimate Videos) -->
+  <div id="custom-media-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-sm glass-panel border border-rose-500/40 rounded-3xl p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-rose-500/20">
+        <div class="flex items-center gap-2">
+          <i data-lucide="film" class="w-4 h-4 text-rose-400"></i>
+          <span class="text-sm font-bold text-white">Private Activity Animations</span>
+        </div>
+        <button onclick="closeCustomMediaModal()" class="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-rose-200">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-300 leading-relaxed">
+        Upload your own private looping GIF or MP4 video for the active activity (<strong id="modal-active-act-name" class="text-rose-300">Kiss</strong>). Stored securely and synced in real-time with partner!
+      </p>
+
+      <div class="space-y-3">
+        <!-- Local File Uploader -->
+        <label class="w-full py-3 px-4 rounded-2xl bg-white/5 border border-white/10 hover:border-rose-400 text-rose-200 font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md">
+          <i data-lucide="upload" class="w-4 h-4 text-rose-400"></i>
+          <span>Upload Local GIF / Video Clip</span>
+          <input type="file" accept="image/gif,video/mp4,video/webm" class="hidden" onchange="handleCustomMediaUpload(this)" />
+        </label>
+
+        <!-- Web URL Loader -->
+        <div class="space-y-1.5">
+          <span class="text-[10px] text-slate-400 font-bold uppercase">Or Paste Direct GIF / MP4 URL:</span>
+          <div class="flex gap-2">
+            <input id="custom-media-url-input" type="url" placeholder="Paste direct .gif or .mp4 URL..." class="flex-1 px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-rose-400" />
+            <button onclick="loadCustomMediaFromUrl()" class="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs active:scale-95 transition-all">
+              Set
+            </button>
+          </div>
+        </div>
+
+        <!-- Reset Button -->
+        <button onclick="resetCustomMediaForCurrentActivity()" class="w-full py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-slate-400 text-xs active:scale-95 transition-all">
+          Reset to Default Simulation
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1347,6 +1420,18 @@
           handleIncomingSuiteKiss(d.progress, d.isHolding);
         } else if (d.type === 'intimacy_suite_whisper') {
           handleIncomingSuiteWhisper(d.text);
+        } else if (d.type === 'sim_activity_change') {
+          setSimulationActivity(d.activityKey, false);
+        } else if (d.type === 'sim_rhythm_speed') {
+          applySimulationSpeed(d.speed, false);
+        } else if (d.type === 'sim_pleasure_boost') {
+          applyIncomingPleasureBoost(d.aPleasure, d.iPleasure, d.sender);
+        } else if (d.type === 'sim_climax_event') {
+          triggerSimulationClimax(false);
+        } else if (d.type === 'sim_touch') {
+          handleIncomingSimTouch(d.x, d.y, d.sender);
+        } else if (d.type === 'sim_custom_media') {
+          saveCustomActivityMedia(d.activityKey, d.mediaType, d.dataUrl, false);
         }
       });
 
@@ -5808,35 +5893,120 @@
     document.getElementById('role-wife').className = `px-2.5 py-1 rounded-lg ${myRole === 'wife' ? 'bg-rose-600 text-white shadow-sm' : 'text-rose-200/70 hover:text-white'}`;
   
     // =========================================================================
-    // SECRET 2D / 2.5D INTIMATE GAME SUITE (HIDDEN IN BEDROOM PILLOWS & LAMP)
+    // SECRET BEDROOM ACTIVITIES SIMULATION ENGINE (GIFs, Videos, Rhythms & P2P)
     // =========================================================================
     let isSuiteOpen = false;
-    let currentSuiteAngle = 'pillow'; // 'pillow' | 'gaze' | 'candle'
+    let currentSimActivity = 'kiss';
+    let currentSimSpeed = 1.0;
+    let simBpm = 80;
+    let pleasureA = 45;
+    let pleasureI = 45;
     let suiteCanvas = null;
     let suiteCtx = null;
     let suiteAnimId = null;
-    let kissMeter = 0; // 0 to 100
-    let isKissHolding = false;
-    let isPartnerKissHolding = false;
-    let partnerKissMeter = 0;
-    let kissHoldInterval = null;
     let suiteParticles = [];
-    let suiteBlushIntensity = 0.25;
-    let suiteBpm = 72;
     let suiteAudioCtx = null;
-    let suiteOsc = null;
-    let suiteGain = null;
+    let suiteHeartbeatInterval = null;
+    let customActivityMedia = {}; // { [actKey]: { type: 'gif'|'video', src: '...' } }
 
-    const SUITE_WHISPERS = [
-      "I love resting in your arms... ❤️",
-      "Your touch gives me goosebumps every single time.",
-      "Look into my eyes... you are my entire world.",
-      "Just hold me tight and never let go.",
-      "I love the gentle sound of your breathing beside me.",
-      "No matter where we are, with you is home.",
-      "Bare skin, whispered secrets, and your lips on mine... 🔥",
-      "You make my heart race and feel safe all at once."
-    ];
+    // Load custom saved media from localStorage
+    try {
+      const savedMedia = localStorage.getItem('sanctuary_sim_media');
+      if (savedMedia) customActivityMedia = JSON.parse(savedMedia);
+    } catch (e) {}
+
+    const SIMULATION_ACTIVITIES = {
+      kiss: {
+        icon: '💋',
+        name: 'Passionate Kiss',
+        desc: 'Deep breathless embrace & mouth-to-mouth intimacy',
+        quote: 'Your lips against mine are all I will ever need...',
+        baseBpm: 80,
+        audioFreq: 580,
+        defaultGif: 'https://media.giphy.com/media/G3va31oEEnIkM/giphy.gif' // Sensual aesthetic romantic anime kiss loop
+      },
+      cuddle: {
+        icon: '🛏️',
+        name: 'Bed Spooning',
+        desc: 'Skin-on-skin wrapped in sheets with soft breathing',
+        quote: 'Resting in your arms is my safest place in the world.',
+        baseBpm: 65,
+        audioFreq: 440,
+        defaultGif: 'https://media.giphy.com/media/l2QDM9Jnim1YV5ujC/giphy.gif' // Aesthetic romantic cuddle loop
+      },
+      massage: {
+        icon: '💆',
+        name: 'Sensual Massage',
+        desc: 'Warm oils trailing down back, shoulders and waist',
+        quote: 'Close your eyes and let my hands take away all your tension...',
+        baseBpm: 70,
+        audioFreq: 490,
+        defaultGif: 'https://media.giphy.com/media/od5H3PmEG5EVq/giphy.gif'
+      },
+      undress: {
+        icon: '👗',
+        name: 'Slow Undress',
+        desc: 'Clothes slipping away slowly under candlelight',
+        quote: 'One piece at a time... you are breathtaking.',
+        baseBpm: 75,
+        audioFreq: 520,
+        defaultGif: 'https://media.giphy.com/media/11rIergnpiYpvW/giphy.gif'
+      },
+      neck: {
+        icon: '🌸',
+        name: 'Neck Kisses',
+        desc: 'Soft lips trailing down sensitive neckline with goosebumps',
+        quote: 'I love feeling your pulse quicken when my lips touch your neck...',
+        baseBpm: 85,
+        audioFreq: 640,
+        defaultGif: 'https://media.giphy.com/media/zkppEMFvRX5FC/giphy.gif'
+      },
+      missionary: {
+        icon: '🔥',
+        name: 'Missionary Intimacy',
+        desc: 'Face-to-face deep rhythm, hands entwined, eyes locked',
+        quote: 'Look into my eyes... feel how completely I belong to you.',
+        baseBpm: 90,
+        audioFreq: 700,
+        defaultGif: 'https://media.giphy.com/media/bm2O3nXTcKJeU/giphy.gif'
+      },
+      spooning: {
+        icon: '💫',
+        name: 'Spooning Rhythm',
+        desc: 'Intimate embrace from behind, synchronized breathing',
+        quote: 'Wrapped together, every breath matching in harmony...',
+        baseBpm: 82,
+        audioFreq: 600,
+        defaultGif: 'https://media.giphy.com/media/l4pTdcifPZLpDjL1e/giphy.gif'
+      },
+      cowgirl: {
+        icon: '🌹',
+        name: 'Passionate Lead',
+        desc: 'Passionate control from top, wild rhythm and arching back',
+        quote: 'Take complete control of me... do whatever you desire.',
+        baseBpm: 105,
+        audioFreq: 750,
+        defaultGif: 'https://media.giphy.com/media/4N1wOi78ZGzSB6H7vK/giphy.gif'
+      },
+      pinned: {
+        icon: '🔒',
+        name: 'Pinned Down',
+        desc: 'Hands pinned above, breathless whispers and surrender',
+        quote: 'You are completely caught now... no escaping my kiss.',
+        baseBpm: 95,
+        audioFreq: 680,
+        defaultGif: 'https://media.giphy.com/media/QgcQLZa6glP2w/giphy.gif'
+      },
+      surrender: {
+        icon: '😈',
+        name: 'Full Climax Surrender',
+        desc: 'Maximum ecstasy, trembling bodies and breathless climax',
+        quote: 'Bare skin, trembling touch, and our souls united as one... 🔥',
+        baseBpm: 115,
+        audioFreq: 820,
+        defaultGif: 'https://media.giphy.com/media/v0eHX3n28wvoQ/giphy.gif'
+      }
+    };
 
     function initSuiteAudio() {
       try {
@@ -5847,6 +6017,26 @@
         if (suiteAudioCtx && suiteAudioCtx.state === 'suspended') {
           suiteAudioCtx.resume();
         }
+      } catch (e) {}
+    }
+
+    function playRhythmicBreathSound(freq, duration = 0.15) {
+      try {
+        initSuiteAudio();
+        if (!suiteAudioCtx) return;
+        const osc = suiteAudioCtx.createOscillator();
+        const gain = suiteAudioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, suiteAudioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 0.7, suiteAudioCtx.currentTime + duration);
+
+        gain.gain.setValueAtTime(0.04, suiteAudioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, suiteAudioCtx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(suiteAudioCtx.destination);
+        osc.start();
+        osc.stop(suiteAudioCtx.currentTime + duration);
       } catch (e) {}
     }
 
@@ -5866,12 +6056,13 @@
       playBeepAlert(880, 0.2);
       if (navigator.vibrate) navigator.vibrate([70, 60, 110]);
 
-      // Initialize canvas and 60 FPS animation loop
-      setupSuiteCanvas();
       initSuiteAudio();
-      setupKissButtonEvents();
+      renderSimActivitiesList();
+      setupSuiteCanvas();
+      setSimulationActivity(currentSimActivity, false);
+      startRhythmicHeartbeatLoop();
 
-      showSuiteToast('✨ Entered Private 2D Suite');
+      showSuiteToast('✨ Entered Private Activities Simulator');
 
       if (broadcast && dataConn && dataConn.open) {
         sendPayload({ type: 'intimacy_suite_open', sender: myRole });
@@ -5887,7 +6078,11 @@
         cancelAnimationFrame(suiteAnimId);
         suiteAnimId = null;
       }
-      stopKissHold();
+      clearInterval(suiteHeartbeatInterval);
+
+      // Pause simulation video
+      const v = document.getElementById('sim-video-player');
+      if (v) v.pause();
 
       if (typeof bedGlowLight !== 'undefined' && bedGlowLight) {
         bedGlowLight.intensity = 0.45;
@@ -5898,261 +6093,220 @@
       }
     }
 
-    function switchSuiteAngle(angleKey, broadcast = true) {
-      if (!['pillow', 'gaze', 'candle'].includes(angleKey)) return;
-      currentSuiteAngle = angleKey;
+    // -------------------------------------------------------------
+    // ACTIVITIES ROSTER & SIMULATION SWITCHER
+    // -------------------------------------------------------------
+    function renderSimActivitiesList() {
+      const container = document.getElementById('sim-activities-list');
+      if (!container) return;
 
-      ['pillow', 'gaze', 'candle'].forEach(a => {
-        const btn = document.getElementById('btn-angle-' + a);
-        if (btn) {
-          if (a === angleKey) {
-            btn.className = 'px-2 py-1 rounded-lg text-xs bg-rose-600 text-white font-semibold transition-all shadow-md';
-          } else {
-            btn.className = 'px-2 py-1 rounded-lg text-xs text-slate-400 hover:text-white transition-all';
+      container.innerHTML = Object.keys(SIMULATION_ACTIVITIES).map(key => {
+        const act = SIMULATION_ACTIVITIES[key];
+        const isActive = (key === currentSimActivity);
+        const hasCustom = !!customActivityMedia[key];
+        return `
+          <button onclick="setSimulationActivity('${key}', true)" class="shrink-0 py-1.5 px-3 rounded-xl border flex items-center gap-1.5 transition-all text-xs font-bold active:scale-95 ${isActive ? 'bg-gradient-to-r from-rose-600 to-pink-600 text-white border-rose-400 shadow-md scale-105' : 'bg-black/40 border-white/10 text-slate-300 hover:text-white'}">
+            <span class="text-sm">${act.icon}</span>
+            <span>${act.name}</span>
+            ${hasCustom ? '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>' : ''}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function setSimulationActivity(activityKey, broadcast = true) {
+      if (!SIMULATION_ACTIVITIES[activityKey]) return;
+      currentSimActivity = activityKey;
+      const act = SIMULATION_ACTIVITIES[activityKey];
+
+      // Update HUD Title & Icon
+      const titleEl = document.getElementById('sim-active-title');
+      const iconEl = document.getElementById('sim-active-icon');
+      if (titleEl) titleEl.textContent = act.name;
+      if (iconEl) iconEl.textContent = act.icon;
+
+      // Update Base BPM
+      simBpm = Math.round(act.baseBpm * currentSimSpeed);
+      updateBpmUI();
+      renderSimActivitiesList();
+
+      // Load Visual Media (Video or GIF or Canvas)
+      const v = document.getElementById('sim-video-player');
+      const g = document.getElementById('sim-gif-player');
+      const custom = customActivityMedia[activityKey];
+
+      if (custom && custom.src) {
+        if (custom.type === 'video') {
+          if (g) g.classList.add('hidden');
+          if (v) {
+            v.src = custom.src;
+            v.playbackRate = currentSimSpeed;
+            v.classList.remove('hidden');
+            v.play().catch(() => {});
+          }
+        } else {
+          if (v) { v.pause(); v.classList.add('hidden'); }
+          if (g) {
+            g.src = custom.src;
+            g.classList.remove('hidden');
           }
         }
-      });
-
-      // Quick burst of ambient particles on angle shift
-      spawnSuiteParticles(15, '#f43f5e');
-      if (navigator.vibrate) navigator.vibrate(40);
-
-      const angleNames = { pillow: '🛌 Pillow Top View', gaze: '💋 Eye-to-Eye Gaze', candle: '🕯️ Candlelight Silhouette' };
-      showSuiteToast(angleNames[angleKey] || 'Angle Changed');
-
-      if (broadcast && dataConn && dataConn.open) {
-        sendPayload({ type: 'intimacy_suite_angle', angle: angleKey, sender: myRole });
+      } else if (act.defaultGif) {
+        // Load default aesthetic loop
+        if (v) { v.pause(); v.classList.add('hidden'); }
+        if (g) {
+          g.src = act.defaultGif;
+          g.classList.remove('hidden');
+        }
       }
-    }
 
-    function triggerSuiteTouchZone(zoneKey, broadcast = true, sender = myRole) {
-      suiteBlushIntensity = Math.min(1.0, suiteBlushIntensity + 0.25);
-      suiteBpm = Math.min(115, suiteBpm + 4);
-      updateSuiteBpmUI();
-
-      const zoneNames = {
-        lips: { name: 'Lips', emoji: '💋', freq: 660, vib: [80, 50, 100] },
-        cheek: { name: 'Cheek', emoji: '🥰', freq: 520, vib: [50, 40, 60] },
-        neck: { name: 'Neck', emoji: '🌸', freq: 740, vib: [40, 30, 80, 40, 100] },
-        waist: { name: 'Waist', emoji: '💫', freq: 440, vib: [90, 60, 120] }
-      };
-
-      const info = zoneNames[zoneKey] || { name: 'Touch', emoji: '✨', freq: 580, vib: 60 };
-      playBeepAlert(info.freq, 0.18);
-      if (navigator.vibrate) navigator.vibrate(info.vib);
-
-      spawnSuiteParticles(25, '#fb7185');
-
-      const isMe = (sender === myRole);
-      const partnerLabel = myRole === 'husband' ? 'A' : 'I';
-      showSuiteToast(isMe ? `You caressed ${partnerLabel}'s ${info.name} ${info.emoji}` : `${partnerLabel} is caressing your ${info.name} ${info.emoji}`);
-
-      if (broadcast && dataConn && dataConn.open) {
-        sendPayload({ type: 'intimacy_suite_touch', zone: zoneKey, sender: myRole });
-      }
-    }
-
-    function handleIncomingSuiteTouch(zoneKey, sender) {
-      triggerSuiteTouchZone(zoneKey, false, sender);
-    }
-
-    function handleIncomingSuiteKiss(progress, isHolding) {
-      partnerKissMeter = progress;
-      isPartnerKissHolding = isHolding;
-      updateKissBarUI();
-    }
-
-    function handleIncomingSuiteWhisper(text) {
-      spawnSuiteParticles(30, '#ec4899');
-      playBeepAlert(920, 0.2);
-      if (navigator.vibrate) navigator.vibrate([60, 40, 80]);
-      showSuiteToast(`💬 "${text}"`);
-    }
-
-    function sendSuiteWhisperRandom(broadcast = true) {
-      const quote = SUITE_WHISPERS[Math.floor(Math.random() * SUITE_WHISPERS.length)];
-      showSuiteToast(`💬 "${quote}"`);
       spawnSuiteParticles(20, '#f43f5e');
-      playBeepAlert(880, 0.15);
+      playBeepAlert(act.audioFreq, 0.18);
+      if (navigator.vibrate) navigator.vibrate([60, 40, 80]);
+      showSuiteToast(`${act.icon} ${act.name}: "${act.quote}"`);
 
       if (broadcast && dataConn && dataConn.open) {
-        sendPayload({ type: 'intimacy_suite_whisper', text: quote, sender: myRole });
+        sendPayload({ type: 'sim_activity_change', activityKey: activityKey, sender: myRole });
       }
     }
 
-    function showSuiteToast(text) {
-      const toast = document.getElementById('suite-status-toast');
-      if (!toast) return;
-      toast.textContent = text;
-      toast.classList.remove('opacity-0');
-      toast.classList.add('opacity-100');
-      clearTimeout(window._suiteToastTimer);
-      window._suiteToastTimer = setTimeout(() => {
-        if (toast) {
-          toast.classList.remove('opacity-100');
-          toast.classList.add('opacity-0');
-        }
-      }, 2600);
-    }
-
-    function updateSuiteBpmUI() {
-      const el = document.getElementById('suite-bpm-indicator');
-      if (el) el.textContent = `❤️ ${Math.round(suiteBpm)} BPM`;
-    }
-
     // -------------------------------------------------------------
-    // HOLD-TO-KISS PASSION METER MECHANIC (CHROME/NOKIA MINI-GAME STYLE)
+    // RHYTHM & SPEED CONTROLLER
     // -------------------------------------------------------------
-    function setupKissButtonEvents() {
-      const btn = document.getElementById('btn-suite-kiss');
-      if (!btn || btn._hasKissEvents) return;
-      btn._hasKissEvents = true;
-
-      const startHold = (e) => {
-        e.preventDefault();
-        startKissHold();
-      };
-      const endHold = (e) => {
-        e.preventDefault();
-        stopKissHold();
-      };
-
-      btn.addEventListener('pointerdown', startHold);
-      window.addEventListener('pointerup', endHold);
-      window.addEventListener('pointercancel', endHold);
-      btn.addEventListener('contextmenu', (e) => e.preventDefault());
+    function handleSimSpeedChange(val, broadcast = true) {
+      applySimulationSpeed(parseFloat(val), broadcast);
     }
 
-    function startKissHold() {
-      if (isKissHolding) return;
-      isKissHolding = true;
-      initSuiteAudio();
+    function applySimulationSpeed(speed, broadcast = true) {
+      currentSimSpeed = speed;
+      const act = SIMULATION_ACTIVITIES[currentSimActivity] || SIMULATION_ACTIVITIES.kiss;
+      simBpm = Math.round(act.baseBpm * currentSimSpeed);
 
-      // Start dynamic oscillator hum that rises with kiss meter
-      try {
-        if (suiteAudioCtx) {
-          suiteOsc = suiteAudioCtx.createOscillator();
-          suiteGain = suiteAudioCtx.createGain();
-          suiteOsc.type = 'sine';
-          suiteOsc.frequency.setValueAtTime(320, suiteAudioCtx.currentTime);
-          suiteGain.gain.setValueAtTime(0.06, suiteAudioCtx.currentTime);
-          suiteOsc.connect(suiteGain);
-          suiteGain.connect(suiteAudioCtx.destination);
-          suiteOsc.start();
-        }
-      } catch (e) {}
+      // Update Video Playback Rate
+      const v = document.getElementById('sim-video-player');
+      if (v) {
+        try { v.playbackRate = currentSimSpeed; } catch (e) {}
+      }
 
-      clearInterval(kissHoldInterval);
-      kissHoldInterval = setInterval(() => {
-        // Double charging rate if both partners are holding together!
-        const rate = isPartnerKissHolding ? 2.8 : 1.6;
-        kissMeter = Math.min(100, kissMeter + rate);
-        suiteBlushIntensity = Math.min(1.0, 0.25 + (kissMeter / 100) * 0.7);
-        suiteBpm = Math.min(128, 72 + (kissMeter / 100) * 45);
-        updateSuiteBpmUI();
+      // Update UI Labels
+      const label = document.getElementById('sim-speed-label');
+      const badge = document.getElementById('sim-speed-badge');
+      const slider = document.getElementById('sim-speed-slider');
+      if (label) label.textContent = currentSimSpeed.toFixed(1) + 'x';
+      if (badge) badge.textContent = currentSimSpeed.toFixed(1) + 'x';
+      if (slider && slider.value !== String(currentSimSpeed)) slider.value = currentSimSpeed;
 
-        // Dynamically ramp up frequency and haptic feedback
-        if (suiteOsc && suiteAudioCtx) {
-          const targetFreq = 320 + (kissMeter / 100) * 440;
-          suiteOsc.frequency.setTargetAtTime(targetFreq, suiteAudioCtx.currentTime, 0.05);
-        }
+      updateBpmUI();
+      restartHeartbeatLoop();
 
-        if (navigator.vibrate && Math.random() < 0.35) {
-          navigator.vibrate(25);
-        }
-
-        updateKissBarUI();
-
-        // Broadcast progress to partner
-        if (dataConn && dataConn.open) {
-          sendPayload({ type: 'intimacy_suite_kiss_progress', progress: kissMeter, isHolding: true });
-        }
-
-        // 100% SWEET SPOT REACHED!
-        if (kissMeter >= 100) {
-          triggerPassionateKissSweetSpot();
-        }
-      }, 35);
-    }
-
-    function stopKissHold() {
-      if (!isKissHolding && !isPartnerKissHolding) return;
-      isKissHolding = false;
-      clearInterval(kissHoldInterval);
-
-      // Stop audio oscillator
-      try {
-        if (suiteGain && suiteAudioCtx) {
-          suiteGain.gain.setTargetAtTime(0, suiteAudioCtx.currentTime, 0.05);
-          setTimeout(() => {
-            if (suiteOsc) { suiteOsc.stop(); suiteOsc.disconnect(); suiteOsc = null; }
-          }, 80);
-        }
-      } catch (e) {}
-
-      // Smooth decay of kiss meter if not at sweet spot
-      const decay = setInterval(() => {
-        if (isKissHolding) {
-          clearInterval(decay);
-          return;
-        }
-        kissMeter = Math.max(0, kissMeter - 3.5);
-        updateKissBarUI();
-        if (kissMeter <= 0) {
-          clearInterval(decay);
-          suiteBpm = Math.max(72, suiteBpm - 8);
-          updateSuiteBpmUI();
-        }
-      }, 30);
-
-      if (dataConn && dataConn.open) {
-        sendPayload({ type: 'intimacy_suite_kiss_progress', progress: kissMeter, isHolding: false });
+      if (broadcast && dataConn && dataConn.open) {
+        sendPayload({ type: 'sim_rhythm_speed', speed: currentSimSpeed, bpm: simBpm, sender: myRole });
       }
     }
 
-    function triggerPassionateKissSweetSpot() {
-      stopKissHold();
-      kissMeter = 100;
-      updateKissBarUI();
+    function updateBpmUI() {
+      const el = document.getElementById('sim-bpm-badge');
+      if (el) el.textContent = `❤️ ${simBpm} BPM`;
+    }
 
-      // Big celebratory fireworks and hearts!
-      spawnSuiteParticles(70, '#f43f5e');
-      playBeepAlert(880, 0.35);
-      if (navigator.vibrate) navigator.vibrate([100, 60, 160, 60, 220]);
+    function startRhythmicHeartbeatLoop() {
+      clearInterval(suiteHeartbeatInterval);
+      const intervalMs = (60 / Math.max(40, simBpm)) * 1000;
+      suiteHeartbeatInterval = setInterval(() => {
+        if (!isSuiteOpen) return;
+        // Audio heartbeat & soft pulse
+        const act = SIMULATION_ACTIVITIES[currentSimActivity] || SIMULATION_ACTIVITIES.kiss;
+        playRhythmicBreathSound(act.audioFreq * 0.5, 0.12);
 
-      showSuiteToast(isPartnerKissHolding ? '🔥 DUAL SYNCHRONIZED KISS ECSTASY! ❤️' : '💋 PASSIONATE KISS LOCKED! ❤️');
+        // Gradually increase pleasure with the active rhythm!
+        surgeSimPleasurePassive(0.4 * currentSimSpeed);
+      }, intervalMs);
+    }
+
+    function restartHeartbeatLoop() {
+      startRhythmicHeartbeatLoop();
+    }
+
+    // -------------------------------------------------------------
+    // DUAL PLEASURE SIMULATION & CLIMAX EVENT
+    // -------------------------------------------------------------
+    function surgeSimPleasure(broadcast = true) {
+      const boost = 7;
+      if (myRole === 'husband') {
+        pleasureA = Math.min(100, pleasureA + boost);
+        pleasureI = Math.min(100, pleasureI + boost * 0.85);
+      } else {
+        pleasureI = Math.min(100, pleasureI + boost);
+        pleasureA = Math.min(100, pleasureA + boost * 0.85);
+      }
+
+      updatePleasureUI();
+      spawnSuiteParticles(25, '#fb7185');
+      playBeepAlert(720, 0.2);
+      if (navigator.vibrate) navigator.vibrate([40, 30, 60]);
+
+      if (pleasureA >= 100 && pleasureI >= 100) {
+        triggerSimulationClimax(true);
+      }
+
+      if (broadcast && dataConn && dataConn.open) {
+        sendPayload({ type: 'sim_pleasure_boost', aPleasure: pleasureA, iPleasure: pleasureI, sender: myRole });
+      }
+    }
+
+    function surgeSimPleasurePassive(amount) {
+      pleasureA = Math.min(100, pleasureA + amount);
+      pleasureI = Math.min(100, pleasureI + amount);
+      updatePleasureUI();
+
+      if (pleasureA >= 100 && pleasureI >= 100) {
+        triggerSimulationClimax(true);
+      }
+    }
+
+    function applyIncomingPleasureBoost(aP, iP, sender) {
+      pleasureA = aP;
+      pleasureI = iP;
+      updatePleasureUI();
+      spawnSuiteParticles(20, '#ec4899');
+      if (navigator.vibrate) navigator.vibrate([50, 40, 70]);
+      if (pleasureA >= 100 && pleasureI >= 100) {
+        triggerSimulationClimax(false);
+      }
+    }
+
+    function updatePleasureUI() {
+      const barI = document.getElementById('bar-pleasure-i');
+      const barA = document.getElementById('bar-pleasure-a');
+      const labelI = document.getElementById('label-pleasure-i');
+      const labelA = document.getElementById('label-pleasure-a');
+
+      if (barI) barI.style.width = Math.round(pleasureI) + '%';
+      if (barA) barA.style.width = Math.round(pleasureA) + '%';
+      if (labelI) labelI.textContent = Math.round(pleasureI) + '%';
+      if (labelA) labelA.textContent = Math.round(pleasureA) + '%';
+    }
+
+    function triggerSimulationClimax(broadcast = true) {
+      spawnSuiteParticles(80, '#f43f5e');
+      playBeepAlert(960, 0.45);
+      if (navigator.vibrate) navigator.vibrate([150, 70, 250, 70, 400]);
+
+      showSuiteToast('🔥 DUAL CLIMAX & ECSTASY REACHED! ❤️');
 
       setTimeout(() => {
-        kissMeter = 0;
-        updateKissBarUI();
-      }, 2200);
-    }
+        pleasureA = 40;
+        pleasureI = 40;
+        updatePleasureUI();
+      }, 3500);
 
-    function updateKissBarUI() {
-      const bar = document.getElementById('suite-kiss-bar');
-      const label = document.getElementById('suite-kiss-label');
-      if (!bar) return;
-
-      const effective = Math.max(kissMeter, partnerKissMeter);
-      bar.style.width = effective + '%';
-
-      if (label) {
-        if (effective >= 100) {
-          label.textContent = '✨ ECSTASY LOCKED! ✨';
-        } else if (isKissHolding && isPartnerKissHolding) {
-          label.textContent = '🔥 DUAL SYNC KISSING... ' + Math.round(effective) + '%';
-        } else if (isKissHolding) {
-          label.textContent = 'LEANING IN... ' + Math.round(effective) + '%';
-        } else if (isPartnerKissHolding) {
-          label.textContent = 'PARTNER IS LEANING IN... ' + Math.round(effective) + '%';
-        } else {
-          label.textContent = 'PRESS & HOLD FOR DEEP KISS';
-        }
+      if (broadcast && dataConn && dataConn.open) {
+        sendPayload({ type: 'sim_climax_event', sender: myRole });
       }
     }
 
     // -------------------------------------------------------------
-    // PROCEDURAL 2.5D LIVING CANVAS ENGINE (SILKY 60 FPS INTIMACY)
+    // INTERACTIVE TOUCH & CARESS CANVAS OVERLAY
     // -------------------------------------------------------------
     function setupSuiteCanvas() {
       suiteCanvas = document.getElementById('intimacy-suite-canvas');
@@ -6163,43 +6317,93 @@
         if (!suiteCanvas || !suiteCanvas.parentElement) return;
         const rect = suiteCanvas.parentElement.getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
-        const w = Math.min(rect.width, 520);
-        const h = Math.min(rect.height, 500);
-        suiteCanvas.width = w * dpr;
-        suiteCanvas.height = h * dpr;
-        suiteCanvas.style.width = w + 'px';
-        suiteCanvas.style.height = h + 'px';
+        suiteCanvas.width = rect.width * dpr;
+        suiteCanvas.height = rect.height * dpr;
+        suiteCanvas.style.width = rect.width + 'px';
+        suiteCanvas.style.height = rect.height + 'px';
         if (suiteCtx) suiteCtx.scale(dpr, dpr);
       };
 
       resize();
       window.addEventListener('resize', resize);
 
-      // Direct canvas tap detection for caresses!
       suiteCanvas.addEventListener('pointerdown', (e) => {
         const rect = suiteCanvas.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width;
         const y = (e.clientY - rect.top) / rect.height;
 
-        // Detect touch zone by coordinates
-        if (y < 0.45) {
-          triggerSuiteTouchZone('cheek', true);
-        } else if (y < 0.65) {
-          triggerSuiteTouchZone(x < 0.5 ? 'lips' : 'neck', true);
-        } else {
-          triggerSuiteTouchZone('waist', true);
-        }
+        handleSimTouch(x, y, true);
       });
 
-      // Start 60 FPS animation render loop
       if (suiteAnimId) cancelAnimationFrame(suiteAnimId);
       function loop() {
         if (isSuiteOpen) {
-          renderSuiteFrame();
+          renderSimParticlesOnly();
           suiteAnimId = requestAnimationFrame(loop);
         }
       }
       suiteAnimId = requestAnimationFrame(loop);
+    }
+
+    function handleSimTouch(x, y, broadcast = true) {
+      if (!suiteCanvas) return;
+      const rect = suiteCanvas.getBoundingClientRect();
+      const px = x * rect.width;
+      const py = y * rect.height;
+
+      // Spawn burst of sparks at touch spot
+      for (let i = 0; i < 16; i++) {
+        suiteParticles.push({
+          x: px,
+          y: py,
+          vx: (Math.random() - 0.5) * 3.5,
+          vy: (Math.random() - 0.5) * 3.5,
+          size: 4 + Math.random() * 6,
+          alpha: 1.0,
+          decay: 0.025,
+          color: '#fb7185',
+          isHeart: Math.random() > 0.4
+        });
+      }
+
+      playBeepAlert(650, 0.12);
+      if (navigator.vibrate) navigator.vibrate(35);
+      surgeSimPleasurePassive(3);
+
+      const partnerLabel = myRole === 'husband' ? 'A' : 'I';
+      showSuiteToast(`Caressed partner's skin... 🌸`);
+
+      if (broadcast && dataConn && dataConn.open) {
+        sendPayload({ type: 'sim_touch', x: x, y: y, sender: myRole });
+      }
+    }
+
+    function handleIncomingSimTouch(x, y, sender) {
+      if (!suiteCanvas) return;
+      const rect = suiteCanvas.getBoundingClientRect();
+      const px = x * rect.width;
+      const py = y * rect.height;
+
+      for (let i = 0; i < 20; i++) {
+        suiteParticles.push({
+          x: px,
+          y: py,
+          vx: (Math.random() - 0.5) * 4.0,
+          vy: (Math.random() - 0.5) * 4.0,
+          size: 5 + Math.random() * 7,
+          alpha: 1.0,
+          decay: 0.02,
+          color: '#f43f5e',
+          isHeart: true
+        });
+      }
+
+      playBeepAlert(720, 0.15);
+      if (navigator.vibrate) navigator.vibrate([60, 40, 80]);
+      surgeSimPleasurePassive(3);
+
+      const partnerLabel = myRole === 'husband' ? 'A' : 'I';
+      showSuiteToast(`${partnerLabel} caressed you here... ✨`);
     }
 
     function spawnSuiteParticles(count, color = '#fb7185') {
@@ -6210,20 +6414,20 @@
 
       for (let i = 0; i < count; i++) {
         suiteParticles.push({
-          x: w * 0.5 + (Math.random() - 0.5) * (w * 0.6),
-          y: h * 0.6 + (Math.random() - 0.5) * (h * 0.4),
-          vx: (Math.random() - 0.5) * 2.2,
-          vy: -1.2 - Math.random() * 2.5,
-          size: 3 + Math.random() * 6,
+          x: w * 0.5 + (Math.random() - 0.5) * (w * 0.7),
+          y: h * 0.6 + (Math.random() - 0.5) * (h * 0.5),
+          vx: (Math.random() - 0.5) * 2.5,
+          vy: -1.5 - Math.random() * 3.0,
+          size: 4 + Math.random() * 7,
           alpha: 1.0,
-          decay: 0.012 + Math.random() * 0.02,
+          decay: 0.015 + Math.random() * 0.02,
           color: color,
-          isHeart: Math.random() > 0.4
+          isHeart: Math.random() > 0.35
         });
       }
     }
 
-    function renderSuiteFrame() {
+    function renderSimParticlesOnly() {
       if (!suiteCanvas || !suiteCtx) return;
       const rect = suiteCanvas.getBoundingClientRect();
       const w = rect.width;
@@ -6232,43 +6436,6 @@
 
       suiteCtx.clearRect(0, 0, w, h);
 
-      // 1. Rich Atmospheric Bedroom Gradient
-      const bgGrad = suiteCtx.createRadialGradient(w * 0.5, h * 0.45, 20, w * 0.5, h * 0.5, w * 0.85);
-      if (currentSuiteAngle === 'candle') {
-        bgGrad.addColorStop(0, '#3f180d');
-        bgGrad.addColorStop(0.5, '#20081c');
-        bgGrad.addColorStop(1, '#09020e');
-      } else {
-        bgGrad.addColorStop(0, '#2b0c20');
-        bgGrad.addColorStop(0.6, '#18061e');
-        bgGrad.addColorStop(1, '#07020d');
-      }
-      suiteCtx.fillStyle = bgGrad;
-      suiteCtx.fillRect(0, 0, w, h);
-
-      // 2. Dynamic Candle Flickering Light Cast
-      const candleFlicker = Math.sin(t * 12) * 0.06 + Math.cos(t * 7) * 0.04;
-      const lightGrad = suiteCtx.createRadialGradient(w * 0.15, h * 0.25, 10, w * 0.15, h * 0.25, w * 0.7);
-      lightGrad.addColorStop(0, `rgba(251, 191, 36, ${0.22 + candleFlicker})`);
-      lightGrad.addColorStop(0.6, 'rgba(244, 63, 94, 0.08)');
-      lightGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      suiteCtx.fillStyle = lightGrad;
-      suiteCtx.fillRect(0, 0, w, h);
-
-      // 3. Gentle Breathing Motion & Dynamic Lean-in
-      const breath = Math.sin(t * 2.2) * 5;
-      const kissOffset = (Math.max(kissMeter, partnerKissMeter) / 100) * 36; // Heads lean towards each other!
-
-      // 4. Render Scene according to chosen Angle
-      if (currentSuiteAngle === 'pillow') {
-        renderPillowAngle(w, h, t, breath, kissOffset);
-      } else if (currentSuiteAngle === 'gaze') {
-        renderGazeAngle(w, h, t, breath, kissOffset);
-      } else {
-        renderCandleAngle(w, h, t, breath, kissOffset);
-      }
-
-      // 5. Update and Render Floating Sparkle & Heart Particles
       for (let i = suiteParticles.length - 1; i >= 0; i--) {
         const p = suiteParticles[i];
         p.x += p.vx + Math.sin(t * 3 + p.y * 0.05) * 0.6;
@@ -6294,216 +6461,6 @@
       }
     }
 
-    function renderPillowAngle(w, h, t, breath, kissOffset) {
-      const ctx = suiteCtx;
-
-      // Soft Silk Pillows under heads
-      const pillowGrad = ctx.createLinearGradient(0, h * 0.15, 0, h * 0.55);
-      pillowGrad.addColorStop(0, '#fdf2f8');
-      pillowGrad.addColorStop(0.6, '#fbcfe8');
-      pillowGrad.addColorStop(1, '#db2777');
-
-      // Left Pillow (Partner I)
-      ctx.fillStyle = pillowGrad;
-      ctx.beginPath();
-      ctx.roundRect(w * 0.08, h * 0.18, w * 0.40, h * 0.32, 28);
-      ctx.fill();
-
-      // Right Pillow (Partner A)
-      ctx.beginPath();
-      ctx.roundRect(w * 0.52, h * 0.18, w * 0.40, h * 0.32, 28);
-      ctx.fill();
-
-      // Soft Velvet Quilt Sheet covering from chest down
-      const quiltGrad = ctx.createLinearGradient(0, h * 0.55, 0, h);
-      quiltGrad.addColorStop(0, '#be185d');
-      quiltGrad.addColorStop(0.5, '#831843');
-      quiltGrad.addColorStop(1, '#4c0519');
-      ctx.fillStyle = quiltGrad;
-      ctx.beginPath();
-      ctx.moveTo(0, h * 0.62 + breath);
-      ctx.bezierCurveTo(w * 0.3, h * 0.58 + breath, w * 0.7, h * 0.58 + breath, w, h * 0.62 + breath);
-      ctx.lineTo(w, h);
-      ctx.lineTo(0, h);
-      ctx.closePath();
-      ctx.fill();
-
-      // Partner I Head & Shoulders (Left leaning in)
-      const xI = w * 0.32 + kissOffset;
-      const yI = h * 0.38 + breath;
-
-      // Neck & Shoulder
-      ctx.fillStyle = '#fce7f3';
-      ctx.beginPath();
-      ctx.ellipse(xI, yI + 35, 42, 55, 0.15, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Face
-      ctx.fillStyle = '#fdf2f8';
-      ctx.beginPath();
-      ctx.ellipse(xI, yI, 36, 46, 0.12, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Cheeks Blush (Partner I)
-      ctx.fillStyle = `rgba(244, 63, 94, ${suiteBlushIntensity})`;
-      ctx.beginPath();
-      ctx.ellipse(xI - 12, yI + 8, 12, 7, 0, 0, Math.PI * 2);
-      ctx.ellipse(xI + 12, yI + 8, 12, 7, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Partner I Hair (Soft Flowing Dark Locks)
-      ctx.fillStyle = '#1c1917';
-      ctx.beginPath();
-      ctx.arc(xI - 5, yI - 12, 42, Math.PI * 0.85, Math.PI * 2.15);
-      ctx.bezierCurveTo(xI + 44, yI + 40, xI - 45, yI + 60, xI - 38, yI + 20);
-      ctx.closePath();
-      ctx.fill();
-
-      // Partner A Head & Shoulders (Right leaning in)
-      const xA = w * 0.68 - kissOffset;
-      const yA = h * 0.38 + breath * 0.8;
-
-      ctx.fillStyle = '#fce7f3';
-      ctx.beginPath();
-      ctx.ellipse(xA, yA + 35, 46, 58, -0.15, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Face
-      ctx.fillStyle = '#fbe8dc';
-      ctx.beginPath();
-      ctx.ellipse(xA, yA, 38, 48, -0.12, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Cheeks Blush (Partner A)
-      ctx.fillStyle = `rgba(244, 63, 94, ${suiteBlushIntensity * 0.85})`;
-      ctx.beginPath();
-      ctx.ellipse(xA - 12, yA + 8, 12, 7, 0, 0, Math.PI * 2);
-      ctx.ellipse(xA + 12, yA + 8, 12, 7, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Partner A Hair
-      ctx.fillStyle = '#292524';
-      ctx.beginPath();
-      ctx.arc(xA, yA - 15, 43, Math.PI * 0.85, Math.PI * 2.15);
-      ctx.fill();
-
-      // Gentle Loving Eyes (Closed or soft gaze)
-      const isBlink = (t % 3.8) < 0.18 || kissOffset > 15;
-      ctx.strokeStyle = '#3f3f46';
-      ctx.lineWidth = 2.2;
-      ctx.lineCap = 'round';
-
-      // Left Eyes (I)
-      ctx.beginPath();
-      if (isBlink) {
-        ctx.arc(xI - 12, yI - 2, 7, 0.1, Math.PI - 0.1);
-        ctx.arc(xI + 12, yI - 2, 7, 0.1, Math.PI - 0.1);
-      } else {
-        ctx.arc(xI - 12, yI - 4, 7, Math.PI + 0.1, Math.PI * 2 - 0.1);
-        ctx.arc(xI + 12, yI - 4, 7, Math.PI + 0.1, Math.PI * 2 - 0.1);
-      }
-      ctx.stroke();
-
-      // Right Eyes (A)
-      ctx.beginPath();
-      if (isBlink) {
-        ctx.arc(xA - 12, yA - 2, 7, 0.1, Math.PI - 0.1);
-        ctx.arc(xA + 12, yA - 2, 7, 0.1, Math.PI - 0.1);
-      } else {
-        ctx.arc(xA - 12, yA - 4, 7, Math.PI + 0.1, Math.PI * 2 - 0.1);
-        ctx.arc(xA + 12, yA - 4, 7, Math.PI + 0.1, Math.PI * 2 - 0.1);
-      }
-      ctx.stroke();
-
-      // Smiling Lips / Kissing Lips
-      ctx.fillStyle = '#f43f5e';
-      ctx.beginPath();
-      ctx.ellipse(xI + 5, yI + 22, 9, kissOffset > 15 ? 6 : 4, 0, 0, Math.PI * 2);
-      ctx.ellipse(xA - 5, yA + 22, 9, kissOffset > 15 ? 6 : 4, 0, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    function renderGazeAngle(w, h, t, breath, kissOffset) {
-      const ctx = suiteCtx;
-      // Close-up cinematic eye-to-eye gaze
-      const xCenter = w * 0.5;
-      const yCenter = h * 0.48 + breath;
-
-      // Romantic atmospheric backdrop glow
-      const radial = ctx.createRadialGradient(xCenter, yCenter, 20, xCenter, yCenter, w * 0.6);
-      radial.addColorStop(0, 'rgba(244, 63, 94, 0.35)');
-      radial.addColorStop(0.7, 'rgba(131, 24, 67, 0.15)');
-      radial.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = radial;
-      ctx.fillRect(0, 0, w, h);
-
-      // Facing profiles approaching each other
-      const pI_x = w * 0.28 + kissOffset * 1.2;
-      const pA_x = w * 0.72 - kissOffset * 1.2;
-
-      // Partner I Profile
-      ctx.fillStyle = '#fdf2f8';
-      ctx.beginPath();
-      ctx.ellipse(pI_x, yCenter, 58, 72, 0.18, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Partner A Profile
-      ctx.fillStyle = '#fbe8dc';
-      ctx.beginPath();
-      ctx.ellipse(pA_x, yCenter, 62, 75, -0.18, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Deep glowing cheek blush
-      ctx.fillStyle = `rgba(225, 29, 72, ${suiteBlushIntensity})`;
-      ctx.beginPath();
-      ctx.ellipse(pI_x + 18, yCenter + 12, 22, 14, 0.2, 0, Math.PI * 2);
-      ctx.ellipse(pA_x - 18, yCenter + 12, 22, 14, -0.2, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Lips approaching
-      ctx.fillStyle = '#e11d48';
-      ctx.beginPath();
-      ctx.ellipse(pI_x + 36, yCenter + 28, 12, 8, 0.2, 0, Math.PI * 2);
-      ctx.ellipse(pA_x - 36, yCenter + 28, 12, 8, -0.2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    function renderCandleAngle(w, h, t, breath, kissOffset) {
-      const ctx = suiteCtx;
-      // Warm candlelight silhouette with glowing amber rim
-      const xC = w * 0.5;
-      const yC = h * 0.45 + breath;
-
-      // Candle flame in bottom corner
-      const flameX = w * 0.18;
-      const flameY = h * 0.78;
-      const fGlow = ctx.createRadialGradient(flameX, flameY, 5, flameX, flameY, 90);
-      fGlow.addColorStop(0, 'rgba(251, 191, 36, 0.8)');
-      fGlow.addColorStop(0.4, 'rgba(244, 63, 94, 0.3)');
-      fGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = fGlow;
-      ctx.fillRect(0, 0, w, h);
-
-      // Warm candle flame
-      ctx.fillStyle = '#fef08a';
-      ctx.beginPath();
-      ctx.ellipse(flameX, flameY, 6, 12 + Math.sin(t * 15) * 2, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Couple Silhouette in warm romantic amber embrace
-      ctx.fillStyle = '#17061d';
-      ctx.beginPath();
-      // Embraced heads & bodies
-      ctx.ellipse(xC - 25 + kissOffset * 0.5, yC, 48, 65, 0.2, 0, Math.PI * 2);
-      ctx.ellipse(xC + 25 - kissOffset * 0.5, yC, 52, 68, -0.2, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Golden Rim Light along the edges
-      ctx.strokeStyle = 'rgba(251, 191, 36, 0.55)';
-      ctx.lineWidth = 3;
-      ctx.stroke();
-    }
-
     function drawMiniHeart(ctx, x, y, size) {
       ctx.beginPath();
       ctx.moveTo(x, y + size * 0.3);
@@ -6512,6 +6469,99 @@
       ctx.bezierCurveTo(x, y + size * 0.85, x + size * 0.6, y + size * 0.65, x + size * 0.6, y + size * 0.35);
       ctx.bezierCurveTo(x + size * 0.6, y, x, y, x, y + size * 0.3);
       ctx.fill();
+    }
+
+    function showSuiteToast(text) {
+      const toast = document.getElementById('suite-status-toast');
+      if (!toast) return;
+      toast.textContent = text;
+      toast.classList.remove('opacity-0');
+      toast.classList.add('opacity-100');
+      clearTimeout(window._suiteToastTimer);
+      window._suiteToastTimer = setTimeout(() => {
+        if (toast) {
+          toast.classList.remove('opacity-100');
+          toast.classList.add('opacity-0');
+        }
+      }, 2800);
+    }
+
+    // -------------------------------------------------------------
+    // CUSTOM GIF & VIDEO MANAGER (UPLOAD & DIRECT URLS)
+    // -------------------------------------------------------------
+    function openCustomMediaModal() {
+      const modal = document.getElementById('custom-media-modal');
+      const act = SIMULATION_ACTIVITIES[currentSimActivity] || SIMULATION_ACTIVITIES.kiss;
+      const label = document.getElementById('modal-active-act-name');
+      if (label) label.textContent = act.name;
+      if (modal) {
+        modal.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    function closeCustomMediaModal() {
+      const modal = document.getElementById('custom-media-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function handleCustomMediaUpload(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+
+      const isVideo = file.type.startsWith('video/');
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        saveCustomActivityMedia(currentSimActivity, isVideo ? 'video' : 'gif', dataUrl, true);
+        closeCustomMediaModal();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function loadCustomMediaFromUrl() {
+      const input = document.getElementById('custom-media-url-input');
+      const url = input ? input.value.trim() : '';
+      if (!url) return;
+
+      const isVideo = url.endsWith('.mp4') || url.endsWith('.webm');
+      saveCustomActivityMedia(currentSimActivity, isVideo ? 'video' : 'gif', url, true);
+      if (input) input.value = '';
+      closeCustomMediaModal();
+    }
+
+    function saveCustomActivityMedia(activityKey, mediaType, dataUrl, broadcast = true) {
+      customActivityMedia[activityKey] = { type: mediaType, src: dataUrl };
+      try {
+        localStorage.setItem('sanctuary_sim_media', JSON.stringify(customActivityMedia));
+      } catch (e) {}
+
+      // If active activity, reload stage
+      if (currentSimActivity === activityKey) {
+        setSimulationActivity(activityKey, false);
+      }
+      renderSimActivitiesList();
+      showSuiteToast('✨ Custom animation saved for ' + activityKey + '!');
+
+      if (broadcast && dataConn && dataConn.open) {
+        sendPayload({
+          type: 'sim_custom_media',
+          activityKey: activityKey,
+          mediaType: mediaType,
+          dataUrl: dataUrl,
+          sender: myRole
+        });
+      }
+    }
+
+    function resetCustomMediaForCurrentActivity() {
+      delete customActivityMedia[currentSimActivity];
+      try {
+        localStorage.setItem('sanctuary_sim_media', JSON.stringify(customActivityMedia));
+      } catch (e) {}
+      setSimulationActivity(currentSimActivity, true);
+      closeCustomMediaModal();
+      showSuiteToast('🔄 Restored default animation');
     }
 
   </script>
