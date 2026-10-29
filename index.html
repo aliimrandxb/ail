@@ -849,61 +849,66 @@
           </button>
         </div>
 
-        <!-- LIVING 3D COUPLE AVATAR & CUSTOMIZATION -->
-        <div class="bg-black/40 border border-yellow-500/40 rounded-2xl p-3.5 space-y-3 shadow-lg">
-          <div class="font-bold text-yellow-300 flex items-center justify-between">
+        <!-- LAND OF DESIRE: 3D CHARACTER CUSTOMIZER & SYNCHRONIZED BED POSES -->
+        <div class="bg-black/40 border border-rose-500/30 rounded-2xl p-3.5 space-y-3.5 shadow-lg">
+          <div class="font-bold text-rose-200 flex items-center justify-between">
             <span class="flex items-center gap-2">
-              <span class="text-base">✨</span>
-              <span>Living 3D Couple (A & I)</span>
+              <i data-lucide="sparkles" class="w-4 h-4 text-rose-400"></i>
+              <span>3D Character Blueprints & Bed Poses</span>
             </span>
-            <span class="text-[9px] text-emerald-400 bg-emerald-950/70 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">Active on Bed</span>
+            <span class="text-[9px] text-emerald-400 bg-emerald-950/70 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">Live Sync</span>
           </div>
           <p class="text-[11px] text-slate-300 leading-relaxed">
-            Living 3D couple with real-time breathing, periodic blinking, and intimate embrace animations sits on your bed by default — zero upload required! (Optional: upload custom stickers or 3D models below).
+            Synchronized dual-armature poses & modular 3D character blueprints (Land of Desire formula). Real-time P2P sync without downloads!
           </p>
-          
-          <!-- Quick Pose Presets -->
+
+          <!-- 1. Synchronized Bed Poses -->
           <div class="space-y-1.5">
-            <div class="text-[10px] text-slate-400 font-semibold">Snapchat Bitmoji Scenes:</div>
+            <div class="text-[10px] text-rose-300/80 font-bold uppercase tracking-wider flex items-center gap-1">
+              <i data-lucide="heart" class="w-3 h-3 text-rose-400"></i>
+              <span>Synchronized Bed Poses:</span>
+            </div>
             <div class="grid grid-cols-3 gap-1.5">
-              <button onclick="setBitmojiScenePreset('cuddle')" class="py-1.5 px-2 rounded-lg bg-white/5 border border-white/10 hover:border-yellow-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center">
-                🛏️ Cuddle
+              <button onclick="applySynchronizedPose('cuddle')" class="py-2 px-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-sm">🛏️</span>
+                <span>Cuddle</span>
               </button>
-              <button onclick="setBitmojiScenePreset('kiss')" class="py-1.5 px-2 rounded-lg bg-white/5 border border-white/10 hover:border-yellow-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center">
-                💋 Kiss
+              <button onclick="applySynchronizedPose('kiss')" class="py-2 px-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-sm">💋</span>
+                <span>Kiss</span>
               </button>
-              <button onclick="setBitmojiScenePreset('hug')" class="py-1.5 px-2 rounded-lg bg-white/5 border border-white/10 hover:border-yellow-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center">
-                🤗 Tight Hug
+              <button onclick="applySynchronizedPose('caress')" class="py-2 px-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-sm">💆</span>
+                <span>Caress</span>
               </button>
-              <button onclick="setBitmojiScenePreset('sleep')" class="py-1.5 px-2 rounded-lg bg-white/5 border border-white/10 hover:border-yellow-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center">
-                💤 Sleeping
+              <button onclick="applySynchronizedPose('whisper')" class="py-2 px-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-sm">🤫</span>
+                <span>Whisper</span>
               </button>
-              <button onclick="setBitmojiScenePreset('tease')" class="py-1.5 px-2 rounded-lg bg-white/5 border border-white/10 hover:border-yellow-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center">
-                🔥 In Love
+              <button onclick="applySynchronizedPose('surrender')" class="py-2 px-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-rose-400 text-slate-200 text-[10px] font-semibold active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-sm">🔥</span>
+                <span>Surrender</span>
               </button>
-              <button onclick="resetCoupleAvatarToDefault()" class="py-1.5 px-2 rounded-lg bg-white/5 border border-white/10 hover:border-white/20 text-slate-400 text-[10px] active:scale-95 transition-all text-center">
-                🔄 Reset
+              <button onclick="resetCharacterBlueprints()" class="py-2 px-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 text-slate-400 text-[10px] active:scale-95 transition-all text-center flex flex-col items-center gap-0.5">
+                <span class="text-sm">🔄</span>
+                <span>Reset</span>
               </button>
             </div>
           </div>
 
-          <!-- Snapchat Sticker / Photo Upload -->
-          <div class="space-y-2 pt-1 border-t border-yellow-500/20">
-            <label class="w-full py-2.5 rounded-xl bg-gradient-to-r from-yellow-500 via-amber-500 to-rose-600 hover:opacity-90 text-slate-950 font-extrabold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer">
-              <i data-lucide="image" class="w-4 h-4 text-slate-950"></i>
-              <span>Upload Your Real Snapchat Bitmoji</span>
-              <input type="file" accept="image/*" class="hidden" onchange="handleCoupleAvatarUpload(this)" />
-            </label>
-
-            <!-- Snapchat Guide -->
-            <div class="p-2.5 rounded-xl bg-yellow-950/30 border border-yellow-500/20 text-[10px] text-yellow-200/90 leading-relaxed space-y-1">
-              <div class="font-bold flex items-center gap-1 text-yellow-300">
-                <span>👻 How to get your real Snapchat Bitmojis here:</span>
+          <!-- 2. Character Customizer (Land of Desire JSON Blueprints) -->
+          <div class="space-y-2 pt-2 border-t border-rose-500/20">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] text-rose-300/80 font-bold uppercase tracking-wider">Customize Character:</span>
+              <div class="flex gap-1 bg-black/40 p-0.5 rounded-lg border border-white/10">
+                <button id="btn-tab-char-i" onclick="switchBlueprintEditorTab('I')" class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-rose-600 text-white transition-all">Partner I</button>
+                <button id="btn-tab-char-a" onclick="switchBlueprintEditorTab('A')" class="px-2.5 py-1 rounded-md text-[10px] font-bold text-slate-400 hover:text-white transition-all">Partner A</button>
               </div>
-              <div>1. Open <strong>Snapchat</strong> on your phone → Open Chat with partner.</div>
-              <div>2. Tap the <strong>Stickers icon</strong> (square smiley) → Tap your <strong>Friendmoji (Couple Bitmoji)</strong>.</div>
-              <div>3. Tap <strong>Share → Save Image</strong> (saves transparent sticker to Photos).</div>
-              <div>4. Tap <strong>"Upload Your Real Snapchat Bitmoji"</strong> above — done! Your real Bitmojis sit directly on the bed!</div>
+            </div>
+
+            <!-- Dynamic Blueprint Editor Content (Populated by JS) -->
+            <div id="blueprint-editor-container" class="space-y-2.5 bg-black/30 border border-white/5 rounded-xl p-2.5">
+              <!-- Populated dynamically via renderBlueprintEditorUI() -->
             </div>
           </div>
         </div>
@@ -1383,6 +1388,10 @@
           playBeepAlert(850, 0.25);
         } else if (d.type === 'wallpaper_sync') {
           applyWallpaperTexture(d.imageSrc);
+        } else if (d.type === 'blueprint_sync') {
+          applyReceivedBlueprint(d.target, d.blueprint);
+        } else if (d.type === 'pose_sync') {
+          applySynchronizedPose(d.poseKey, false);
         } else if (d.type === 'couple_avatar_sync') {
           setCustomCoupleAvatar(d.dataUrl, false);
         } else if (d.type === 'couple_glb_sync') {
@@ -3020,392 +3029,388 @@
       showTelepathyBanner('🔄 Switched to Living 3D Couple (A & I)');
     }
 
-    function setBitmojiScenePreset(sceneKey) {
-      currentCouplePose = sceneKey;
-      customCoupleAvatarDataUrl = null;
-      localStorage.removeItem('sanctuary_couple_custom_avatar');
-      restoreBillboardAvatar();
-      updateCoupleBillboardTexture(sceneKey);
-      showTelepathyBanner(`👻 Snapchat Bitmoji scene set to ${sceneKey}!`);
+    // =============================================================
+    // LAND OF DESIRE: MODULAR 3D CHARACTER BLUEPRINTS & DUAL-POSES
+    // =============================================================
+    const DEFAULT_BLUEPRINT_I = {
+      target: 'I',
+      name: 'I',
+      gender: 'male',
+      skinTone: '#efc4a4',
+      hairStyle: 'quiff',
+      hairColor: '#1b130e',
+      eyeColor: '#1c1917',
+      outfit: 'shirt_pants',
+      outfitColor: '#1e293b',
+      outfitPantsColor: '#0f172a'
+    };
+
+    const DEFAULT_BLUEPRINT_A = {
+      target: 'A',
+      name: 'A',
+      gender: 'female',
+      skinTone: '#ffdfd0',
+      hairStyle: 'waves',
+      hairColor: '#27160e',
+      eyeColor: '#78350f',
+      outfit: 'chemise',
+      outfitColor: '#f43f5e',
+      outfitAccent: '#ffe4e6'
+    };
+
+    let blueprintI = (() => {
+      try {
+        const saved = localStorage.getItem('sanctuary_blueprint_I');
+        return saved ? Object.assign({}, DEFAULT_BLUEPRINT_I, JSON.parse(saved)) : { ...DEFAULT_BLUEPRINT_I };
+      } catch (e) {
+        return { ...DEFAULT_BLUEPRINT_I };
+      }
+    })();
+
+    let blueprintA = (() => {
+      try {
+        const saved = localStorage.getItem('sanctuary_blueprint_A');
+        return saved ? Object.assign({}, DEFAULT_BLUEPRINT_A, JSON.parse(saved)) : { ...DEFAULT_BLUEPRINT_A };
+      } catch (e) {
+        return { ...DEFAULT_BLUEPRINT_A };
+      }
+    })();
+
+    let activeBlueprintTab = 'I';
+    let currentSynchronizedPose = 'cuddle';
+    let activePoseAnimationId = null;
+
+    // Dual-Armature Synchronized Bed Poses (Land of Desire poses_controller.py formula)
+    const SYNCHRONIZED_POSES = {
+      cuddle: {
+        name: 'Tender Cuddle',
+        emoji: '🛏️',
+        charI: { posX: -0.28, posY: 0.0, posZ: 0.0, rotX: -0.10, rotY: 0.22, rotZ: -0.04, headRotX: 0.05, headRotY: 0.12, headRotZ: 0 },
+        charA: { posX: 0.24, posY: -0.03, posZ: 0.06, rotX: -0.08, rotY: -0.32, rotZ: -0.08, headRotX: 0.08, headRotY: -0.15, headRotZ: -0.10 },
+        blink: false
+      },
+      kiss: {
+        name: 'Sweet Kiss',
+        emoji: '💋',
+        charI: { posX: -0.13, posY: 0.02, posZ: 0.05, rotX: -0.06, rotY: 0.48, rotZ: 0.06, headRotX: 0.04, headRotY: 0.24, headRotZ: 0.08 },
+        charA: { posX: 0.11, posY: 0.0, posZ: 0.07, rotX: -0.04, rotY: -0.52, rotZ: -0.12, headRotX: 0.06, headRotY: -0.22, headRotZ: -0.08 },
+        blink: true
+      },
+      caress: {
+        name: 'Gentle Caress',
+        emoji: '💆',
+        charI: { posX: -0.18, posY: 0.04, posZ: 0.06, rotX: -0.08, rotY: 0.38, rotZ: 0.04, headRotX: 0.12, headRotY: 0.18, headRotZ: 0.02 },
+        charA: { posX: 0.18, posY: -0.02, posZ: 0.08, rotX: -0.06, rotY: -0.38, rotZ: -0.06, headRotX: 0.10, headRotY: -0.25, headRotZ: -0.14 },
+        blink: false
+      },
+      whisper: {
+        name: 'Intimate Whisper',
+        emoji: '🤫',
+        charI: { posX: -0.09, posY: 0.03, posZ: 0.07, rotX: -0.05, rotY: 0.58, rotZ: 0.08, headRotX: 0.06, headRotY: 0.30, headRotZ: 0.05 },
+        charA: { posX: 0.12, posY: -0.01, posZ: 0.05, rotX: -0.06, rotY: -0.42, rotZ: -0.08, headRotX: 0.04, headRotY: -0.18, headRotZ: -0.06 },
+        blink: false
+      },
+      surrender: {
+        name: 'Passionate Surrender',
+        emoji: '🔥',
+        charI: { posX: -0.12, posY: 0.08, posZ: 0.08, rotX: -0.15, rotY: 0.52, rotZ: 0.10, headRotX: 0.15, headRotY: 0.20, headRotZ: 0.05 },
+        charA: { posX: 0.14, posY: -0.06, posZ: 0.04, rotX: 0.02, rotY: -0.35, rotZ: -0.18, headRotX: -0.05, headRotY: -0.12, headRotZ: -0.15 },
+        blink: true
+      }
+    };
+
+    function applySynchronizedPose(poseKey, broadcast = true) {
+      const poseData = SYNCHRONIZED_POSES[poseKey] || SYNCHRONIZED_POSES.cuddle;
+      currentSynchronizedPose = poseKey;
+      currentCouplePose = poseKey;
+
+      if (broadcast && dataConn && dataConn.open) {
+        try {
+          dataConn.send({ type: 'pose_sync', poseKey });
+        } catch (e) {
+          console.warn('Pose sync send error:', e);
+        }
+      }
+
+      showTelepathyBanner(`${poseData.emoji} Synchronized Bed Pose: ${poseData.name}`);
+
+      if (charI && charA) {
+        const startI = {
+          x: charI.position.x, y: charI.position.y, z: charI.position.z,
+          rotX: charI.rotation.x, rotY: charI.rotation.y, rotZ: charI.rotation.z
+        };
+        const startA = {
+          x: charA.position.x, y: charA.position.y, z: charA.position.z,
+          rotX: charA.rotation.x, rotY: charA.rotation.y, rotZ: charA.rotation.z
+        };
+
+        const targetI = poseData.charI;
+        const targetA = poseData.charA;
+
+        const animStart = performance.now();
+        const animDur = 950;
+
+        if (charI.faceMesh && charI.faceMesh.material) {
+          charI.faceMesh.material.map = poseData.blink ? faceTexI_closed : faceTexI_open;
+          charI.faceMesh.material.needsUpdate = true;
+        }
+        if (charA.faceMesh && charA.faceMesh.material) {
+          charA.faceMesh.material.map = poseData.blink ? faceTexA_closed : faceTexA_open;
+          charA.faceMesh.material.needsUpdate = true;
+        }
+
+        if (activePoseAnimationId) cancelAnimationFrame(activePoseAnimationId);
+
+        function stepPoseAnim() {
+          const elapsed = performance.now() - animStart;
+          const p = Math.min(elapsed / animDur, 1.0);
+          const ease = 1 - Math.pow(1 - p, 3); // cubic ease out
+
+          charI.position.x = startI.x + (targetI.posX - startI.x) * ease;
+          charI.position.y = startI.y + (targetI.posY - startI.y) * ease;
+          charI.position.z = startI.z + (targetI.posZ - startI.z) * ease;
+          charI.rotation.x = startI.rotX + (targetI.rotX - startI.rotX) * ease;
+          charI.rotation.y = startI.rotY + (targetI.rotY - startI.rotY) * ease;
+          charI.rotation.z = startI.rotZ + (targetI.rotZ - startI.rotZ) * ease;
+
+          charA.position.x = startA.x + (targetA.posX - startA.x) * ease;
+          charA.position.y = startA.y + (targetA.posY - startA.y) * ease;
+          charA.position.z = startA.z + (targetA.posZ - startA.z) * ease;
+          charA.rotation.x = startA.rotX + (targetA.rotX - startA.rotX) * ease;
+          charA.rotation.y = startA.rotY + (targetA.rotY - startA.rotY) * ease;
+          charA.rotation.z = startA.rotZ + (targetA.rotZ - startA.rotZ) * ease;
+
+          if (charI.headMesh) {
+            charI.headMesh.rotation.x = (targetI.headRotX || 0) * ease;
+            charI.headMesh.rotation.y = (targetI.headRotY || 0) * ease;
+            charI.headMesh.rotation.z = (targetI.headRotZ || 0) * ease;
+          }
+          if (charA.headMesh) {
+            charA.headMesh.rotation.x = (targetA.headRotX || 0) * ease;
+            charA.headMesh.rotation.y = (targetA.headRotY || 0) * ease;
+            charA.headMesh.rotation.z = (targetA.headRotZ || 0) * ease;
+          }
+
+          if (p < 1.0) {
+            activePoseAnimationId = requestAnimationFrame(stepPoseAnim);
+          } else {
+            activePoseAnimationId = null;
+          }
+        }
+        stepPoseAnim();
+      }
+
+      updateCoupleBillboardTexture(poseKey);
     }
 
-    function renderSnapchatBitmojiCouple(ctx, w, h, poseKey) {
-      ctx.save();
-      ctx.clearRect(0, 0, w, h);
-
-      // 1. Soft Snapchat-style ambient shadow on bed
-      const baseShadow = ctx.createRadialGradient(w * 0.5, h * 0.88, 20, w * 0.5, h * 0.88, w * 0.45);
-      baseShadow.addColorStop(0, 'rgba(0, 0, 0, 0.45)');
-      baseShadow.addColorStop(0.5, 'rgba(255, 220, 0, 0.12)');
-      baseShadow.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = baseShadow;
-      ctx.fillRect(0, 0, w, h);
-
-      // Pose offsets for Snapchat Bitmoji style
-      let leanI = 0, leanA = 0;
-      let eyeType = 'happy'; // 'happy', 'wink', 'kiss', 'sleep'
-      let emojiReaction = '💕';
-
-      if (poseKey === 'kiss') {
-        leanI = 42; leanA = -42;
-        eyeType = 'kiss';
-        emojiReaction = '💋';
-      } else if (poseKey === 'hug' || poseKey === 'neck') {
-        leanI = 30; leanA = -25;
-        eyeType = 'happy';
-        emojiReaction = '🤗';
-      } else if (poseKey === 'sleep') {
-        leanI = 15; leanA = -15;
-        eyeType = 'sleep';
-        emojiReaction = '💤';
-      } else if (poseKey === 'tease' || poseKey === 'touch') {
-        leanI = 20; leanA = -18;
-        eyeType = 'wink';
-        emojiReaction = '🔥';
+    function updateCharacterBlueprint(target, changes, broadcast = true) {
+      if (target === 'I') {
+        Object.assign(blueprintI, changes);
+        localStorage.setItem('sanctuary_blueprint_I', JSON.stringify(blueprintI));
+      } else if (target === 'A') {
+        Object.assign(blueprintA, changes);
+        localStorage.setItem('sanctuary_blueprint_A', JSON.stringify(blueprintA));
       }
 
-      // --- Fluffy Bed Pillows in Background ---
-      ctx.save();
-      ctx.fillStyle = '#ffffff';
-      ctx.shadowColor = 'rgba(0,0,0,0.12)';
-      ctx.shadowBlur = 18;
-      // Left Pillow
-      ctx.beginPath();
-      if (ctx.roundRect) ctx.roundRect(w * 0.12, h * 0.38, w * 0.38, h * 0.28, [30]);
-      else ctx.rect(w * 0.12, h * 0.38, w * 0.38, h * 0.28);
-      ctx.fill();
-      // Right Pillow
-      ctx.beginPath();
-      if (ctx.roundRect) ctx.roundRect(w * 0.50, h * 0.38, w * 0.38, h * 0.28, [30]);
-      else ctx.rect(w * 0.50, h * 0.38, w * 0.38, h * 0.28);
-      ctx.fill();
-      ctx.restore();
-
-      // ==========================================
-      // PARTNER I (Guy Bitmoji - Left)
-      // ==========================================
-      const xI = w * 0.34 + leanI;
-      const yI = h * 0.44;
-
-      // Body (3D Shaded Hoodie / Loungewear)
-      ctx.save();
-      const bodyGradI = ctx.createLinearGradient(xI - 70, yI, xI + 70, yI + 220);
-      bodyGradI.addColorStop(0, '#334155');
-      bodyGradI.addColorStop(0.5, '#1e293b');
-      bodyGradI.addColorStop(1, '#0f172a');
-      ctx.fillStyle = bodyGradI;
-      ctx.beginPath();
-      ctx.moveTo(xI - 85, yI + 220);
-      ctx.quadraticCurveTo(xI - 80, yI + 80, xI - 40, yI + 75);
-      ctx.lineTo(xI + 40, yI + 75);
-      ctx.quadraticCurveTo(xI + 80, yI + 80, xI + 85, yI + 220);
-      ctx.closePath();
-      ctx.fill();
-      // Hoodie strings
-      ctx.strokeStyle = '#64748b';
-      ctx.lineWidth = 3.5;
-      ctx.beginPath();
-      ctx.moveTo(xI - 12, yI + 85); ctx.lineTo(xI - 10, yI + 115);
-      ctx.moveTo(xI + 12, yI + 85); ctx.lineTo(xI + 14, yI + 115);
-      ctx.stroke();
-      ctx.restore();
-
-      // Neck I
-      ctx.fillStyle = '#e2aa85';
-      ctx.fillRect(xI - 16, yI + 52, 32, 28);
-
-      // Head I (Cute 3D Bitmoji Round Face)
-      ctx.save();
-      ctx.shadowColor = 'rgba(0,0,0,0.18)';
-      ctx.shadowBlur = 12;
-      const faceGradI = ctx.createRadialGradient(xI - 12, yI - 12, 10, xI, yI, 72);
-      faceGradI.addColorStop(0, '#fde6d2');
-      faceGradI.addColorStop(0.7, '#f7c39f');
-      faceGradI.addColorStop(1, '#e2aa85');
-      ctx.fillStyle = faceGradI;
-      ctx.beginPath();
-      ctx.arc(xI, yI, 68, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      // Ears I
-      ctx.fillStyle = '#e2aa85';
-      ctx.beginPath();
-      ctx.arc(xI - 68, yI + 4, 14, 0, Math.PI * 2);
-      ctx.arc(xI + 68, yI + 4, 14, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Hair I (3D Volumetric Fade & Top volume)
-      ctx.save();
-      const hairGradI = ctx.createLinearGradient(xI - 70, yI - 75, xI + 70, yI);
-      hairGradI.addColorStop(0, '#1e293b');
-      hairGradI.addColorStop(0.5, '#0f172a');
-      hairGradI.addColorStop(1, '#020617');
-      ctx.fillStyle = hairGradI;
-      ctx.beginPath();
-      ctx.arc(xI, yI - 18, 72, Math.PI * 0.78, Math.PI * 2.22);
-      ctx.quadraticCurveTo(xI + 30, yI - 55, xI - 20, yI - 50);
-      ctx.closePath();
-      ctx.fill();
-      // Stylish top puff
-      ctx.beginPath();
-      ctx.arc(xI - 10, yI - 65, 34, 0, Math.PI * 2);
-      ctx.arc(xI + 22, yI - 60, 30, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      // Blushing Cheeks I
-      ctx.fillStyle = 'rgba(244, 63, 94, 0.35)';
-      ctx.beginPath();
-      ctx.arc(xI - 36, yI + 20, 16, 0, Math.PI * 2);
-      ctx.arc(xI + 36, yI + 20, 16, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Eyes I
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 4.5;
-      ctx.lineCap = 'round';
-      if (eyeType === 'kiss' || eyeType === 'happy' || eyeType === 'sleep') {
-        ctx.beginPath();
-        ctx.arc(xI - 25, yI + 2, 14, Math.PI * 1.15, Math.PI * 1.85);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(xI + 25, yI + 2, 14, Math.PI * 1.15, Math.PI * 1.85);
-        ctx.stroke();
-      } else {
-        ctx.fillStyle = '#0f172a';
-        ctx.beginPath();
-        ctx.arc(xI - 25, yI + 2, 9, 0, Math.PI * 2);
-        ctx.arc(xI + 25, yI + 2, 9, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(xI - 27, yI, 3.5, 0, Math.PI * 2);
-        ctx.arc(xI + 23, yI, 3.5, 0, Math.PI * 2);
-        ctx.fill();
+      if (broadcast && dataConn && dataConn.open) {
+        try {
+          const currentBp = (target === 'I') ? blueprintI : blueprintA;
+          dataConn.send({ type: 'blueprint_sync', target, blueprint: currentBp });
+        } catch (e) {
+          console.warn('Blueprint sync send error:', e);
+        }
       }
 
-      // Eyebrows I
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 5;
-      ctx.beginPath();
-      ctx.arc(xI - 26, yI - 16, 18, Math.PI * 1.2, Math.PI * 1.75);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(xI + 26, yI - 16, 18, Math.PI * 1.25, Math.PI * 1.8);
-      ctx.stroke();
-
-      // Cute Smile I
-      ctx.strokeStyle = '#881337';
-      ctx.lineWidth = 3.5;
-      ctx.beginPath();
-      ctx.arc(xI, yI + 28, 16, 0.15, Math.PI - 0.15);
-      ctx.stroke();
-
-      // ==========================================
-      // PARTNER A (Girl Bitmoji - Right)
-      // ==========================================
-      const xA = w * 0.64 + leanA;
-      const yA = h * 0.45;
-
-      // Flowing Hair Behind Body A
-      ctx.save();
-      const hairBackGrad = ctx.createLinearGradient(xA - 70, yA - 40, xA + 70, yA + 200);
-      hairBackGrad.addColorStop(0, '#271b12');
-      hairBackGrad.addColorStop(0.5, '#18110b');
-      hairBackGrad.addColorStop(1, '#0c0704');
-      ctx.fillStyle = hairBackGrad;
-      ctx.beginPath();
-      ctx.moveTo(xA - 75, yA - 10);
-      ctx.quadraticCurveTo(xA - 95, yA + 120, xA - 70, yA + 230);
-      ctx.lineTo(xA + 70, yA + 230);
-      ctx.quadraticCurveTo(xA + 95, yA + 120, xA + 75, yA - 10);
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-
-      // Body A (Silk Camisole / Nightwear)
-      ctx.save();
-      const bodyGradA = ctx.createLinearGradient(xA - 60, yA + 70, xA + 60, yA + 220);
-      bodyGradA.addColorStop(0, '#f43f5e');
-      bodyGradA.addColorStop(0.6, '#be123c');
-      bodyGradA.addColorStop(1, '#881337');
-      ctx.fillStyle = bodyGradA;
-      ctx.beginPath();
-      ctx.moveTo(xA - 70, yA + 220);
-      ctx.quadraticCurveTo(xA - 65, yA + 90, xA - 32, yA + 78);
-      ctx.lineTo(xA + 32, yA + 78);
-      ctx.quadraticCurveTo(xA + 65, yA + 90, xA + 70, yA + 220);
-      ctx.closePath();
-      ctx.fill();
-      // Silk straps
-      ctx.strokeStyle = '#ffe4e6';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(xA - 26, yA + 55); ctx.lineTo(xA - 24, yA + 80);
-      ctx.moveTo(xA + 26, yA + 55); ctx.lineTo(xA + 24, yA + 80);
-      ctx.stroke();
-      ctx.restore();
-
-      // Neck & Collarbone A
-      ctx.fillStyle = '#f6c9af';
-      ctx.fillRect(xA - 14, yA + 50, 28, 26);
-
-      // Head A (Cute 3D Round Face)
-      ctx.save();
-      ctx.shadowColor = 'rgba(0,0,0,0.18)';
-      ctx.shadowBlur = 12;
-      const faceGradA = ctx.createRadialGradient(xA - 10, yA - 10, 10, xA, yA, 66);
-      faceGradA.addColorStop(0, '#fff1e6');
-      faceGradA.addColorStop(0.7, '#fcd9c4');
-      faceGradA.addColorStop(1, '#f6c9af');
-      ctx.fillStyle = faceGradA;
-      ctx.beginPath();
-      ctx.arc(xA, yA, 64, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      // Front Hair Waves A (Framing face)
-      ctx.save();
-      ctx.fillStyle = '#18110b';
-      ctx.beginPath();
-      ctx.moveTo(xA - 45, yA - 50);
-      ctx.quadraticCurveTo(xA - 75, yA + 20, xA - 52, yA + 120);
-      ctx.quadraticCurveTo(xA - 35, yA + 60, xA - 40, yA - 10);
-      ctx.closePath();
-      ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(xA + 45, yA - 50);
-      ctx.quadraticCurveTo(xA + 75, yA + 20, xA + 52, yA + 120);
-      ctx.quadraticCurveTo(xA + 35, yA + 60, xA + 40, yA - 10);
-      ctx.closePath();
-      ctx.fill();
-      // Top bangs
-      ctx.beginPath();
-      ctx.arc(xA, yA - 16, 68, Math.PI * 0.82, Math.PI * 2.18);
-      ctx.quadraticCurveTo(xA + 20, yA - 42, xA - 20, yA - 44);
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-
-      // Blushing Cheeks A
-      ctx.fillStyle = 'rgba(244, 63, 94, 0.45)';
-      ctx.beginPath();
-      ctx.arc(xA - 32, yA + 18, 17, 0, Math.PI * 2);
-      ctx.arc(xA + 32, yA + 18, 17, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Eyes A
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 4.5;
-      ctx.lineCap = 'round';
-      if (eyeType === 'kiss' || eyeType === 'happy' || eyeType === 'sleep') {
-        ctx.beginPath();
-        ctx.arc(xA - 22, yA + 2, 13, Math.PI * 1.15, Math.PI * 1.85);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(xA - 34, yA - 2); ctx.lineTo(xA - 40, yA - 6);
-        ctx.moveTo(xA - 10, yA - 2); ctx.lineTo(xA - 6, yA - 6);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.arc(xA + 22, yA + 2, 13, Math.PI * 1.15, Math.PI * 1.85);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(xA + 34, yA - 2); ctx.lineTo(xA + 40, yA - 6);
-        ctx.moveTo(xA + 10, yA - 2); ctx.lineTo(xA + 6, yA - 6);
-        ctx.stroke();
-      } else {
-        ctx.fillStyle = '#0f172a';
-        ctx.beginPath();
-        ctx.arc(xA - 22, yA + 2, 8.5, 0, Math.PI * 2);
-        ctx.arc(xA + 22, yA + 2, 8.5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(xA - 24, yA, 3.5, 0, Math.PI * 2);
-        ctx.arc(xA + 20, yA, 3.5, 0, Math.PI * 2);
-        ctx.fill();
+      if (coupleGroup) {
+        buildLivingCouple3D(coupleGroup);
+        if (currentSynchronizedPose) {
+          applySynchronizedPose(currentSynchronizedPose, false);
+        }
       }
 
-      // Eyebrows A
-      ctx.strokeStyle = '#18110b';
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.arc(xA - 23, yA - 15, 16, Math.PI * 1.25, Math.PI * 1.8);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(xA + 23, yA - 15, 16, Math.PI * 1.2, Math.PI * 1.75);
-      ctx.stroke();
+      renderBlueprintEditorUI();
+      showTelepathyBanner(`✨ Partner ${target} styling updated & synced`);
+    }
 
-      // Sweet Smile A
-      ctx.strokeStyle = '#e11d48';
-      ctx.lineWidth = 3.5;
-      ctx.beginPath();
-      ctx.arc(xA, yA + 26, 14, 0.15, Math.PI - 0.15);
-      ctx.stroke();
-
-      // ==========================================
-      // COZY 3D DUVET BLANKET (Tucked into Bed)
-      // ==========================================
-      ctx.save();
-      const duvetGrad = ctx.createLinearGradient(0, h * 0.72, 0, h);
-      duvetGrad.addColorStop(0, '#ffffff');
-      duvetGrad.addColorStop(0.3, '#f8fafc');
-      duvetGrad.addColorStop(1, '#e2e8f0');
-      ctx.fillStyle = duvetGrad;
-      ctx.shadowColor = 'rgba(0,0,0,0.12)';
-      ctx.shadowBlur = 18;
-
-      ctx.beginPath();
-      ctx.moveTo(w * 0.08, h);
-      ctx.quadraticCurveTo(w * 0.25, h * 0.70, w * 0.50, h * 0.73);
-      ctx.quadraticCurveTo(w * 0.75, h * 0.70, w * 0.92, h);
-      ctx.closePath();
-      ctx.fill();
-
-      // Duvet Fold Trim
-      ctx.strokeStyle = '#cbd5e1';
-      ctx.lineWidth = 5;
-      ctx.beginPath();
-      ctx.moveTo(w * 0.15, h * 0.82);
-      ctx.quadraticCurveTo(w * 0.50, h * 0.74, w * 0.85, h * 0.82);
-      ctx.stroke();
-      ctx.restore();
-
-      // ==========================================
-      // SNAPCHAT 3D FLOATING EMOJIS & SPARKLES
-      // ==========================================
-      ctx.save();
-      ctx.font = '54px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
-      ctx.shadowBlur = 12;
-
-      // Top floating emoji bubble
-      ctx.fillText(emojiReaction, w * 0.5, h * 0.26);
-
-      // Additional floating sparkles and hearts
-      ctx.font = '28px sans-serif';
-      ctx.fillText('✨', w * 0.22, h * 0.32);
-      ctx.fillText('💖', w * 0.78, h * 0.30);
-      if (poseKey === 'kiss') {
-        ctx.fillText('💋', w * 0.35, h * 0.24);
-        ctx.fillText('💕', w * 0.65, h * 0.24);
+    function applyReceivedBlueprint(target, receivedBlueprint) {
+      if (!receivedBlueprint) return;
+      if (target === 'I') {
+        Object.assign(blueprintI, receivedBlueprint);
+        localStorage.setItem('sanctuary_blueprint_I', JSON.stringify(blueprintI));
+      } else if (target === 'A') {
+        Object.assign(blueprintA, receivedBlueprint);
+        localStorage.setItem('sanctuary_blueprint_A', JSON.stringify(blueprintA));
       }
-      ctx.restore();
 
-      // Snapchat Style Badge
-      ctx.save();
-      ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
-      ctx.fillStyle = '#ffffff';
-      ctx.textAlign = 'center';
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
-      ctx.shadowBlur = 10;
-      ctx.fillText('👻 A & I • Sanctuary', w * 0.5, h - 30);
-      ctx.restore();
+      if (coupleGroup) {
+        buildLivingCouple3D(coupleGroup);
+        if (currentSynchronizedPose) {
+          applySynchronizedPose(currentSynchronizedPose, false);
+        }
+      }
 
-      ctx.restore();
+      renderBlueprintEditorUI();
+      showTelepathyBanner(`💕 Received Partner ${target}'s 3D styling from partner!`);
+    }
+
+    function resetCharacterBlueprints() {
+      blueprintI = { ...DEFAULT_BLUEPRINT_I };
+      blueprintA = { ...DEFAULT_BLUEPRINT_A };
+      localStorage.removeItem('sanctuary_blueprint_I');
+      localStorage.removeItem('sanctuary_blueprint_A');
+      if (coupleGroup) {
+        buildLivingCouple3D(coupleGroup);
+        applySynchronizedPose('cuddle', true);
+      }
+      renderBlueprintEditorUI();
+      showTelepathyBanner('🔄 Characters restored to original blueprints');
+    }
+
+    function switchBlueprintEditorTab(target) {
+      activeBlueprintTab = target;
+      const btnI = document.getElementById('btn-tab-char-i');
+      const btnA = document.getElementById('btn-tab-char-a');
+      if (btnI && btnA) {
+        if (target === 'I') {
+          btnI.className = 'px-2.5 py-1 rounded-md text-[10px] font-bold bg-rose-600 text-white transition-all';
+          btnA.className = 'px-2.5 py-1 rounded-md text-[10px] font-bold text-slate-400 hover:text-white transition-all';
+        } else {
+          btnA.className = 'px-2.5 py-1 rounded-md text-[10px] font-bold bg-rose-600 text-white transition-all';
+          btnI.className = 'px-2.5 py-1 rounded-md text-[10px] font-bold text-slate-400 hover:text-white transition-all';
+        }
+      }
+      renderBlueprintEditorUI();
+    }
+
+    function renderBlueprintEditorUI() {
+      const container = document.getElementById('blueprint-editor-container');
+      if (!container) return;
+
+      const isI = (activeBlueprintTab === 'I');
+      const bp = isI ? blueprintI : blueprintA;
+
+      const skinTones = [
+        { name: 'Fair Porcelain', color: '#ffdfd0' },
+        { name: 'Warm Peach', color: '#efc4a4' },
+        { name: 'Olive Caramel', color: '#d4a373' },
+        { name: 'Warm Bronze', color: '#bc6c25' },
+        { name: 'Deep Chestnut', color: '#7f4f24' }
+      ];
+
+      const hairColors = [
+        { name: 'Jet Black', color: '#09090b' },
+        { name: 'Dark Espresso', color: '#1b130e' },
+        { name: 'Warm Chestnut', color: '#3b1f11' },
+        { name: 'Honey Amber', color: '#92400e' },
+        { name: 'Burgundy Rose', color: '#831843' }
+      ];
+
+      const eyeColors = [
+        { name: 'Espresso', color: '#1c1917' },
+        { name: 'Amber Brown', color: '#78350f' },
+        { name: 'Emerald', color: '#14532d' },
+        { name: 'Deep Ocean', color: '#1e3a8a' }
+      ];
+
+      const hairStyles = isI ? [
+        { key: 'quiff', label: 'Styled Quiff' },
+        { key: 'fringe', label: 'Casual Fringe' },
+        { key: 'slick', label: 'Sleek Back' },
+        { key: 'short', label: 'Crew Crop' }
+      ] : [
+        { key: 'waves', label: 'Silky Waves' },
+        { key: 'ponytail', label: 'High Ponytail' },
+        { key: 'bob', label: 'Chic Bob' },
+        { key: 'curls', label: 'Romantic Curls' }
+      ];
+
+      const outfitColors = [
+        { name: 'Crimson Rose', color: '#f43f5e' },
+        { name: 'Midnight Navy', color: '#1e293b' },
+        { name: 'Emerald Forest', color: '#065f46' },
+        { name: 'Royal Amethyst', color: '#701a75' },
+        { name: 'Pearl Champagne', color: '#fef3c7' },
+        { name: 'Soft Blush', color: '#fb7185' }
+      ];
+
+      let html = `
+        <!-- Skin Tone Selector -->
+        <div class="space-y-1">
+          <div class="text-[9px] text-slate-300 font-semibold flex items-center justify-between">
+            <span>Skin Tone</span>
+            <span class="text-[8px] text-rose-300 font-mono">${bp.skinTone}</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            ${skinTones.map(st => `
+              <button onclick="updateCharacterBlueprint('${activeBlueprintTab}', { skinTone: '${st.color}' }, true)" 
+                title="${st.name}"
+                class="w-6 h-6 rounded-full border ${bp.skinTone === st.color ? 'border-white scale-110 ring-2 ring-rose-400' : 'border-white/20'} transition-all shadow-sm"
+                style="background-color: ${st.color};">
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Hair Style & Color -->
+        <div class="space-y-1.5 pt-1.5 border-t border-white/5">
+          <div class="text-[9px] text-slate-300 font-semibold">Hair Style:</div>
+          <div class="grid grid-cols-2 gap-1">
+            ${hairStyles.map(hs => `
+              <button onclick="updateCharacterBlueprint('${activeBlueprintTab}', { hairStyle: '${hs.key}' }, true)"
+                class="py-1 px-2 rounded-lg text-[9px] font-medium border text-center transition-all ${bp.hairStyle === hs.key ? 'bg-rose-500/20 border-rose-400 text-rose-200' : 'bg-white/5 border-white/10 text-slate-300 hover:border-white/20'}">
+                ${hs.label}
+              </button>
+            `).join('')}
+          </div>
+          <div class="text-[9px] text-slate-300 font-semibold pt-1">Hair Color:</div>
+          <div class="flex items-center gap-1.5">
+            ${hairColors.map(hc => `
+              <button onclick="updateCharacterBlueprint('${activeBlueprintTab}', { hairColor: '${hc.color}' }, true)"
+                title="${hc.name}"
+                class="w-6 h-6 rounded-full border ${bp.hairColor === hc.color ? 'border-white scale-110 ring-2 ring-rose-400' : 'border-white/20'} transition-all shadow-sm"
+                style="background-color: ${hc.color};">
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Eye Color -->
+        <div class="space-y-1 pt-1.5 border-t border-white/5">
+          <div class="text-[9px] text-slate-300 font-semibold">Eye Color:</div>
+          <div class="flex items-center gap-1.5">
+            ${eyeColors.map(ec => `
+              <button onclick="updateCharacterBlueprint('${activeBlueprintTab}', { eyeColor: '${ec.color}' }, true)"
+                title="${ec.name}"
+                class="w-6 h-6 rounded-full border ${bp.eyeColor === ec.color ? 'border-white scale-110 ring-2 ring-rose-400' : 'border-white/20'} transition-all shadow-sm"
+                style="background-color: ${ec.color};">
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Outfit Color -->
+        <div class="space-y-1 pt-1.5 border-t border-white/5">
+          <div class="text-[9px] text-slate-300 font-semibold flex items-center justify-between">
+            <span>Outfit Color</span>
+            <span class="text-[8px] text-rose-300 font-mono">${bp.outfitColor}</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            ${outfitColors.map(oc => `
+              <button onclick="updateCharacterBlueprint('${activeBlueprintTab}', { outfitColor: '${oc.color}' }, true)"
+                title="${oc.name}"
+                class="w-6 h-6 rounded-full border ${bp.outfitColor === oc.color ? 'border-white scale-110 ring-2 ring-rose-400' : 'border-white/20'} transition-all shadow-sm"
+                style="background-color: ${oc.color};">
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function setBitmojiScenePreset(sceneKey) {
+      applySynchronizedPose(sceneKey, true);
     }
 
     function updateCoupleBillboardTexture(poseKey) {
@@ -3418,14 +3423,12 @@
         img.onload = () => {
           coupleCtx.clearRect(0, 0, w, h);
           coupleCtx.save();
-          // Soft ambient drop shadow underneath
           const radGrad = coupleCtx.createRadialGradient(w / 2, h * 0.82, 30, w / 2, h * 0.82, w * 0.45);
           radGrad.addColorStop(0, 'rgba(0, 0, 0, 0.5)');
           radGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
           coupleCtx.fillStyle = radGrad;
           coupleCtx.fillRect(0, 0, w, h);
 
-          // Draw image preserving original alpha transparency (Snapchat sticker format!)
           const aspect = img.width / img.height;
           let dw = w * 0.9, dh = h * 0.9;
           if (aspect > 1) {
@@ -3437,14 +3440,12 @@
           const dy = (h - dh) / 2 + 15;
           coupleCtx.drawImage(img, dx, dy, dw, dh);
 
-          // Subtle Snapchat style watermark at bottom
           coupleCtx.font = 'bold 22px sans-serif';
           coupleCtx.fillStyle = '#ffffff';
           coupleCtx.textAlign = 'center';
           coupleCtx.shadowColor = 'rgba(0, 0, 0, 0.85)';
           coupleCtx.shadowBlur = 8;
-          coupleCtx.fillText('👻 A & I ❤️', w / 2, h - 25);
-
+          coupleCtx.fillText('💕 A & I', w / 2, h - 25);
           coupleCtx.restore();
           if (coupleTexture) coupleTexture.needsUpdate = true;
         };
@@ -3452,8 +3453,23 @@
         return;
       }
 
-      // Default Snapchat 3D Bitmoji couple scene
-      renderSnapchatBitmojiCouple(coupleCtx, w, h, poseKey);
+      // Elegant fallback silhouette on bed if billboard active
+      coupleCtx.clearRect(0, 0, w, h);
+      coupleCtx.save();
+      const radGrad = coupleCtx.createRadialGradient(w / 2, h * 0.82, 30, w / 2, h * 0.82, w * 0.45);
+      radGrad.addColorStop(0, 'rgba(0, 0, 0, 0.45)');
+      radGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      coupleCtx.fillStyle = radGrad;
+      coupleCtx.fillRect(0, 0, w, h);
+
+      coupleCtx.font = '54px sans-serif';
+      coupleCtx.textAlign = 'center';
+      const poseEmoji = (SYNCHRONIZED_POSES[poseKey] && SYNCHRONIZED_POSES[poseKey].emoji) || '💕';
+      coupleCtx.fillText(poseEmoji, w * 0.5, h * 0.45);
+      coupleCtx.font = 'bold 22px sans-serif';
+      coupleCtx.fillStyle = '#ffffff';
+      coupleCtx.fillText('A & I • Sanctuary', w * 0.5, h - 35);
+      coupleCtx.restore();
       if (coupleTexture) coupleTexture.needsUpdate = true;
     }
 
@@ -3486,7 +3502,7 @@
         if (!isBlinking) {
           // Almond handsome dark eyes
           const eyeL = ctx.createRadialGradient(88, 126, 2, 88, 126, 16);
-          eyeL.addColorStop(0, '#1c1917');
+          eyeL.addColorStop(0, (blueprintI && blueprintI.eyeColor) || '#1c1917');
           eyeL.addColorStop(0.7, '#292524');
           eyeL.addColorStop(1, '#0c0a09');
           ctx.fillStyle = eyeL;
@@ -3495,7 +3511,7 @@
           ctx.fill();
 
           const eyeR = ctx.createRadialGradient(168, 126, 2, 168, 126, 16);
-          eyeR.addColorStop(0, '#1c1917');
+          eyeR.addColorStop(0, (blueprintI && blueprintI.eyeColor) || '#1c1917');
           eyeR.addColorStop(0.7, '#292524');
           eyeR.addColorStop(1, '#0c0a09');
           ctx.fillStyle = eyeR;
@@ -3612,7 +3628,7 @@
 
           // Irises with romantic amber-espresso gradient
           const irisL = ctx.createRadialGradient(86, 128, 2, 86, 128, 18);
-          irisL.addColorStop(0, '#78350f');
+          irisL.addColorStop(0, (blueprintA && blueprintA.eyeColor) || '#78350f');
           irisL.addColorStop(0.65, '#291e16');
           irisL.addColorStop(1, '#0c0a09');
           ctx.fillStyle = irisL;
@@ -3621,7 +3637,7 @@
           ctx.fill();
 
           const irisR = ctx.createRadialGradient(170, 128, 2, 170, 128, 18);
-          irisR.addColorStop(0, '#78350f');
+          irisR.addColorStop(0, (blueprintA && blueprintA.eyeColor) || '#78350f');
           irisR.addColorStop(0.65, '#291e16');
           irisR.addColorStop(1, '#0c0a09');
           ctx.fillStyle = irisR;
@@ -3757,16 +3773,25 @@
       faceTexA_open = createFaceTexture(true, false);
       faceTexA_closed = createFaceTexture(true, true);
 
-      // Stylized Materials
-      const skinMatI = new THREE.MeshStandardMaterial({ color: 0xefc4a4, roughness: 0.65, metalness: 0.05 });
-      const skinMatA = new THREE.MeshStandardMaterial({ color: 0xffdfd0, roughness: 0.55, metalness: 0.05 });
-      const hairMatI = new THREE.MeshStandardMaterial({ color: 0x1b130e, roughness: 0.75, metalness: 0.1 });
-      const hairMatA = new THREE.MeshStandardMaterial({ color: 0x27160e, roughness: 0.55, metalness: 0.18 });
-      const shirtMatI = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.85 }); // Midnight loungewear
-      const pantsMatI = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.9 });
-      const dressMatA = new THREE.MeshStandardMaterial({ color: 0xf43f5e, roughness: 0.35, metalness: 0.22 }); // Rose silk
-      const laceMatA = new THREE.MeshStandardMaterial({ color: 0xffe4e6, roughness: 0.5 });
-      const blanketMat = new THREE.MeshStandardMaterial({ color: 0x831843, roughness: 0.55 }); // Bed duvet fold
+      // Stylized Materials (Land of Desire Blueprints)
+      const skinColorI = (blueprintI && blueprintI.skinTone) ? blueprintI.skinTone : '#efc4a4';
+      const skinColorA = (blueprintA && blueprintA.skinTone) ? blueprintA.skinTone : '#ffdfd0';
+      const hairColorI = (blueprintI && blueprintI.hairColor) ? blueprintI.hairColor : '#1b130e';
+      const hairColorA = (blueprintA && blueprintA.hairColor) ? blueprintA.hairColor : '#27160e';
+      const shirtColorI = (blueprintI && blueprintI.outfitColor) ? blueprintI.outfitColor : '#1e293b';
+      const pantsColorI = (blueprintI && blueprintI.outfitPantsColor) ? blueprintI.outfitPantsColor : '#0f172a';
+      const dressColorA = (blueprintA && blueprintA.outfitColor) ? blueprintA.outfitColor : '#f43f5e';
+      const laceColorA = (blueprintA && blueprintA.outfitAccent) ? blueprintA.outfitAccent : '#ffe4e6';
+
+      const skinMatI = new THREE.MeshStandardMaterial({ color: new THREE.Color(skinColorI), roughness: 0.65, metalness: 0.05 });
+      const skinMatA = new THREE.MeshStandardMaterial({ color: new THREE.Color(skinColorA), roughness: 0.55, metalness: 0.05 });
+      const hairMatI = new THREE.MeshStandardMaterial({ color: new THREE.Color(hairColorI), roughness: 0.75, metalness: 0.1 });
+      const hairMatA = new THREE.MeshStandardMaterial({ color: new THREE.Color(hairColorA), roughness: 0.55, metalness: 0.18 });
+      const shirtMatI = new THREE.MeshStandardMaterial({ color: new THREE.Color(shirtColorI), roughness: 0.85 });
+      const pantsMatI = new THREE.MeshStandardMaterial({ color: new THREE.Color(pantsColorI), roughness: 0.9 });
+      const dressMatA = new THREE.MeshStandardMaterial({ color: new THREE.Color(dressColorA), roughness: 0.35, metalness: 0.22 });
+      const laceMatA = new THREE.MeshStandardMaterial({ color: new THREE.Color(laceColorA), roughness: 0.5 });
+      const blanketMat = new THREE.MeshStandardMaterial({ color: 0x831843, roughness: 0.55 });
 
       // ==========================================
       // 1. PARTNER I (Guy - Left)
@@ -3806,23 +3831,39 @@
       earMeshIR.position.set(0.18, 0.0, 0);
       headMeshI.add(earMeshIR);
 
-      // Sculpted 3D Hair (Modern styled quiff & fade)
+      // Modular 3D Hair (Blueprint Driven)
+      const hairStyleI = (blueprintI && blueprintI.hairStyle) || 'quiff';
       const hairCrownI = new THREE.Mesh(new THREE.SphereGeometry(0.188, 24, 20), hairMatI);
       hairCrownI.position.set(0, 0.05, -0.02);
       hairCrownI.scale.set(1.03, 1.06, 1.08);
       headMeshI.add(hairCrownI);
 
-      const tuftGeo = new THREE.ConeGeometry(0.09, 0.18, 12);
-      tuftGeo.rotateX(Math.PI * 0.4);
-      const tuft1 = new THREE.Mesh(tuftGeo, hairMatI);
-      tuft1.position.set(0.02, 0.15, 0.11);
-      tuft1.rotation.set(-0.2, 0.2, -0.15);
-      headMeshI.add(tuft1);
+      if (hairStyleI === 'quiff') {
+        const tuftGeo = new THREE.ConeGeometry(0.09, 0.18, 12);
+        tuftGeo.rotateX(Math.PI * 0.4);
+        const tuft1 = new THREE.Mesh(tuftGeo, hairMatI);
+        tuft1.position.set(0.02, 0.15, 0.11);
+        tuft1.rotation.set(-0.2, 0.2, -0.15);
+        headMeshI.add(tuft1);
 
-      const tuft2 = new THREE.Mesh(tuftGeo, hairMatI);
-      tuft2.position.set(-0.06, 0.13, 0.10);
-      tuft2.rotation.set(-0.15, -0.1, 0.1);
-      headMeshI.add(tuft2);
+        const tuft2 = new THREE.Mesh(tuftGeo, hairMatI);
+        tuft2.position.set(-0.06, 0.13, 0.10);
+        tuft2.rotation.set(-0.15, -0.1, 0.1);
+        headMeshI.add(tuft2);
+      } else if (hairStyleI === 'fringe') {
+        const fringeGeo = new THREE.CylinderGeometry(0.04, 0.02, 0.16, 12);
+        fringeGeo.rotateZ(Math.PI * 0.35);
+        const f1 = new THREE.Mesh(fringeGeo, hairMatI);
+        f1.position.set(0.02, 0.12, 0.15);
+        headMeshI.add(f1);
+        const f2 = new THREE.Mesh(fringeGeo, hairMatI);
+        f2.position.set(-0.06, 0.11, 0.14);
+        f2.rotation.set(0.1, 0.2, -0.2);
+        headMeshI.add(f2);
+      } else if (hairStyleI === 'slick') {
+        hairCrownI.scale.set(1.05, 1.04, 1.12);
+        hairCrownI.position.set(0, 0.04, -0.04);
+      }
 
       // Neck
       const neckI = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.09, 0.14, 16), skinMatI);
@@ -3942,27 +3983,48 @@
       hairclip.position.set(-0.15, 0.10, 0.08);
       headMeshA.add(hairclip);
 
-      // Cascading long locks down shoulders & back
-      const hairLockGeo = new THREE.CylinderGeometry(0.045, 0.065, 0.48, 14);
-      const lockLeft = new THREE.Mesh(hairLockGeo, hairMatA);
-      lockLeft.position.set(-0.15, 0.28, -0.08);
-      lockLeft.rotation.set(0.15, 0.1, 0.35);
-      charA.add(lockLeft);
+      // Modular Hair Styling for Partner A (Blueprint Driven)
+      const hairStyleA = (blueprintA && blueprintA.hairStyle) || 'waves';
+      if (hairStyleA === 'waves' || hairStyleA === 'curls') {
+        const hairLockGeo = new THREE.CylinderGeometry(0.045, 0.065, 0.48, 14);
+        const lockLeft = new THREE.Mesh(hairLockGeo, hairMatA);
+        lockLeft.position.set(-0.15, 0.28, -0.08);
+        lockLeft.rotation.set(0.15, 0.1, 0.35);
+        charA.add(lockLeft);
 
-      const lockRight = new THREE.Mesh(hairLockGeo, hairMatA);
-      lockRight.position.set(0.15, 0.28, -0.08);
-      lockRight.rotation.set(0.15, -0.1, -0.35);
-      charA.add(lockRight);
+        const lockRight = new THREE.Mesh(hairLockGeo, hairMatA);
+        lockRight.position.set(0.15, 0.28, -0.08);
+        lockRight.rotation.set(0.15, -0.1, -0.35);
+        charA.add(lockRight);
 
-      const lockBack = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.11, 0.52, 14), hairMatA);
-      lockBack.position.set(0.0, 0.26, -0.14);
-      lockBack.rotation.set(-0.18, 0, 0);
-      charA.add(lockBack);
+        const lockBack = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.11, 0.52, 14), hairMatA);
+        lockBack.position.set(0.0, 0.26, -0.14);
+        lockBack.rotation.set(-0.18, 0, 0);
+        charA.add(lockBack);
 
-      const frontTress = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.02, 0.32, 12), hairMatA);
-      frontTress.position.set(0.14, 0.30, 0.10);
-      frontTress.rotation.set(0.3, -0.2, -0.2);
-      charA.add(frontTress);
+        const frontTress = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.02, 0.32, 12), hairMatA);
+        frontTress.position.set(0.14, 0.30, 0.10);
+        frontTress.rotation.set(0.3, -0.2, -0.2);
+        charA.add(frontTress);
+      } else if (hairStyleA === 'ponytail') {
+        const ponyGeo = new THREE.CylinderGeometry(0.05, 0.03, 0.42, 12);
+        const ponyMesh = new THREE.Mesh(ponyGeo, hairMatA);
+        ponyMesh.position.set(0, 0.50, -0.24);
+        ponyMesh.rotation.set(-0.45, 0, 0);
+        charA.add(ponyMesh);
+
+        const tieMesh = new THREE.Mesh(new THREE.TorusGeometry(0.04, 0.012, 8, 16), laceMatA);
+        tieMesh.position.set(0, 0.58, -0.16);
+        charA.add(tieMesh);
+      } else if (hairStyleA === 'bob') {
+        const bobGeo = new THREE.CylinderGeometry(0.05, 0.055, 0.24, 12);
+        const bobL = new THREE.Mesh(bobGeo, hairMatA);
+        bobL.position.set(-0.15, 0.42, 0.0);
+        charA.add(bobL);
+        const bobR = new THREE.Mesh(bobGeo, hairMatA);
+        bobR.position.set(0.15, 0.42, 0.0);
+        charA.add(bobR);
+      }
 
       // Neck
       const neckA = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.075, 0.13, 16), skinMatA);
@@ -4928,6 +4990,9 @@
       if (savedCustomGLB) {
         loadCustomCoupleGLB(savedCustomGLB, false);
       }
+
+      // Initialize Land of Desire character blueprint customizer UI
+      renderBlueprintEditorUI();
 
       // Romantic Passion Aura Swirl around Couple
       const passionGeom = new THREE.BufferGeometry();
