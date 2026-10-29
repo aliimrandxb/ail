@@ -836,17 +836,17 @@
           </button>
         </div>
 
-        <!-- SNAPCHAT 3D BITMOJI COUPLE AVATAR SYSTEM -->
+        <!-- LIVING 3D COUPLE AVATAR & CUSTOMIZATION -->
         <div class="bg-black/40 border border-yellow-500/40 rounded-2xl p-3.5 space-y-3 shadow-lg">
           <div class="font-bold text-yellow-300 flex items-center justify-between">
             <span class="flex items-center gap-2">
-              <span class="text-base">👻</span>
-              <span>Snapchat 3D Bitmoji Characters</span>
+              <span class="text-base">✨</span>
+              <span>Living 3D Couple (A & I)</span>
             </span>
-            <span class="text-[9px] text-yellow-400 bg-yellow-950/70 border border-yellow-500/30 px-2 py-0.5 rounded-full font-mono">Snap Style</span>
+            <span class="text-[9px] text-emerald-400 bg-emerald-950/70 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">Active on Bed</span>
           </div>
           <p class="text-[11px] text-slate-300 leading-relaxed">
-            Cute, expressive 3D Bitmoji couple in bed! Upload any Friendmoji sticker from your Snapchat or tap a quick scene preset.
+            Living 3D couple with real-time breathing, periodic blinking, and intimate embrace animations sits on your bed by default — zero upload required! (Optional: upload custom stickers or 3D models below).
           </p>
           
           <!-- Quick Pose Presets -->
@@ -2855,22 +2855,30 @@
     }
 
     // -------------------------------------------------------------
-    // LIGHTWEIGHT 360° IMAGE-BASED LIVING COUPLE AVATAR SYSTEM
+    // LIVING 3D STYLIZED COUPLE (A & I) & AVATAR SYSTEM
     // -------------------------------------------------------------
+    let coupleGroup, coupleBillboardMesh, coupleShadowMesh, coupleCanvas, coupleCtx, coupleTexture;
+    let currentCouplePose = 'cuddle';
+    let charI = null, charA = null, livingCoupleMeshGroup = null, passionParticles, isIntimacyAnimating = false;
+    let faceTexI_open = null, faceTexI_closed = null, faceTexA_open = null, faceTexA_closed = null;
     let customCoupleAvatarDataUrl = localStorage.getItem('sanctuary_couple_custom_avatar') || null;
 
     function setCustomCoupleAvatar(dataUrl, broadcast = true) {
       customCoupleAvatarDataUrl = dataUrl;
       if (dataUrl) {
         localStorage.setItem('sanctuary_couple_custom_avatar', dataUrl);
+        if (livingCoupleMeshGroup) livingCoupleMeshGroup.visible = false;
+        if (coupleBillboardMesh) coupleBillboardMesh.visible = true;
       } else {
         localStorage.removeItem('sanctuary_couple_custom_avatar');
+        if (livingCoupleMeshGroup) livingCoupleMeshGroup.visible = true;
+        if (coupleBillboardMesh) coupleBillboardMesh.visible = false;
       }
       updateCoupleBillboardTexture(currentCouplePose || 'cuddle');
       if (broadcast && dataUrl) {
         sendPayload({ type: 'couple_avatar_sync', dataUrl });
       }
-      showTelepathyBanner(dataUrl ? '✨ Couple 3D Avatar Updated!' : '🔄 Reset to romantic art avatar');
+      showTelepathyBanner(dataUrl ? '✨ Custom Couple Avatar Applied!' : '🔄 Restored Living 3D Couple (A & I)');
     }
 
     function handleCoupleAvatarUpload(input) {
@@ -2884,7 +2892,16 @@
     }
 
     function resetCoupleAvatarToDefault() {
-      setCustomCoupleAvatar(null, true);
+      localStorage.removeItem('sanctuary_couple_custom_avatar');
+      localStorage.removeItem('sanctuary_custom_glb_url');
+      customCoupleAvatarDataUrl = null;
+      if (coupleGLTFModel && coupleGroup) {
+        coupleGroup.remove(coupleGLTFModel);
+        coupleGLTFModel = null;
+      }
+      if (livingCoupleMeshGroup) livingCoupleMeshGroup.visible = true;
+      if (coupleBillboardMesh) coupleBillboardMesh.visible = false;
+      showTelepathyBanner('✨ Reset to Living 3D Couple (A & I)');
     }
 
     // -------------------------------------------------------------
@@ -2903,7 +2920,8 @@
 
       gltfLoader.load(sourceUrl, (gltf) => {
         if (!coupleGroup) return;
-        // Hide 2D billboard cutout
+        // Hide procedural 3D characters and billboard
+        if (livingCoupleMeshGroup) livingCoupleMeshGroup.visible = false;
         if (coupleBillboardMesh) coupleBillboardMesh.visible = false;
         if (coupleGLTFModel) coupleGroup.remove(coupleGLTFModel);
 
@@ -2968,11 +2986,15 @@
         coupleGroup.remove(coupleGLTFModel);
         coupleGLTFModel = null;
       }
-      if (coupleBillboardMesh) {
-        coupleBillboardMesh.visible = true;
+      if (customCoupleAvatarDataUrl) {
+        if (coupleBillboardMesh) coupleBillboardMesh.visible = true;
+        if (livingCoupleMeshGroup) livingCoupleMeshGroup.visible = false;
+      } else {
+        if (livingCoupleMeshGroup) livingCoupleMeshGroup.visible = true;
+        if (coupleBillboardMesh) coupleBillboardMesh.visible = false;
       }
       localStorage.removeItem('sanctuary_custom_glb_url');
-      showTelepathyBanner('🔄 Switched to 360° Image Cutout');
+      showTelepathyBanner('🔄 Switched to Living 3D Couple (A & I)');
     }
 
     function setBitmojiScenePreset(sceneKey) {
@@ -3412,6 +3434,586 @@
       if (coupleTexture) coupleTexture.needsUpdate = true;
     }
 
+    // -------------------------------------------------------------
+    // LIVING 3D STYLIZED COUPLE (A & I) MESH BUILDER & FACE TEXTURES
+    // -------------------------------------------------------------
+    function createFaceTexture(isGirl, isBlinking) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 256;
+      canvas.height = 256;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, 256, 256);
+
+      if (!isGirl) {
+        // Partner I (Guy) - Handsome, warm, stylish facial features
+        // Eyebrows
+        ctx.strokeStyle = '#231812';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(60, 92);
+        ctx.quadraticCurveTo(88, 83, 114, 90);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(142, 90);
+        ctx.quadraticCurveTo(168, 83, 196, 92);
+        ctx.stroke();
+
+        if (!isBlinking) {
+          // Almond handsome dark eyes
+          const eyeL = ctx.createRadialGradient(88, 126, 2, 88, 126, 16);
+          eyeL.addColorStop(0, '#1c1917');
+          eyeL.addColorStop(0.7, '#292524');
+          eyeL.addColorStop(1, '#0c0a09');
+          ctx.fillStyle = eyeL;
+          ctx.beginPath();
+          ctx.ellipse(88, 126, 15, 17, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          const eyeR = ctx.createRadialGradient(168, 126, 2, 168, 126, 16);
+          eyeR.addColorStop(0, '#1c1917');
+          eyeR.addColorStop(0.7, '#292524');
+          eyeR.addColorStop(1, '#0c0a09');
+          ctx.fillStyle = eyeR;
+          ctx.beginPath();
+          ctx.ellipse(168, 126, 15, 17, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Upper eyelid line
+          ctx.strokeStyle = '#09090b';
+          ctx.lineWidth = 3.5;
+          ctx.beginPath();
+          ctx.moveTo(68, 122);
+          ctx.quadraticCurveTo(88, 112, 108, 123);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(148, 123);
+          ctx.quadraticCurveTo(168, 112, 188, 122);
+          ctx.stroke();
+
+          // Catchlight sparkle
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(84, 121, 4.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(93, 131, 2.2, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(164, 121, 4.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(173, 131, 2.2, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          // Closed smiling eyelids
+          ctx.strokeStyle = '#18181b';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.arc(88, 122, 16, Math.PI * 0.15, Math.PI * 0.85);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(168, 122, 16, Math.PI * 0.15, Math.PI * 0.85);
+          ctx.stroke();
+        }
+
+        // Subtle nose shadow
+        ctx.strokeStyle = 'rgba(168, 85, 50, 0.45)';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(128, 138);
+        ctx.lineTo(125, 150);
+        ctx.lineTo(131, 150);
+        ctx.stroke();
+
+        // Soft blush
+        const bGradL = ctx.createRadialGradient(72, 146, 1, 72, 146, 20);
+        bGradL.addColorStop(0, 'rgba(239, 68, 68, 0.28)');
+        bGradL.addColorStop(1, 'rgba(239, 68, 68, 0)');
+        ctx.fillStyle = bGradL;
+        ctx.beginPath();
+        ctx.arc(72, 146, 20, 0, Math.PI * 2);
+        ctx.fill();
+
+        const bGradR = ctx.createRadialGradient(184, 146, 1, 184, 146, 20);
+        bGradR.addColorStop(0, 'rgba(239, 68, 68, 0.28)');
+        bGradR.addColorStop(1, 'rgba(239, 68, 68, 0)');
+        ctx.fillStyle = bGradR;
+        ctx.beginPath();
+        ctx.arc(184, 146, 20, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Loving smile
+        ctx.strokeStyle = '#b91c1c';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.arc(128, 166, 18, Math.PI * 0.18, Math.PI * 0.82);
+        ctx.stroke();
+      } else {
+        // Partner A (Girl) - Beautiful, expressive, romantic
+        // Soft elegant eyebrows
+        ctx.strokeStyle = '#32190e';
+        ctx.lineWidth = 3.5;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(60, 94);
+        ctx.quadraticCurveTo(86, 80, 110, 88);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(146, 88);
+        ctx.quadraticCurveTo(170, 80, 196, 94);
+        ctx.stroke();
+
+        if (!isBlinking) {
+          // Eyeshadow soft rose hue
+          const shadowGradL = ctx.createRadialGradient(86, 122, 2, 86, 122, 22);
+          shadowGradL.addColorStop(0, 'rgba(244, 63, 94, 0.35)');
+          shadowGradL.addColorStop(1, 'rgba(244, 63, 94, 0)');
+          ctx.fillStyle = shadowGradL;
+          ctx.beginPath();
+          ctx.arc(86, 120, 22, 0, Math.PI * 2);
+          ctx.fill();
+
+          const shadowGradR = ctx.createRadialGradient(170, 122, 2, 170, 122, 22);
+          shadowGradR.addColorStop(0, 'rgba(244, 63, 94, 0.35)');
+          shadowGradR.addColorStop(1, 'rgba(244, 63, 94, 0)');
+          ctx.fillStyle = shadowGradR;
+          ctx.beginPath();
+          ctx.arc(170, 120, 22, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Irises with romantic amber-espresso gradient
+          const irisL = ctx.createRadialGradient(86, 128, 2, 86, 128, 18);
+          irisL.addColorStop(0, '#78350f');
+          irisL.addColorStop(0.65, '#291e16');
+          irisL.addColorStop(1, '#0c0a09');
+          ctx.fillStyle = irisL;
+          ctx.beginPath();
+          ctx.ellipse(86, 126, 17, 20, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          const irisR = ctx.createRadialGradient(170, 128, 2, 170, 128, 18);
+          irisR.addColorStop(0, '#78350f');
+          irisR.addColorStop(0.65, '#291e16');
+          irisR.addColorStop(1, '#0c0a09');
+          ctx.fillStyle = irisR;
+          ctx.beginPath();
+          ctx.ellipse(170, 126, 17, 20, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Winged upper lash line
+          ctx.strokeStyle = '#09090b';
+          ctx.lineWidth = 4.5;
+          ctx.beginPath();
+          ctx.moveTo(64, 125);
+          ctx.quadraticCurveTo(84, 110, 107, 122);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(66, 123);
+          ctx.lineTo(58, 117);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(149, 122);
+          ctx.quadraticCurveTo(172, 110, 192, 125);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(190, 123);
+          ctx.lineTo(198, 117);
+          ctx.stroke();
+
+          // Specular highlights
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(80, 118, 5.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(92, 131, 3.0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(80, 133, 1.8, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(164, 118, 5.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(176, 131, 3.0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(164, 133, 1.8, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          // Closed fluttery eyelashes
+          ctx.strokeStyle = '#09090b';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.arc(86, 122, 17, Math.PI * 0.15, Math.PI * 0.85);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(74, 133); ctx.lineTo(70, 140);
+          ctx.moveTo(86, 138); ctx.lineTo(86, 145);
+          ctx.moveTo(98, 133); ctx.lineTo(102, 140);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(170, 122, 17, Math.PI * 0.15, Math.PI * 0.85);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(158, 133); ctx.lineTo(154, 140);
+          ctx.moveTo(170, 138); ctx.lineTo(170, 145);
+          ctx.moveTo(182, 133); ctx.lineTo(186, 140);
+          ctx.stroke();
+        }
+
+        // Cute button nose
+        ctx.fillStyle = 'rgba(225, 29, 72, 0.4)';
+        ctx.beginPath();
+        ctx.ellipse(128, 146, 3, 2, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Rosy blushing cheeks
+        const blushL = ctx.createRadialGradient(68, 146, 2, 68, 146, 24);
+        blushL.addColorStop(0, 'rgba(244, 63, 94, 0.55)');
+        blushL.addColorStop(0.6, 'rgba(251, 113, 133, 0.3)');
+        blushL.addColorStop(1, 'rgba(251, 113, 133, 0)');
+        ctx.fillStyle = blushL;
+        ctx.beginPath();
+        ctx.arc(68, 146, 24, 0, Math.PI * 2);
+        ctx.fill();
+
+        const blushR = ctx.createRadialGradient(188, 146, 2, 188, 146, 24);
+        blushR.addColorStop(0, 'rgba(244, 63, 94, 0.55)');
+        blushR.addColorStop(0.6, 'rgba(251, 113, 133, 0.3)');
+        blushR.addColorStop(1, 'rgba(251, 113, 133, 0)');
+        ctx.fillStyle = blushR;
+        ctx.beginPath();
+        ctx.arc(188, 146, 24, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Sweet smiling lips with gloss highlight
+        ctx.fillStyle = '#e11d48';
+        ctx.beginPath();
+        ctx.ellipse(128, 168, 12, 6, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#be123c';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(128, 164, 14, Math.PI * 0.15, Math.PI * 0.85);
+        ctx.stroke();
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+        ctx.beginPath();
+        ctx.arc(126, 167, 2.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      const tex = new THREE.CanvasTexture(canvas);
+      if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+      tex.needsUpdate = true;
+      return tex;
+    }
+
+    function buildLivingCouple3D(parentGroup) {
+      if (!parentGroup) return null;
+      if (livingCoupleMeshGroup) {
+        parentGroup.remove(livingCoupleMeshGroup);
+      }
+      livingCoupleMeshGroup = new THREE.Group();
+      livingCoupleMeshGroup.name = 'livingCouple3D';
+
+      // Generate facial expression textures
+      faceTexI_open = createFaceTexture(false, false);
+      faceTexI_closed = createFaceTexture(false, true);
+      faceTexA_open = createFaceTexture(true, false);
+      faceTexA_closed = createFaceTexture(true, true);
+
+      // Stylized Materials
+      const skinMatI = new THREE.MeshStandardMaterial({ color: 0xefc4a4, roughness: 0.65, metalness: 0.05 });
+      const skinMatA = new THREE.MeshStandardMaterial({ color: 0xffdfd0, roughness: 0.55, metalness: 0.05 });
+      const hairMatI = new THREE.MeshStandardMaterial({ color: 0x1b130e, roughness: 0.75, metalness: 0.1 });
+      const hairMatA = new THREE.MeshStandardMaterial({ color: 0x27160e, roughness: 0.55, metalness: 0.18 });
+      const shirtMatI = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.85 }); // Midnight loungewear
+      const pantsMatI = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.9 });
+      const dressMatA = new THREE.MeshStandardMaterial({ color: 0xf43f5e, roughness: 0.35, metalness: 0.22 }); // Rose silk
+      const laceMatA = new THREE.MeshStandardMaterial({ color: 0xffe4e6, roughness: 0.5 });
+      const blanketMat = new THREE.MeshStandardMaterial({ color: 0x831843, roughness: 0.55 }); // Bed duvet fold
+
+      // ==========================================
+      // 1. PARTNER I (Guy - Left)
+      // ==========================================
+      charI = new THREE.Group();
+      charI.name = 'partnerI';
+      charI.position.set(-0.28, 0.0, 0.0);
+      charI.rotation.set(-0.10, 0.22, -0.04);
+
+      // Head
+      const headGeoI = new THREE.SphereGeometry(0.18, 28, 24);
+      headGeoI.scale(1.0, 1.08, 1.0);
+      const headMeshI = new THREE.Mesh(headGeoI, skinMatI);
+      headMeshI.position.set(0, 0.58, 0);
+      charI.add(headMeshI);
+      charI.headMesh = headMeshI;
+
+      // Face Decal Plane
+      const faceDecalGeoI = new THREE.PlaneGeometry(0.22, 0.22);
+      const faceDecalMatI = new THREE.MeshBasicMaterial({
+        map: faceTexI_open,
+        transparent: true,
+        depthWrite: false
+      });
+      const faceMeshI = new THREE.Mesh(faceDecalGeoI, faceDecalMatI);
+      faceMeshI.position.set(0, 0.015, 0.174);
+      headMeshI.add(faceMeshI);
+      charI.faceMesh = faceMeshI;
+
+      // Ears
+      const earGeo = new THREE.SphereGeometry(0.045, 12, 12);
+      earGeo.scale(0.5, 1.0, 0.8);
+      const earMeshIL = new THREE.Mesh(earGeo, skinMatI);
+      earMeshIL.position.set(-0.18, 0.0, 0);
+      headMeshI.add(earMeshIL);
+      const earMeshIR = new THREE.Mesh(earGeo, skinMatI);
+      earMeshIR.position.set(0.18, 0.0, 0);
+      headMeshI.add(earMeshIR);
+
+      // Sculpted 3D Hair (Modern styled quiff & fade)
+      const hairCrownI = new THREE.Mesh(new THREE.SphereGeometry(0.188, 24, 20), hairMatI);
+      hairCrownI.position.set(0, 0.05, -0.02);
+      hairCrownI.scale.set(1.03, 1.06, 1.08);
+      headMeshI.add(hairCrownI);
+
+      const tuftGeo = new THREE.ConeGeometry(0.09, 0.18, 12);
+      tuftGeo.rotateX(Math.PI * 0.4);
+      const tuft1 = new THREE.Mesh(tuftGeo, hairMatI);
+      tuft1.position.set(0.02, 0.15, 0.11);
+      tuft1.rotation.set(-0.2, 0.2, -0.15);
+      headMeshI.add(tuft1);
+
+      const tuft2 = new THREE.Mesh(tuftGeo, hairMatI);
+      tuft2.position.set(-0.06, 0.13, 0.10);
+      tuft2.rotation.set(-0.15, -0.1, 0.1);
+      headMeshI.add(tuft2);
+
+      // Neck
+      const neckI = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.09, 0.14, 16), skinMatI);
+      neckI.position.set(0, 0.44, 0);
+      charI.add(neckI);
+
+      // Torso / Loungewear Shirt
+      const chestGeoI = new THREE.CylinderGeometry(0.18, 0.19, 0.38, 20);
+      const chestMeshI = new THREE.Mesh(chestGeoI, shirtMatI);
+      chestMeshI.position.set(0, 0.22, 0);
+      charI.add(chestMeshI);
+      charI.chestMesh = chestMeshI;
+
+      // Shoulders
+      const shoulderGeoI = new THREE.SphereGeometry(0.095, 16, 16);
+      const shoulderL_I = new THREE.Mesh(shoulderGeoI, shirtMatI);
+      shoulderL_I.position.set(-0.22, 0.35, 0);
+      charI.add(shoulderL_I);
+
+      const shoulderR_I = new THREE.Mesh(shoulderGeoI, shirtMatI);
+      shoulderR_I.position.set(0.22, 0.35, 0);
+      charI.add(shoulderR_I);
+
+      // Left Arm (Relaxed)
+      const armGeoI = new THREE.CylinderGeometry(0.06, 0.055, 0.28, 12);
+      const armL_I = new THREE.Mesh(armGeoI, shirtMatI);
+      armL_I.position.set(-0.25, 0.18, 0.02);
+      armL_I.rotation.set(0.2, 0, 0.35);
+      charI.add(armL_I);
+      const handL_I = new THREE.Mesh(new THREE.SphereGeometry(0.05, 12, 12), skinMatI);
+      handL_I.position.set(-0.31, 0.03, 0.08);
+      charI.add(handL_I);
+
+      // Right Arm (Wrapped affectionately around Partner A)
+      const armR_I = new THREE.Mesh(armGeoI, shirtMatI);
+      armR_I.position.set(0.25, 0.21, 0.08);
+      armR_I.rotation.set(0.4, 0.3, -0.6);
+      charI.add(armR_I);
+      const forearmR_I = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.045, 0.24, 12), skinMatI);
+      forearmR_I.position.set(0.38, 0.16, 0.22);
+      forearmR_I.rotation.set(0.2, -0.8, -0.3);
+      charI.add(forearmR_I);
+      const handR_I = new THREE.Mesh(new THREE.SphereGeometry(0.048, 12, 12), skinMatI);
+      handR_I.position.set(0.48, 0.15, 0.29);
+      charI.add(handR_I);
+
+      // Loungewear Pants & Legs
+      const legGeoI = new THREE.CylinderGeometry(0.09, 0.08, 0.42, 14);
+      const legL_I = new THREE.Mesh(legGeoI, pantsMatI);
+      legL_I.position.set(-0.11, -0.05, 0.18);
+      legL_I.rotation.set(1.15, -0.2, 0.1);
+      charI.add(legL_I);
+
+      const legR_I = new THREE.Mesh(legGeoI, pantsMatI);
+      legR_I.position.set(0.10, -0.05, 0.18);
+      legR_I.rotation.set(1.15, 0.2, -0.1);
+      charI.add(legR_I);
+
+      livingCoupleMeshGroup.add(charI);
+
+      // ==========================================
+      // 2. PARTNER A (Girl - Right)
+      // ==========================================
+      charA = new THREE.Group();
+      charA.name = 'partnerA';
+      charA.position.set(0.28, -0.03, 0.06);
+      charA.rotation.set(-0.08, -0.32, -0.08);
+
+      // Head
+      const headGeoA = new THREE.SphereGeometry(0.165, 28, 24);
+      headGeoA.scale(1.0, 1.05, 1.0);
+      const headMeshA = new THREE.Mesh(headGeoA, skinMatA);
+      headMeshA.position.set(0, 0.54, 0);
+      charA.add(headMeshA);
+      charA.headMesh = headMeshA;
+
+      // Face Decal Plane
+      const faceDecalGeoA = new THREE.PlaneGeometry(0.20, 0.20);
+      const faceDecalMatA = new THREE.MeshBasicMaterial({
+        map: faceTexA_open,
+        transparent: true,
+        depthWrite: false
+      });
+      const faceMeshA = new THREE.Mesh(faceDecalGeoA, faceDecalMatA);
+      faceMeshA.position.set(0, 0.015, 0.160);
+      headMeshA.add(faceMeshA);
+      charA.faceMesh = faceMeshA;
+
+      // Ears
+      const earMeshAL = new THREE.Mesh(earGeo, skinMatA);
+      earMeshAL.position.set(-0.165, 0.0, 0);
+      headMeshA.add(earMeshAL);
+      const earMeshAR = new THREE.Mesh(earGeo, skinMatA);
+      earMeshAR.position.set(0.165, 0.0, 0);
+      headMeshA.add(earMeshAR);
+
+      // Sculpted 3D Hair (Long, silky chestnut locks)
+      const hairCrownA = new THREE.Mesh(new THREE.SphereGeometry(0.174, 26, 22), hairMatA);
+      hairCrownA.position.set(0, 0.04, -0.025);
+      hairCrownA.scale.set(1.05, 1.08, 1.10);
+      headMeshA.add(hairCrownA);
+
+      // Soft bangs framing face
+      const bangGeo = new THREE.CylinderGeometry(0.025, 0.015, 0.18, 12);
+      const bangL = new THREE.Mesh(bangGeo, hairMatA);
+      bangL.position.set(-0.11, -0.05, 0.13);
+      bangL.rotation.set(0.2, 0.2, 0.35);
+      headMeshA.add(bangL);
+
+      const bangR = new THREE.Mesh(bangGeo, hairMatA);
+      bangR.position.set(0.11, -0.05, 0.13);
+      bangR.rotation.set(0.2, -0.2, -0.35);
+      headMeshA.add(bangR);
+
+      // Hair accessory
+      const hairclip = new THREE.Mesh(new THREE.SphereGeometry(0.022, 10, 10), new THREE.MeshStandardMaterial({ color: 0xf43f5e, roughness: 0.2, emissive: 0x9f1239, emissiveIntensity: 0.4 }));
+      hairclip.position.set(-0.15, 0.10, 0.08);
+      headMeshA.add(hairclip);
+
+      // Cascading long locks down shoulders & back
+      const hairLockGeo = new THREE.CylinderGeometry(0.045, 0.065, 0.48, 14);
+      const lockLeft = new THREE.Mesh(hairLockGeo, hairMatA);
+      lockLeft.position.set(-0.15, 0.28, -0.08);
+      lockLeft.rotation.set(0.15, 0.1, 0.35);
+      charA.add(lockLeft);
+
+      const lockRight = new THREE.Mesh(hairLockGeo, hairMatA);
+      lockRight.position.set(0.15, 0.28, -0.08);
+      lockRight.rotation.set(0.15, -0.1, -0.35);
+      charA.add(lockRight);
+
+      const lockBack = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.11, 0.52, 14), hairMatA);
+      lockBack.position.set(0.0, 0.26, -0.14);
+      lockBack.rotation.set(-0.18, 0, 0);
+      charA.add(lockBack);
+
+      const frontTress = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.02, 0.32, 12), hairMatA);
+      frontTress.position.set(0.14, 0.30, 0.10);
+      frontTress.rotation.set(0.3, -0.2, -0.2);
+      charA.add(frontTress);
+
+      // Neck
+      const neckA = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.075, 0.13, 16), skinMatA);
+      neckA.position.set(0, 0.41, 0);
+      charA.add(neckA);
+
+      // Torso / Rose Silk Camisole Nightdress
+      const chestGeoA = new THREE.CylinderGeometry(0.14, 0.17, 0.35, 20);
+      const chestMeshA = new THREE.Mesh(chestGeoA, dressMatA);
+      chestMeshA.position.set(0, 0.20, 0);
+      charA.add(chestMeshA);
+      charA.chestMesh = chestMeshA;
+
+      // Lace Trim around neckline
+      const laceTrim = new THREE.Mesh(new THREE.TorusGeometry(0.142, 0.015, 10, 24), laceMatA);
+      laceTrim.position.set(0, 0.37, 0);
+      laceTrim.rotation.x = Math.PI / 2;
+      charA.add(laceTrim);
+
+      // Shoulders
+      const shoulderGeoA = new THREE.SphereGeometry(0.075, 16, 16);
+      const shoulderL_A = new THREE.Mesh(shoulderGeoA, skinMatA);
+      shoulderL_A.position.set(-0.17, 0.33, 0);
+      charA.add(shoulderL_A);
+
+      const shoulderR_A = new THREE.Mesh(shoulderGeoA, skinMatA);
+      shoulderR_A.position.set(0.17, 0.33, 0);
+      charA.add(shoulderR_A);
+
+      // Left Arm (Reaching lovingly onto Partner I's chest)
+      const armGeoA = new THREE.CylinderGeometry(0.045, 0.04, 0.25, 12);
+      const armL_A = new THREE.Mesh(armGeoA, skinMatA);
+      armL_A.position.set(-0.22, 0.22, 0.12);
+      armL_A.rotation.set(0.5, 0.4, 0.7);
+      charA.add(armL_A);
+      const handL_A = new THREE.Mesh(new THREE.SphereGeometry(0.04, 12, 12), skinMatA);
+      handL_A.position.set(-0.34, 0.16, 0.22);
+      charA.add(handL_A);
+
+      // Right Arm (Nestled softly beside her)
+      const armR_A = new THREE.Mesh(armGeoA, skinMatA);
+      armR_A.position.set(0.20, 0.18, 0.02);
+      armR_A.rotation.set(0.2, -0.1, -0.4);
+      charA.add(armR_A);
+      const handR_A = new THREE.Mesh(new THREE.SphereGeometry(0.04, 12, 12), skinMatA);
+      handR_A.position.set(0.27, 0.04, 0.08);
+      charA.add(handR_A);
+
+      // Legs in silk nightwear
+      const legGeoA = new THREE.CylinderGeometry(0.075, 0.065, 0.38, 14);
+      const legL_A = new THREE.Mesh(legGeoA, skinMatA);
+      legL_A.position.set(-0.07, -0.05, 0.16);
+      legL_A.rotation.set(1.1, -0.3, 0.2);
+      charA.add(legL_A);
+
+      const legR_A = new THREE.Mesh(legGeoA, skinMatA);
+      legR_A.position.set(0.09, -0.05, 0.16);
+      legR_A.rotation.set(1.15, 0.1, -0.1);
+      charA.add(legR_A);
+
+      livingCoupleMeshGroup.add(charA);
+
+      // ==========================================
+      // 3. COZY SILK DUVET / BLANKET FOLD ON LAPS
+      // ==========================================
+      const blanketFold = new THREE.Mesh(new THREE.CylinderGeometry(0.44, 0.48, 0.22, 20), blanketMat);
+      blanketFold.scale.set(1.4, 0.65, 0.9);
+      blanketFold.position.set(0.0, -0.02, 0.18);
+      livingCoupleMeshGroup.add(blanketFold);
+
+      parentGroup.add(livingCoupleMeshGroup);
+      return livingCoupleMeshGroup;
+    }
+
     function triggerIntimateBedEncounter(key) {
       if (isIntimacyAnimating) return; // prevent stacking
       isIntimacyAnimating = true;
@@ -3501,9 +4103,65 @@
         }, holdTime);
       }
 
-      // 3. Update character pose on 360 image-based billboard & animate pulse
+      // 3. Intimate 3D living character lean-in & embrace animation
       updateCoupleBillboardTexture(key);
-      if (coupleBillboardMesh) {
+      if (charI && charA) {
+        const startPosI = { x: -0.28, z: 0.0, rotY: 0.22, rotZ: -0.04 };
+        const startPosA = { x: 0.28, z: 0.06, rotY: -0.32, rotZ: -0.08 };
+        
+        // Target intimate embrace positions
+        const targetPosI = { x: -0.13, z: 0.04, rotY: 0.52, rotZ: 0.08 };
+        const targetPosA = { x: 0.11, z: 0.08, rotY: -0.56, rotZ: -0.16 };
+        
+        const animStart = performance.now();
+        const leanInDur = 1100;
+        
+        function animateEmbraceIn() {
+          const elapsed = performance.now() - animStart;
+          const p = Math.min(elapsed / leanInDur, 1);
+          const ease = 1 - Math.pow(1 - p, 3); // cubic ease out
+          
+          charI.position.x = startPosI.x + (targetPosI.x - startPosI.x) * ease;
+          charI.position.z = startPosI.z + (targetPosI.z - startPosI.z) * ease;
+          charI.rotation.y = startPosI.rotY + (targetPosI.rotY - startPosI.rotY) * ease;
+          charI.rotation.z = startPosI.rotZ + (targetPosI.rotZ - startPosI.rotZ) * ease;
+
+          charA.position.x = startPosA.x + (targetPosA.x - startPosA.x) * ease;
+          charA.position.z = startPosA.z + (targetPosA.z - startPosA.z) * ease;
+          charA.rotation.y = startPosA.rotY + (targetPosA.rotY - startPosA.rotY) * ease;
+          charA.rotation.z = startPosA.rotZ + (targetPosA.rotZ - startPosA.rotZ) * ease;
+          
+          if (p < 1) requestAnimationFrame(animateEmbraceIn);
+        }
+        animateEmbraceIn();
+        
+        // Release back to gentle cuddle after hold
+        setTimeout(() => {
+          const relStart = performance.now();
+          const relDur = 1400;
+          function animateEmbraceOut() {
+            const elapsed = performance.now() - relStart;
+            const p = Math.min(elapsed / relDur, 1);
+            const ease = p * p * (3 - 2 * p); // smooth step
+            
+            charI.position.x = targetPosI.x + (startPosI.x - targetPosI.x) * ease;
+            charI.position.z = targetPosI.z + (startPosI.z - targetPosI.z) * ease;
+            charI.rotation.y = targetPosI.rotY + (startPosI.rotY - targetPosI.rotY) * ease;
+            charI.rotation.z = targetPosI.rotZ + (startPosI.rotZ - targetPosI.rotZ) * ease;
+
+            charA.position.x = targetPosA.x + (startPosA.x - targetPosA.x) * ease;
+            charA.position.z = targetPosA.z + (startPosA.z - targetPosA.z) * ease;
+            charA.rotation.y = targetPosA.rotY + (startPosA.rotY - targetPosA.rotY) * ease;
+            charA.rotation.z = targetPosA.rotZ + (startPosA.rotZ - targetPosA.rotZ) * ease;
+
+            if (p < 1) requestAnimationFrame(animateEmbraceOut);
+          }
+          animateEmbraceOut();
+        }, pose.dur - 1600);
+      }
+
+      // Billboard scale pulse if custom photo cutout active
+      if (coupleBillboardMesh && coupleBillboardMesh.visible) {
         const startScale = 1.0;
         const targetScale = pose.scale || 1.12;
         const animStart = performance.now();
@@ -3997,9 +4655,6 @@
     // -------------------------------------------------------------
     let scene, camera, renderer, controls, candleLight, bedGlowLight, pointLight1, pointLight2, tvScreenMesh, threeInitialized = false;
     let cssScene, css3dRenderer, cssTvObject;
-    let coupleGroup, coupleBillboardMesh, coupleShadowMesh, coupleCanvas, coupleCtx, coupleTexture;
-    let currentCouplePose = 'cuddle';
-    let charI = null, charA = null, passionParticles, isIntimacyAnimating = false;
     let wallPhotoIndex = 0;
     let wallSlideshowTimer = null;
 
@@ -4226,7 +4881,16 @@
       });
       coupleBillboardMesh = new THREE.Mesh(billboardGeo, billboardMat);
       coupleBillboardMesh.position.y = 0.68;
+      coupleBillboardMesh.visible = false; // Hidden by default in favor of true 3D living characters
       coupleGroup.add(coupleBillboardMesh);
+
+      // Build Living 3D Stylized Couple (A & I) on Bed
+      buildLivingCouple3D(coupleGroup);
+
+      if (customCoupleAvatarDataUrl) {
+        if (livingCoupleMeshGroup) livingCoupleMeshGroup.visible = false;
+        coupleBillboardMesh.visible = true;
+      }
       roomGroup.add(coupleGroup);
 
       // Auto-load custom GLB model if previously saved
@@ -4344,7 +5008,7 @@
         mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
         raycaster.setFromCamera(mouse, camera);
 
-        const clickable = [tvScreenMesh, wallPhotoMesh, ...bedInteractiveMeshes, coupleBillboardMesh, coupleGroup];
+        const clickable = [tvScreenMesh, wallPhotoMesh, ...bedInteractiveMeshes, livingCoupleMeshGroup, coupleBillboardMesh, coupleGroup];
         const intersects = raycaster.intersectObjects(clickable, true);
         if (intersects.length > 0) {
           const hit = intersects[0].object;
@@ -4358,7 +5022,7 @@
             let isCoupleOrBed = false;
             let curr = hit;
             while (curr && curr !== scene) {
-              if (curr === coupleBillboardMesh || curr === coupleGroup || curr === coupleGLTFModel || bedInteractiveMeshes.includes(curr)) {
+              if (curr === livingCoupleMeshGroup || curr === coupleBillboardMesh || curr === coupleGroup || curr === coupleGLTFModel || bedInteractiveMeshes.includes(curr)) {
                 isCoupleOrBed = true;
                 break;
               }
@@ -4386,15 +5050,42 @@
           bedGlowLight.intensity = 1.4 + Math.sin(t * 1.8) * 0.45;
         }
 
-        // 360° Cylindrical billboarding: couple smoothly tracks camera from all 360° viewing angles
-        if (coupleBillboardMesh && camera && coupleGroup) {
+        // Living breathing and gentle sway for 3D couple (A & I)
+        if (charI && charA && !isIntimacyAnimating) {
+          const breath = Math.sin(t * 2.0) * 0.007;
+          charI.position.y = 0.0 + breath;
+          charA.position.y = -0.03 + Math.sin(t * 2.0 - 0.25) * 0.007;
+          if (charI.chestMesh) charI.chestMesh.scale.x = 1.0 + Math.sin(t * 2.0) * 0.012;
+          if (charA.chestMesh) charA.chestMesh.scale.x = 1.0 + Math.sin(t * 2.0 - 0.25) * 0.015;
+        }
+
+        // Natural eye blinking loop (every 3.6s, blinks for 130ms)
+        const blinkPhase = t % 3.6;
+        const isBlink = blinkPhase < 0.13;
+        if (charI && charI.faceMesh && faceTexI_open && faceTexI_closed) {
+          const targetI = isBlink ? faceTexI_closed : faceTexI_open;
+          if (charI.faceMesh.material.map !== targetI) {
+            charI.faceMesh.material.map = targetI;
+            charI.faceMesh.material.needsUpdate = true;
+          }
+        }
+        if (charA && charA.faceMesh && faceTexA_open && faceTexA_closed) {
+          const targetA = isBlink ? faceTexA_closed : faceTexA_open;
+          if (charA.faceMesh.material.map !== targetA) {
+            charA.faceMesh.material.map = targetA;
+            charA.faceMesh.material.needsUpdate = true;
+          }
+        }
+
+        // 360° Cylindrical billboarding: couple smoothly tracks camera from all 360° viewing angles (if custom photo active)
+        if (coupleBillboardMesh && coupleBillboardMesh.visible && camera && coupleGroup) {
           const dx = camera.position.x - coupleGroup.position.x;
           const dz = camera.position.z - coupleGroup.position.z;
           coupleBillboardMesh.rotation.y = Math.atan2(dx, dz);
         }
 
-        // Gentle breathing and intimate sway for A & I
-        if (coupleBillboardMesh && !isIntimacyAnimating) {
+        // Gentle breathing and intimate sway for billboard (if active)
+        if (coupleBillboardMesh && coupleBillboardMesh.visible && !isIntimacyAnimating) {
           const breath = Math.sin(t * 2.2) * 0.012;
           coupleBillboardMesh.position.y = 0.68 + breath;
           coupleBillboardMesh.scale.x = 1.0 + Math.sin(t * 2.2) * 0.008;
