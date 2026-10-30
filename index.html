@@ -6161,8 +6161,7 @@
       }
 
       spawnSuiteParticles(20, '#f43f5e');
-      playBeepAlert(act.audioFreq, 0.18);
-      if (navigator.vibrate) navigator.vibrate([60, 40, 80]);
+      if (navigator.vibrate) navigator.vibrate([50, 30, 60]);
       showSuiteToast(`${act.icon} ${act.name}: "${act.quote}"`);
 
       if (broadcast && dataConn && dataConn.open) {
@@ -6214,9 +6213,10 @@
       const intervalMs = (60 / Math.max(40, simBpm)) * 1000;
       suiteHeartbeatInterval = setInterval(() => {
         if (!isSuiteOpen) return;
-        // Audio heartbeat & soft pulse
-        const act = SIMULATION_ACTIVITIES[currentSimActivity] || SIMULATION_ACTIVITIES.kiss;
-        playRhythmicBreathSound(act.audioFreq * 0.5, 0.12);
+        // Quiet, pleasant sensual heartbeat pulse - pure gentle haptic vibration, no annoying electronic beeps
+        if (navigator.vibrate && Math.random() < 0.45) {
+          navigator.vibrate(18);
+        }
 
         // Gradually increase pleasure with the active rhythm!
         surgeSimPleasurePassive(0.4 * currentSimSpeed);
@@ -6242,8 +6242,7 @@
 
       updatePleasureUI();
       spawnSuiteParticles(25, '#fb7185');
-      playBeepAlert(720, 0.2);
-      if (navigator.vibrate) navigator.vibrate([40, 30, 60]);
+      if (navigator.vibrate) navigator.vibrate([35, 40, 50]);
 
       if (pleasureA >= 100 && pleasureI >= 100) {
         triggerSimulationClimax(true);
@@ -6289,8 +6288,7 @@
 
     function triggerSimulationClimax(broadcast = true) {
       spawnSuiteParticles(80, '#f43f5e');
-      playBeepAlert(960, 0.45);
-      if (navigator.vibrate) navigator.vibrate([150, 70, 250, 70, 400]);
+      if (navigator.vibrate) navigator.vibrate([100, 60, 180, 60, 260]);
 
       showSuiteToast('🔥 DUAL CLIMAX & ECSTASY REACHED! ❤️');
 
@@ -6366,8 +6364,7 @@
         });
       }
 
-      playBeepAlert(650, 0.12);
-      if (navigator.vibrate) navigator.vibrate(35);
+      if (navigator.vibrate) navigator.vibrate(28);
       surgeSimPleasurePassive(3);
 
       const partnerLabel = myRole === 'husband' ? 'A' : 'I';
@@ -6398,8 +6395,7 @@
         });
       }
 
-      playBeepAlert(720, 0.15);
-      if (navigator.vibrate) navigator.vibrate([60, 40, 80]);
+      if (navigator.vibrate) navigator.vibrate([45, 30, 55]);
       surgeSimPleasurePassive(3);
 
       const partnerLabel = myRole === 'husband' ? 'A' : 'I';
