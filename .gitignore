@@ -1,0 +1,6 @@
+android-app/android/.gradle
+android-app/android/app/build
+android-app/android/build
+android-app/node_modules
+*.keystore
+scratch/
