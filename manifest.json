@@ -1,7 +1,7 @@
 {
-  "name": "DailySync Utility",
-  "short_name": "DailySync",
-  "description": "Household checklist, weather & daily utility sync",
+  "name": "ail - All I Love",
+  "short_name": "ail",
+  "description": "All I Love",
   "start_url": "index.html",
   "scope": "./",
   "display": "standalone",

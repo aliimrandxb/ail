@@ -1,6 +1,6 @@
 {
   "appId": "com.sanctuary.app",
-  "appName": "Sanctuary",
+  "appName": "ail",
   "webDir": "dist",
   "bundledWebRuntime": false
 }
