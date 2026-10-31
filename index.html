@@ -311,33 +311,73 @@
     <div id="three-container" class="absolute inset-0 w-full h-full z-0"></div>
 
     <!-- Active Video Overlay for WebRTC Video Calls -->
-    <div id="video-call-overlay" class="hidden absolute inset-0 z-50 bg-black/95 flex flex-col items-center justify-between p-4">
-      <div class="w-full flex justify-between items-center z-10 pt-2">
-        <div class="flex items-center gap-2 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="text-xs font-semibold text-rose-200" id="video-call-timer">00:00</span>
-        </div>
-        <button onclick="toggleVideoCallCamera()" class="p-2.5 rounded-full bg-white/10 text-white active:scale-95 shadow-md">
-          <i data-lucide="switch-camera" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <!-- Remote Video (Full Screen) -->
-      <video id="remote-video" autoplay playsinline class="absolute inset-0 w-full h-full object-cover"></video>
+    <div id="video-call-overlay" class="hidden fixed inset-0 z-[100] bg-black flex flex-col items-center justify-between overflow-hidden select-none">
       
-      <!-- Local Video (Picture in Picture) -->
-      <div class="absolute top-16 right-4 w-28 h-40 bg-slate-900 rounded-2xl overflow-hidden border-2 border-rose-500 shadow-2xl z-20">
-        <video id="local-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
+      <!-- Top Call Bar: Timer, Filter Selector, Switch Camera, Minimize PiP -->
+      <div class="relative z-30 w-full max-w-lg px-4 pt-3.5 pb-2 flex items-center justify-between bg-gradient-to-b from-black/80 via-black/40 to-transparent">
+        <div class="flex items-center gap-2 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 shadow-lg">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-xs font-mono font-bold text-rose-200" id="video-call-timer">00:00</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Live Beauty & Atmosphere Filter Button -->
+          <button onclick="cycleVideoCallFilter()" title="Cycle Beauty / Warm Filter" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-rose-300 active:scale-95 transition-all backdrop-blur-md border border-white/10">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </button>
+
+          <!-- Back / Front Camera Toggle -->
+          <button onclick="toggleVideoCallCamera()" title="Switch Front/Back Camera" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white active:scale-95 transition-all backdrop-blur-md border border-white/10 flex items-center gap-1">
+            <i data-lucide="switch-camera" class="w-4 h-4 text-emerald-400"></i>
+            <span id="cam-facing-badge" class="text-[9px] font-mono font-bold text-emerald-300">Front</span>
+          </button>
+
+          <!-- Minimize to Floating PiP Window (so user can game or browse room while talking!) -->
+          <button onclick="minimizeVideoCallToPiP()" title="Minimize to Floating PiP Window" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-rose-200 active:scale-95 transition-all backdrop-blur-md border border-white/10">
+            <i data-lucide="minimize-2" class="w-4 h-4"></i>
+          </button>
+        </div>
       </div>
 
-      <!-- Video Call Controls -->
-      <div class="relative z-10 flex items-center gap-5 pb-6">
-        <button onclick="toggleVideoMute()" id="btn-video-mute" class="w-13 h-13 p-3.5 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center active:scale-95">
-          <i data-lucide="mic" class="w-6 h-6"></i>
-        </button>
-        <button onclick="endLiveCall()" class="w-16 h-16 rounded-full bg-rose-600 text-white flex items-center justify-center active:scale-95 shadow-2xl">
-          <i data-lucide="phone-off" class="w-7 h-7"></i>
-        </button>
+      <!-- Remote Video (Full Screen Stream with filter) -->
+      <video id="remote-video" autoplay playsinline class="absolute inset-0 w-full h-full object-cover transition-all duration-300"></video>
+      
+      <!-- Floating Flying Reaction Hearts & Emojis Canvas -->
+      <canvas id="call-effects-canvas" class="pointer-events-none absolute inset-0 w-full h-full z-20"></canvas>
+
+      <!-- Local Video (Self View - Tap to switch size or drag) -->
+      <div id="local-video-container" onclick="toggleLocalVideoSize()" class="absolute top-16 right-4 w-28 h-40 bg-slate-900 rounded-2xl overflow-hidden border-2 border-rose-500 shadow-2xl z-30 transition-all duration-300 cursor-pointer">
+        <video id="local-video" autoplay playsinline muted class="w-full h-full object-cover transition-all duration-300"></video>
+        <div class="absolute bottom-1 right-1 text-[8px] px-1 py-0.5 rounded bg-black/60 text-white font-mono">You</div>
+      </div>
+
+      <!-- Bottom Floating Emoji Bar & Audio/End Call Controls -->
+      <div class="relative z-30 w-full max-w-lg px-4 pb-6 pt-2 flex flex-col items-center gap-3 bg-gradient-to-t from-black via-black/80 to-transparent">
+        
+        <!-- Quick Romantic Reaction Emoji Bar (Sent in real-time over P2P DataChannel!) -->
+        <div class="flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-rose-500/30 shadow-lg">
+          <button onclick="sendCallEmojiReaction('❤️')" class="text-xl hover:scale-125 active:scale-95 transition-transform">❤️</button>
+          <button onclick="sendCallEmojiReaction('💋')" class="text-xl hover:scale-125 active:scale-95 transition-transform">💋</button>
+          <button onclick="sendCallEmojiReaction('🔥')" class="text-xl hover:scale-125 active:scale-95 transition-transform">🔥</button>
+          <button onclick="sendCallEmojiReaction('🥰')" class="text-xl hover:scale-125 active:scale-95 transition-transform">🥰</button>
+          <button onclick="sendCallEmojiReaction('🌹')" class="text-xl hover:scale-125 active:scale-95 transition-transform">🌹</button>
+          <button onclick="sendCallEmojiReaction('✨')" class="text-xl hover:scale-125 active:scale-95 transition-transform">✨</button>
+        </div>
+
+        <!-- Video Call Controls -->
+        <div class="flex items-center justify-center gap-6">
+          <button onclick="toggleVideoMute()" id="btn-video-mute" class="w-13 h-13 p-3.5 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white flex items-center justify-center active:scale-95 shadow-lg transition-all">
+            <i data-lucide="mic" class="w-6 h-6"></i>
+          </button>
+          
+          <button onclick="endLiveCall()" class="w-16 h-16 rounded-full bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center active:scale-95 shadow-[0_0_30px_rgba(225,29,72,0.6)] transition-all">
+            <i data-lucide="phone-off" class="w-7 h-7"></i>
+          </button>
+
+          <button onclick="toggleVideoCallCamera()" class="w-13 h-13 p-3.5 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white flex items-center justify-center active:scale-95 shadow-lg transition-all">
+            <i data-lucide="refresh-cw" class="w-6 h-6 text-emerald-300"></i>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -834,6 +874,22 @@
         </button>
         <button onclick="clearCurrentTrack()" title="Stop Playback" class="p-1.5 rounded-lg bg-rose-950/80 hover:bg-rose-900 border border-rose-500/30 text-rose-300 active:scale-95 transition-all">
           <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- FLOATING MINI CALL PiP CARD (When call is minimized to browse 3D room or play games) -->
+    <div id="call-pip-floating" class="hidden fixed top-16 right-3 z-[90] w-32 h-44 bg-black rounded-2xl overflow-hidden border-2 border-rose-500 shadow-2xl flex flex-col justify-between p-1.5 backdrop-blur-md animate-fade-in select-none">
+      <video id="pip-call-remote-video" autoplay playsinline class="absolute inset-0 w-full h-full object-cover"></video>
+      <div class="relative z-10 flex justify-between items-center">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <button onclick="restoreVideoCallFromPiP()" title="Maximize Video Call" class="p-1 rounded-lg bg-black/60 text-white hover:bg-black/80">
+          <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+      <div class="relative z-10 flex justify-center pb-0.5">
+        <button onclick="endLiveCall()" class="px-2.5 py-1 rounded-full bg-rose-600/90 hover:bg-rose-500 text-[10px] text-white font-bold shadow-md">
+          End Call
         </button>
       </div>
     </div>
@@ -1493,7 +1549,7 @@
         const partnerId = getPartnerPeerId();
 
         if (type === 'video') {
-          document.getElementById('video-call-overlay').classList.remove('hidden');
+          document.getElementById('video-call-overlay').classList.remove('hidden'); closeDrawer();
           const localVideo = document.getElementById('local-video');
           localVideo.srcObject = localStream;
         } else {
@@ -1603,6 +1659,7 @@
       stopRingtoneLoop();
       document.getElementById('incoming-call-modal').classList.add('hidden');
       document.getElementById('video-call-overlay').classList.add('hidden');
+      const pipFloat = document.getElementById('call-pip-floating'); if (pipFloat) pipFloat.classList.add('hidden');
       document.getElementById('active-call-banner').classList.add('hidden');
 
       if (callSeconds > 0) {
@@ -1701,26 +1758,240 @@
       }
     }
 
-    function toggleVideoCallCamera() {
-      if (localStream) {
-        const videoTrack = localStream.getVideoTracks()[0];
-        if (videoTrack) {
-          videoTrack.stop();
-          const currentMode = videoTrack.getSettings().facingMode;
-          navigator.mediaDevices.getUserMedia({
-            video: { facingMode: currentMode === 'user' ? 'environment' : 'user' },
-            audio: true
-          }).then(s => {
-            localStream = s;
-            document.getElementById('local-video').srcObject = s;
-            if (activeMediaCall && activeMediaCall.peerConnection) {
-              const sender = activeMediaCall.peerConnection.getSenders().find(s => s.track && s.track.kind === 'video');
-              if (sender) sender.replaceTrack(s.getVideoTracks()[0]);
-            }
+    
+    // =========================================================================
+    // ADVANCED VIDEO CALLING: HARDWARE BACK/FRONT CAMERA SWITCHING & LIVE EFFECTS
+    // =========================================================================
+    let currentCameraFacing = 'user'; // 'user' (front) or 'environment' (back)
+    let currentVideoFilterIndex = 0;
+    const VIDEO_FILTERS = [
+      { name: 'Natural', css: 'none' },
+      { name: 'Warm Glow', css: 'sepia(0.2) saturate(1.2) brightness(1.05)' },
+      { name: 'Romantic Rose', css: 'hue-rotate(330deg) saturate(1.25) contrast(1.05)' },
+      { name: 'Midnight Cinematic', css: 'contrast(1.15) brightness(0.95) saturate(1.1)' },
+      { name: 'Dreamy Soft', css: 'contrast(0.95) brightness(1.1) saturate(1.15)' }
+    ];
+
+    let callEffectsCanvas = null;
+    let callEffectsCtx = null;
+    let callEffectsAnimId = null;
+    let callFloatingEmojis = [];
+
+    async function toggleVideoCallCamera() {
+      // Toggle facing mode
+      currentCameraFacing = (currentCameraFacing === 'user') ? 'environment' : 'user';
+      
+      const badge = document.getElementById('cam-facing-badge');
+      if (badge) badge.textContent = currentCameraFacing === 'user' ? 'Front' : 'Back';
+
+      showTelepathyBanner(`📷 Switching to ${currentCameraFacing === 'user' ? 'Front' : 'Back'} Camera...`);
+      if (navigator.vibrate) navigator.vibrate(40);
+
+      try {
+        // Enforce exact environment camera for Android back lenses
+        const videoConstraints = {
+          facingMode: { ideal: currentCameraFacing },
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        };
+
+        const newStream = await navigator.mediaDevices.getUserMedia({
+          video: videoConstraints,
+          audio: false // Keep active audio stream intact without mic renegotiation pop
+        });
+
+        const newVideoTrack = newStream.getVideoTracks()[0];
+        if (!newVideoTrack) throw new Error('No video track found');
+
+        // Stop old local video track
+        if (localStream) {
+          const oldTrack = localStream.getVideoTracks()[0];
+          if (oldTrack) oldTrack.stop();
+          localStream.removeTrack(oldTrack);
+          localStream.addTrack(newVideoTrack);
+        } else {
+          localStream = newStream;
+        }
+
+        // Update local video element
+        const lVideo = document.getElementById('local-video');
+        if (lVideo) lVideo.srcObject = localStream;
+
+        // Replace track on live active WebRTC peer connection
+        if (activeMediaCall && activeMediaCall.peerConnection) {
+          const senders = activeMediaCall.peerConnection.getSenders();
+          const videoSender = senders.find(s => s.track && s.track.kind === 'video');
+          if (videoSender) {
+            await videoSender.replaceTrack(newVideoTrack);
+            console.log('[WebRTC] Camera track successfully switched to', currentCameraFacing);
+          }
+        }
+      } catch (err) {
+        console.warn('Fallback to basic facingMode:', err);
+        try {
+          const fallbackStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: currentCameraFacing }
           });
+          const newTrack = fallbackStream.getVideoTracks()[0];
+          if (localStream && newTrack) {
+            localStream.getVideoTracks().forEach(t => t.stop());
+            localStream.addTrack(newTrack);
+            document.getElementById('local-video').srcObject = localStream;
+            if (activeMediaCall && activeMediaCall.peerConnection) {
+              const videoSender = activeMediaCall.peerConnection.getSenders().find(s => s.track && s.track.kind === 'video');
+              if (videoSender) videoSender.replaceTrack(newTrack);
+            }
+          }
+        } catch (e2) {
+          showTelepathyBanner('Camera switch failed: ' + e2.message);
         }
       }
     }
+
+    function cycleVideoCallFilter() {
+      currentVideoFilterIndex = (currentVideoFilterIndex + 1) % VIDEO_FILTERS.length;
+      const f = VIDEO_FILTERS[currentVideoFilterIndex];
+      
+      const rVideo = document.getElementById('remote-video');
+      const lVideo = document.getElementById('local-video');
+      if (lVideo) lVideo.style.filter = f.css;
+
+      showTelepathyBanner('✨ Filter: ' + f.name);
+      if (navigator.vibrate) navigator.vibrate(30);
+
+      // Broadcast filter to partner
+      if (dataConn && dataConn.open) {
+        sendPayload({ type: 'call_filter_sync', filterCss: f.css, sender: myRole });
+      }
+    }
+
+    function applyRemoteVideoFilter(filterCss) {
+      const rVideo = document.getElementById('remote-video');
+      const pipVideo = document.getElementById('pip-call-remote-video');
+      if (rVideo) rVideo.style.filter = filterCss || 'none';
+      if (pipVideo) pipVideo.style.filter = filterCss || 'none';
+    }
+
+    function sendCallEmojiReaction(emoji) {
+      spawnCallEmojiReaction(emoji, true);
+      if (navigator.vibrate) navigator.vibrate(35);
+
+      if (dataConn && dataConn.open) {
+        sendPayload({ type: 'call_emoji_reaction', emoji: emoji, sender: myRole });
+      }
+    }
+
+    function spawnCallEmojiReaction(emoji, isLocal = true) {
+      initCallEffectsCanvas();
+      const rect = callEffectsCanvas ? callEffectsCanvas.getBoundingClientRect() : { width: window.innerWidth, height: window.innerHeight };
+      const startX = isLocal ? (rect.width * 0.75) : (rect.width * 0.25);
+      
+      for (let i = 0; i < 6; i++) {
+        callFloatingEmojis.push({
+          char: emoji,
+          x: startX + (Math.random() - 0.5) * 60,
+          y: rect.height - 120 + Math.random() * 40,
+          vx: (Math.random() - 0.5) * 3,
+          vy: -3.5 - Math.random() * 3.5,
+          scale: 0.8 + Math.random() * 0.6,
+          alpha: 1.0,
+          decay: 0.015 + Math.random() * 0.01
+        });
+      }
+    }
+
+    function initCallEffectsCanvas() {
+      if (!callEffectsCanvas) {
+        callEffectsCanvas = document.getElementById('call-effects-canvas');
+        if (callEffectsCanvas) {
+          callEffectsCtx = callEffectsCanvas.getContext('2d');
+          const resize = () => {
+            if (!callEffectsCanvas) return;
+            callEffectsCanvas.width = window.innerWidth;
+            callEffectsCanvas.height = window.innerHeight;
+          };
+          resize();
+          window.addEventListener('resize', resize);
+        }
+      }
+
+      if (!callEffectsAnimId) {
+        function loop() {
+          renderCallEffects();
+          if (callFloatingEmojis.length > 0) {
+            callEffectsAnimId = requestAnimationFrame(loop);
+          } else {
+            callEffectsAnimId = null;
+          }
+        }
+        callEffectsAnimId = requestAnimationFrame(loop);
+      }
+    }
+
+    function renderCallEffects() {
+      if (!callEffectsCanvas || !callEffectsCtx) return;
+      const ctx = callEffectsCtx;
+      ctx.clearRect(0, 0, callEffectsCanvas.width, callEffectsCanvas.height);
+
+      for (let i = callFloatingEmojis.length - 1; i >= 0; i--) {
+        const p = callFloatingEmojis[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= p.decay;
+
+        if (p.alpha <= 0) {
+          callFloatingEmojis.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.font = `${Math.round(32 * p.scale)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText(p.char, p.x, p.y);
+        ctx.restore();
+      }
+    }
+
+    function toggleLocalVideoSize() {
+      const container = document.getElementById('local-video-container');
+      if (!container) return;
+      const isBig = container.classList.contains('w-44');
+      if (isBig) {
+        container.classList.remove('w-44', 'h-60');
+        container.classList.add('w-28', 'h-40');
+      } else {
+        container.classList.remove('w-28', 'h-40');
+        container.classList.add('w-44', 'h-60');
+      }
+    }
+
+    // -------------------------------------------------------------
+    // MINIMIZE VIDEO CALL TO FLOATING PiP (NO OVERLAPPING WINDOWS!)
+    // -------------------------------------------------------------
+    function minimizeVideoCallToPiP() {
+      const overlay = document.getElementById('video-call-overlay');
+      const pip = document.getElementById('call-pip-floating');
+      const pipVideo = document.getElementById('pip-call-remote-video');
+      const rVideo = document.getElementById('remote-video');
+
+      if (overlay) overlay.classList.add('hidden');
+      if (pip) {
+        pip.classList.remove('hidden');
+        if (rVideo && rVideo.srcObject && pipVideo) {
+          pipVideo.srcObject = rVideo.srcObject;
+        }
+      }
+      showTelepathyBanner('📺 Call minimized to floating card');
+    }
+
+    function restoreVideoCallFromPiP() {
+      const overlay = document.getElementById('video-call-overlay');
+      const pip = document.getElementById('call-pip-floating');
+      if (pip) pip.classList.add('hidden');
+      if (overlay) overlay.classList.remove('hidden');
+    }
+
 
     function playBeepAlert(freq, duration) {
       try {
