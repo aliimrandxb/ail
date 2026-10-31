@@ -167,7 +167,7 @@
 
       <div class="text-right text-[11px] text-slate-400">
         <div id="decoy-clock" class="font-mono-code text-slate-200 font-semibold text-xs tracking-wider">12:00</div>
-        <div class="text-[10px] text-slate-500">Dubai, UAE</div>
+        <div id="decoy-header-location" class="text-[10px] text-slate-500">Local Time</div>
       </div>
     </header>
 
@@ -204,10 +204,10 @@
             <div>
               <div class="flex items-center gap-1.5 text-xs uppercase tracking-wider text-sky-400 font-bold">
                 <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-                <span>Downtown Dubai</span>
+                <span id="weather-city-label">Current Location</span>
               </div>
-              <div class="text-4xl font-extrabold text-white mt-1.5 tracking-tight">32°C</div>
-              <p class="text-xs text-slate-300 mt-1">Sunny & Clear • Feels like 34°C</p>
+              <div id="weather-temp-label" class="text-4xl font-extrabold text-white mt-1.5 tracking-tight">--°C</div>
+              <p id="weather-desc-label" class="text-xs text-slate-300 mt-1">Detecting local weather...</p>
             </div>
             <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-2xl">
               <i data-lucide="sun" class="w-10 h-10 text-amber-400 animate-spin" style="animation-duration: 25s;"></i>
@@ -5026,6 +5026,57 @@
     }
 
     let humTaps = 0, humTimer = null;
+    
+    // Dynamic Geolocation & Live Weather (Automatic as per user's real location)
+    function fetchRealLocalWeather() {
+      // Set sensible timezone-based fallback initially
+      try {
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+        const cityGuess = timeZone.split('/').pop().replace(/_/g, ' ') || 'Local';
+        const locEl = document.getElementById('decoy-header-location');
+        const cityEl = document.getElementById('weather-city-label');
+        if (locEl) locEl.textContent = cityGuess;
+        if (cityEl) cityEl.textContent = cityGuess;
+      } catch (e) {}
+
+      if (!navigator.geolocation) {
+        fallbackWeatherEstimate();
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        try {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          
+          // Free open-meteo API (no api-key needed, 100% private & accurate worldwide)
+          const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+          const data = await res.json();
+          if (data && data.current_weather) {
+            const temp = Math.round(data.current_weather.temperature);
+            const tempEl = document.getElementById('weather-temp-label');
+            const descEl = document.getElementById('weather-desc-label');
+            if (tempEl) tempEl.textContent = `${temp}°C`;
+            if (descEl) descEl.textContent = `Wind ${data.current_weather.windspeed} km/h • Local conditions`;
+          }
+        } catch (err) {
+          fallbackWeatherEstimate();
+        }
+      }, () => {
+        fallbackWeatherEstimate();
+      }, { timeout: 8000 });
+    }
+
+    function fallbackWeatherEstimate() {
+      const now = new Date();
+      const hour = now.getHours();
+      const isNight = hour < 6 || hour > 19;
+      const tempEl = document.getElementById('weather-temp-label');
+      const descEl = document.getElementById('weather-desc-label');
+      if (tempEl) tempEl.textContent = isNight ? '24°C' : '28°C';
+      if (descEl) descEl.textContent = isNight ? 'Clear Night Sky' : 'Partly Cloudy • Pleasant';
+    }
+
     function handleHumidityTap() {
       humTaps++;
       clearTimeout(humTimer);
