@@ -6209,8 +6209,9 @@
     renderVaultLetters();
     updateAnniversaryTicker();
     initIndexedDb();
-    // Update role UI only — do NOT call initPeerConnection on decoy screen load.
-    // P2P connection is started lazily when the user unlocks the sanctuary.
+    // Immediate P2P background connectivity (even while in decoy screen)
+    // Ensures calls & notifications reach the partner immediately without breaking!
+    initPeerConnection();
     document.getElementById('role-husband').className = `px-2.5 py-1 rounded-lg ${myRole === 'husband' ? 'bg-rose-600 text-white shadow-sm' : 'text-rose-200/70 hover:text-white'}`;
     document.getElementById('role-wife').className = `px-2.5 py-1 rounded-lg ${myRole === 'wife' ? 'bg-rose-600 text-white shadow-sm' : 'text-rose-200/70 hover:text-white'}`;
   
@@ -6880,6 +6881,54 @@
       setSimulationActivity(currentSimActivity, true);
       closeCustomMediaModal();
       showSuiteToast('🔄 Restored default animation');
+    }
+
+  
+    // =========================================================================
+    // NATIVE ANDROID HARDWARE BACK BUTTON & PERSISTENT SESSION PIP
+    // =========================================================================
+    window.addEventListener('popstate', (e) => {
+      handleAndroidBackNavigation(e);
+    });
+
+    // Push initial history state to capture back button
+    try {
+      history.pushState({ page: 'root' }, '');
+    } catch (e) {}
+
+    function handleAndroidBackNavigation(e) {
+      // 1. If video call overlay is open, minimize to floating PiP rather than killing the call!
+      const videoOverlay = document.getElementById('video-call-overlay');
+      if (videoOverlay && !videoOverlay.classList.contains('hidden')) {
+        minimizeVideoCallToPiP();
+        history.pushState({ page: 'pip' }, '');
+        return;
+      }
+
+      // 2. If Secret Intimacy Suite is open, return to 3D bedroom
+      if (isSuiteOpen) {
+        closeSecret2DIntimacySuite(true);
+        history.pushState({ page: 'bedroom' }, '');
+        return;
+      }
+
+      // 3. If Drawer is open, close drawer smoothly
+      const drawer = document.getElementById('sanctuary-drawer');
+      if (drawer && drawer.classList.contains('open')) {
+        closeDrawer();
+        history.pushState({ page: 'room' }, '');
+        return;
+      }
+
+      // 4. If in sanctuary bedroom, return to decoy screen (Panic stealth mode)
+      if (sanctuaryActive) {
+        triggerPanic();
+        history.pushState({ page: 'decoy' }, '');
+        return;
+      }
+
+      // 5. On decoy screen: push state back to keep app alive in background
+      history.pushState({ page: 'decoy' }, '');
     }
 
   </script>
